@@ -2,6 +2,7 @@ const { isAuth } = require("../middlewares/index.js");
 
 module.exports = (app) => {
   const spdmain = require("../controllers/spdmain.controller.js");
+  const spdmainParts = require("../controllers/spdmain.parts.controller.js");
 
   var router = require("express").Router();
 
@@ -13,6 +14,12 @@ module.exports = (app) => {
   router.get("/pagination", isAuth, spdmain.findAllPaging);
   router.get("/table", isAuth, spdmain.findAllForTable);
   router.get("/table/pagination", isAuth, spdmain.findAllForTablePaging);
+  router.get("/akomodasi", isAuth, spdmainParts.findAllAkomodasi);
+  router.get("/jenis", isAuth, spdmainParts.findAllJenis);
+  router.get("/status", isAuth, spdmainParts.findAllStatus);
+  router.get("/transportasi", isAuth, spdmainParts.findAllTransportasi);
+  router.get("/tujuandinas", isAuth, spdmainParts.findAllTujuanDinas);
+  router.get("/uangmuka", isAuth, spdmainParts.findAllUangMuka);
 
   // Retrieve all published SPD Data
   // router.get("/published", spdmain.findAllPublished);
