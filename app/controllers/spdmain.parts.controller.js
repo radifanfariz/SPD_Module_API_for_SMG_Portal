@@ -5,11 +5,16 @@ const SpdmainStatus = db.spdmainStatus;
 const SpdmainTransportasi = db.spdmainTransportasi;
 const SpdmainTujuandinas = db.spdmainTujuandinas;
 const SpdmainUangMuka = db.spdmainUangmuka;
+const SpdmainJenisBiaya = db.spdmainJenisBiaya;
 
 
 // Retrieve all SPD main data from the database.
 exports.findAllAkomodasi = (req, res) => {
-    SpdmainAkomadasi.findAll()
+    SpdmainAkomadasi.findAll({
+        order: [
+            ['n_spd_akomodasi_id', 'ASC'],
+        ],
+    })
       .then((data) => {
         const successResponse = {
           status: true,
@@ -30,7 +35,11 @@ exports.findAllAkomodasi = (req, res) => {
   };
 // Retrieve all SPD main data from the database.
 exports.findAllJenis = (req, res) => {
-    SpdmainJenis.findAll()
+    SpdmainJenis.findAll({
+        order: [
+            ['n_spd_jenis_id', 'ASC'],
+        ],
+    })
       .then((data) => {
         const successResponse = {
           status: true,
@@ -51,7 +60,11 @@ exports.findAllJenis = (req, res) => {
   };
 // Retrieve all SPD main data from the database.
 exports.findAllStatus = (req, res) => {
-    SpdmainStatus.findAll()
+    SpdmainStatus.findAll({
+        order: [
+            ['n_spd_status_id', 'ASC'],
+        ],
+    })
       .then((data) => {
         const successResponse = {
           status: true,
@@ -72,7 +85,11 @@ exports.findAllStatus = (req, res) => {
   };
 // Retrieve all SPD main data from the database.
 exports.findAllTransportasi = (req, res) => {
-    SpdmainTransportasi.findAll()
+    SpdmainTransportasi.findAll({
+        order: [
+            ['n_spd_transportasi_id', 'ASC'],
+        ],
+    })
       .then((data) => {
         const successResponse = {
           status: true,
@@ -93,7 +110,11 @@ exports.findAllTransportasi = (req, res) => {
   };
 // Retrieve all SPD main data from the database.
 exports.findAllTujuanDinas = (req, res) => {
-    SpdmainTujuandinas.findAll()
+    SpdmainTujuandinas.findAll({
+        order: [
+            ['n_spd_tujuandinas_id', 'ASC'],
+        ],
+    })
       .then((data) => {
         const successResponse = {
           status: true,
@@ -114,7 +135,36 @@ exports.findAllTujuanDinas = (req, res) => {
   };
 // Retrieve all SPD main data from the database.
 exports.findAllUangMuka = (req, res) => {
-    SpdmainUangMuka.findAll()
+    SpdmainUangMuka.findAll({
+        order: [
+            ['n_spd_uangmuka_id', 'ASC'],
+        ],
+    })
+      .then((data) => {
+        const successResponse = {
+          status: true,
+          message: "Ok",
+          totalItems: data.length,
+          data: data,
+        };
+        res.send(successResponse);
+      })
+      .catch((err) => {
+        const errorResponse = {
+          status: false,
+          message:
+            err.message || "Some error occurred while retrieving SPD data Uang Muka.",
+        };
+        res.status(500).send(errorResponse);
+      });
+  };
+// Retrieve all SPD main data from the database.
+exports.findAllJenisBiaya = (req, res) => {
+    SpdmainJenisBiaya.findAll({
+        order: [
+            ['n_spd_jenisbiaya_id', 'ASC'],
+        ],
+    })
       .then((data) => {
         const successResponse = {
           status: true,

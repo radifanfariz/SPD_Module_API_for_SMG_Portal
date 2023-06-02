@@ -62,10 +62,12 @@ app.use(bodyParser.json()); //alternative
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({ extended: true })); //alternative
+// app.use(bodyParser.urlencoded({ extended: true })); //alternative
 
 // routes of api
 require("./app/routes/spdmain.route")(app);
+require("./app/routes/spdpelaksanaan.route")(app);
+require("./app/routes/spdrealisasi.route")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 9999;

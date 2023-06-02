@@ -129,6 +129,27 @@ exports.SpdmainAkomodasi = (sequelize, Sequelize) => {
   
     return SpdmainUangMuka;
   };
+  exports.SpdmainJenisBiaya = (sequelize, Sequelize) => {
+    const SpdmainJenisBiaya = sequelize.define(
+      "spd_main_jenisbiaya",
+      {
+        n_spd_jenisbiaya_id: {
+          type: Sequelize.INTEGER,
+          autoIncrement: true,
+          primaryKey: true,
+        },
+        e_spd_jenisbiaya: {
+          type: Sequelize.STRING
+        },
+      },
+      {
+        freezeTableName: true,
+        timestamps: false,
+      }
+    );
+  
+    return SpdmainJenisBiaya;
+  };
   
   
   

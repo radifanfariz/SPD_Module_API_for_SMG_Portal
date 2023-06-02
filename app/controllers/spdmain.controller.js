@@ -7,6 +7,7 @@ const SpdmainStatus = db.spdmainStatus;
 const SpdmainTransportasi = db.spdmainTransportasi;
 const SpdmainTujuandinas = db.spdmainTujuandinas;
 const SpdmainUangMuka = db.spdmainUangmuka;
+const SpdRealisasi = db.spdrealisasi;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new SPD data main
@@ -20,7 +21,7 @@ exports.create = (req, res) => {
 
   const spdmainData = {
     n_spd_company_id: req.body.n_spd_company_id,
-    n_spd_employee_id: req.body.n_spd_employee_id,
+    n_spd_hrisId: req.body.n_spd_hrisId,
     c_spd_hashid: req.body.c_spd_hashid,
     c_spd_nomorsurat: req.body.c_spd_nomorsurat,
     c_spd_companynama: req.body.c_spd_companynama,
@@ -56,8 +57,9 @@ exports.create = (req, res) => {
     c_spd_banknorek: req.body.c_spd_banknorek,
     c_spd_bankatasnama: req.body.c_spd_bankatasnama,
     c_spd_atasannama: req.body.c_spd_atasannama,
-    n_spd_atasan_id: req.body.n_spd_atasan_id,
+    n_spd_atasan_hrisId: req.body.n_spd_atasan_hrisId,
     c_spd_tempatdiajukan: req.body.c_spd_tempatdiajukan,
+    n_realisasi_id: req.body.n_realisasi_id,
   };
 
   Spdmain.create(spdmainData)
@@ -95,8 +97,9 @@ exports.findAllForTable = (req, res) => {
       const spdDataForTable = data.map((item) => {
         return {
           n_spd_id: item.n_spd_id,
+          n_realisasi_id: item.n_realisasi_id,
           n_spd_company_id: item.n_spd_company_id,
-          n_spd_employee_id: item.n_spd_employee_id,
+          n_spd_hrisId: item.n_spd_hrisId,
           c_spd_hashid: item.c_spd_hashid,
           c_spd_companynama: item.c_spd_companynama,
           c_spd_nama: item.c_spd_nama,
@@ -105,7 +108,7 @@ exports.findAllForTable = (req, res) => {
           d_spd_tanggalajukan: item.d_spd_tanggalajukan,
           n_spd_status_id: item.n_spd_status_id,
           c_spd_atasannama: item.c_spd_atasannama,
-          n_spd_atasan_id: item.n_spd_atasan_id,
+          n_spd_atasan_hrisId: item.n_spd_atasan_hrisId,
           spd_main_jenis: item.spd_main_jenis,
           spd_main_status: item.spd_main_status,
         };
@@ -132,7 +135,7 @@ exports.findAllForTablePaging = (req, res) => {
   const { page, size } = req.query;
   const {
     n_spd_company_id,
-    n_spd_employee_id,
+    n_spd_hrisId,
     c_spd_nama,
     c_spd_nomorsurat,
     d_spd_tanggalajukan,
@@ -150,9 +153,9 @@ exports.findAllForTablePaging = (req, res) => {
     ],
     where: req.body
       ? {
-          [Op.or]: [
+          [Op.and]: [
             n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
-            n_spd_employee_id ? { n_spd_employee_id: n_spd_employee_id } : null,
+            n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
             c_spd_atasannama
               ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
               : null,
@@ -190,8 +193,9 @@ exports.findAllForTablePaging = (req, res) => {
       const rowDataFormatted = row.map((item) => {
         return {
           n_spd_id: item.n_spd_id,
+          n_realisasi_id: item.n_realisasi_id,
           n_spd_company_id: item.n_spd_company_id,
-          n_spd_employee_id: item.n_spd_employee_id,
+          n_spd_hrisId: item.n_spd_hrisId,
           c_spd_hashid: item.c_spd_hashid,
           c_spd_companynama: item.c_spd_companynama,
           c_spd_nama: item.c_spd_nama,
@@ -200,7 +204,7 @@ exports.findAllForTablePaging = (req, res) => {
           d_spd_tanggalajukan: item.d_spd_tanggalajukan,
           n_spd_status_id: item.n_spd_status_id,
           c_spd_atasannama: item.c_spd_atasannama,
-          n_spd_atasan_id: item.n_spd_atasan_id,
+          n_spd_atasan_hrisId: item.n_spd_atasan_hrisId,
           spd_main_jenis: item.spd_main_jenis,
           spd_main_status: item.spd_main_status,
         };
@@ -237,6 +241,7 @@ exports.findAll = (req, res) => {
       { model: SpdmainTransportasi },
       { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
       { model: SpdmainUangMuka },
+      { model: SpdRealisasi, as: 'spd_realisasi' },
     ],
   })
     .then((data) => {
@@ -264,7 +269,7 @@ exports.findAllPaging = (req, res) => {
   const { limit, offset } = getPagination(page, size);
   const {
     n_spd_company_id,
-    n_spd_employee_id,
+    n_spd_hrisId,
     c_spd_nama,
     c_spd_nomorsurat,
     d_spd_tanggalajukan,
@@ -281,11 +286,12 @@ exports.findAllPaging = (req, res) => {
       { model: SpdmainTransportasi },
       { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
       { model: SpdmainUangMuka },
+      { model: SpdRealisasi, as: 'spd_realisasi' },
     ],
     where: {
       [Op.or]: [
         n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
-        n_spd_employee_id ? { n_spd_employee_id: n_spd_employee_id } : null,
+        n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
         c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
         c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
         c_spd_nomorsurat
@@ -344,6 +350,7 @@ exports.findOne = (req, res) => {
       { model: SpdmainTransportasi },
       { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
       { model: SpdmainUangMuka },
+      { model: SpdRealisasi, as: 'spd_realisasi' },
     ],
   })
     .then((data) => {
@@ -460,6 +467,7 @@ exports.delete = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.send({
+          status: true,
           message: "SPD data was deleted successfully!",
         });
       } else {
