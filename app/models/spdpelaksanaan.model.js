@@ -10,9 +10,6 @@ module.exports = (sequelize, Sequelize) => {
       n_spd_id: {
         type: Sequelize.INTEGER,
       },
-      n_realisasi_id: {
-        type: Sequelize.INTEGER,
-      },
       d_pelaksanaan_tanggal: {
         type: Sequelize.DATEONLY,
       },
@@ -21,12 +18,6 @@ module.exports = (sequelize, Sequelize) => {
       },
       c_pelaksanaan_keterangan: {
         type: Sequelize.STRING,
-      },
-      c_pelaksanaan_attachment: {
-        type: Sequelize.STRING,
-      },
-      n_pelaksanaan_nominal: {
-        type: Sequelize.DOUBLE,
       },
     },
     {

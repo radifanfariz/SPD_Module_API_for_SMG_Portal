@@ -68,6 +68,8 @@ app.use(express.urlencoded({ extended: true }));
 require("./app/routes/spdmain.route")(app);
 require("./app/routes/spdpelaksanaan.route")(app);
 require("./app/routes/spdrealisasi.route")(app);
+require("./app/routes/spdrealisasidetail.route")(app);
+require("./app/routes/spdrealisasipersetujuan.route")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 9999;

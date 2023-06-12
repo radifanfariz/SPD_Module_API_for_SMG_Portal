@@ -2,6 +2,7 @@ const dbConfig = require("../config/db.config.js");
 
 const Sequelize = require("sequelize");
 const { SpdmainAkomodasi, SpdmainJenis, SpdmainStatus, SpdmainTransportasi, SpdmainTujuanDinas, SpdmainUangMuka, SpdmainJenisBiaya } = require("./spdmain.parts.model.js");
+const { SpdrealisasiKetJenis } = require("./spdrealisasi.parts.model.js");
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
@@ -27,8 +28,10 @@ db.spdmain = require("./spdmain.model.js")(sequelize, Sequelize);
 // support table
 db.spdpelaksanaan = require("./spdpelaksanaan.model.js")(sequelize, Sequelize);
 db.spdrealisasi = require("./spdrealisasi.model.js")(sequelize, Sequelize);
+db.spdrealisasidetail = require("./spdrealisasidetail.model.js")(sequelize, Sequelize);
+db.spdrealisasipersetujuan = require("./spdrealisasipersetujuan.model.js")(sequelize, Sequelize);
 
-// nested table
+// spdmain part table
 db.spdmainAkomodasi = SpdmainAkomodasi(sequelize, Sequelize);
 db.spdmainJenis = SpdmainJenis(sequelize, Sequelize);
 db.spdmainStatus = SpdmainStatus(sequelize, Sequelize);
@@ -36,6 +39,9 @@ db.spdmainTransportasi = SpdmainTransportasi(sequelize, Sequelize);
 db.spdmainTujuandinas = SpdmainTujuanDinas(sequelize, Sequelize);
 db.spdmainUangmuka = SpdmainUangMuka(sequelize, Sequelize);
 db.spdmainJenisBiaya = SpdmainJenisBiaya(sequelize, Sequelize);
+
+// spdrealisasi part table
+db.spdrealisasiKetJenis = SpdrealisasiKetJenis(sequelize,Sequelize);
 
 ////////////////////////////////////////////////////////////////
 
@@ -47,46 +53,47 @@ db.spdpelaksanaan.belongsTo(db.spdmain,{
   foreignKey: 'n_spd_id',as: "spd_main"
 })
 
-// realisasi to pelaksanaan
-db.spdrealisasi.hasMany(db.spdpelaksanaan,{
-  foreignKey: 'n_realisasi_id', as: "spd_realisasi"
-})
-db.spdpelaksanaan.belongsTo(db.spdrealisasi,{
-  foreignKey: 'n_realisasi_id', as: "spd_realisasi"
-})
-
-// pelaksanaan to realisasi
-db.spdpelaksanaan.hasMany(db.spdrealisasi,{
-  foreignKey: 'n_realisasi_id'
-})
-db.spdrealisasi.belongsTo(db.spdpelaksanaan,{
-  foreignKey: 'n_realisasi_id'
-})
-
 // realisasi to spdmain
-db.spdmain.hasOne(db.spdrealisasi,{
+db.spdmain.hasMany(db.spdrealisasi,{
   foreignKey: 'n_spd_id'
 })
 db.spdrealisasi.belongsTo(db.spdmain,{
   foreignKey: 'n_spd_id'
 })
-// realisasi to spdmain
-db.spdrealisasi.hasOne(db.spdmain,{
-  foreignKey: 'n_realisasi_id'
+
+// realisasidetail to spdmain
+db.spdmain.hasMany(db.spdrealisasidetail,{
+  foreignKey: 'n_spd_id'
 })
-db.spdmain.belongsTo(db.spdrealisasi,{
-  foreignKey: 'n_realisasi_id'
+db.spdrealisasidetail.belongsTo(db.spdmain,{
+  foreignKey: 'n_spd_id'
+})
+
+// realisasipersetujuan to spdmain
+db.spdmain.hasMany(db.spdrealisasipersetujuan,{
+  foreignKey: 'n_spd_id'
+})
+db.spdrealisasipersetujuan.belongsTo(db.spdmain,{
+  foreignKey: 'n_spd_id'
+})
+
+// realisasiketjenis to realisasidetail
+db.spdrealisasiKetJenis.hasMany(db.spdrealisasidetail,{
+  foreignKey: 'n_rket_id', as: "spd_realisasi_ketjenis"
+})
+db.spdrealisasidetail.belongsTo(db.spdrealisasiKetJenis,{
+  foreignKey: 'n_rket_id', as: "spd_realisasi_ketjenis"
+})
+// realisasiketjenis to realisasipersetujuan
+db.spdrealisasiKetJenis.hasMany(db.spdrealisasipersetujuan,{
+  foreignKey: 'n_rket_id'
+})
+db.spdrealisasipersetujuan.belongsTo(db.spdrealisasiKetJenis,{
+  foreignKey: 'n_rket_id', as: "spd_realisasi_ketjenis"
 })
 
 
 ///////////////////////////////////////////////////////
-// jenisbiaya
-db.spdmainJenisBiaya.hasMany(db.spdpelaksanaan,{
-  foreignKey: 'n_spd_jenisbiaya_id', as: 'spd_main_jenisbiaya'
-})
-db.spdpelaksanaan.belongsTo(db.spdmainJenisBiaya,{
-  foreignKey: 'n_spd_jenisbiaya_id', as: 'spd_main_jenisbiaya'
-})
 // akomodasi
 db.spdmainAkomodasi.hasMany(db.spdmain,{
   foreignKey: 'n_spd_akomodasi_id'

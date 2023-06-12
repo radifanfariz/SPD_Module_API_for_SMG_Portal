@@ -1,7 +1,6 @@
 const db = require("../models");
 // const { getPagingData, getPagination } = require("../utils/spdmain.util");
 const Spdmain = db.spdmain;
-const Spdpelaksanaan = db.spdpelaksanaan;
 const Spdrealisasi = db.spdrealisasi;
 const Op = db.Sequelize.Op;
 
@@ -16,21 +15,47 @@ exports.create = (req, res) => {
 
   const spdrealisasiData = {
     n_spd_id: req.body.n_spd_id,
-    d_realisasi_tanggal: req.body.d_realisasi_tanggal,
     n_realisasi_uangsaku: req.body.n_realisasi_uangsaku,
+    c_realisasi_uangsaku_ket: req.body.c_realisasi_uangsaku_ket,
     n_realisasi_biayapenginapan: req.body.n_realisasi_biayapenginapan,
-    n_realisasi_biayatransportasi: req.body.n_realisasi_biayatransportasi,
+    c_realisasi_biayapenginapan_ket: req.body.c_realisasi_biayapenginapan_ket,
+    n_realisasi_biayatransport: req.body.n_realisasi_biayatransport,
+    c_realisasi_biayatransport_ket: req.body.c_realisasi_biayatransport_ket,
     n_realisasi_biayalain: req.body.n_realisasi_biayalain,
-    n_realisasi_totalbiaya: req.body.n_realisasi_totalbiaya,
-    n_realisasi_hrd_uangsaku: req.body.n_realisasi_hrd_uangsaku,
-    n_realisasi_hrd_biayapenginapan: req.body.n_realisasi_hrd_biayapenginapan,
-    n_realisasi_hrd_biayatransportasi: req.body.n_realisasi_hrd_biayatransportasi,
-    n_realisasi_hrd_biayalain: req.body.n_realisasi_hrd_biayalain,
-    n_realisasi_hrd_totalbiaya: req.body.n_realisasi_hrd_totalbiaya,
-    c_realisasi_keterangan: req.body.c_realisasi_keterangan,
+    c_realisasi_biayalain_ket: req.body.c_realisasi_biayalain_ket,
+    d_realisasi_tanggal: req.body.d_realisasi_tanggal,
+    n_realisasi_subtotal: req.body.n_realisasi_subtotal,
   };
 
   Spdrealisasi.create(spdrealisasiData)
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message || "Some error occurred while creating the SPD Realisasi data.",
+      };
+      res.status(500).send(errorResponse);
+    });
+};
+// Create and Save a new SPD pelaksanaan main
+exports.bulkCreate = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Data can not be empty!",
+    });
+    return;
+  }
+
+  Spdrealisasi.bulkCreate(req.body)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -88,7 +113,6 @@ exports.findAllByParam = (req, res) => {
 
   Spdrealisasi.findAll({
     include: [
-      { model: Spdpelaksanaan, as: "spd_pelaksanaan" },
       { model: Spdmain, as: "spd_main" },
     ],
     where: {
@@ -121,7 +145,6 @@ exports.findOne = (req, res) => {
   
     Spdrealisasi.findByPk(spdrealisasiId, {
       include: [
-        { model: Spdpelaksanaan, as: "spd_pelaksanaan" },
         { model: Spdmain, as: "spd_main" },
       ],
     })

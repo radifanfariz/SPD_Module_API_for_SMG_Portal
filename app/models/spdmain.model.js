@@ -125,9 +125,9 @@ module.exports = (sequelize, Sequelize) => {
       n_spd_approval_id: {
         type: Sequelize.INTEGER
       },
-      n_realisasi_id: {
-        type: Sequelize.INTEGER
-      },
+      // n_realisasi_id: {
+      //   type: Sequelize.INTEGER
+      // },
     },{
         freezeTableName: true,
         timestamps: false,

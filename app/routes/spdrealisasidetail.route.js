@@ -1,23 +1,22 @@
 const { isAuth } = require("../middlewares/index.js");
 
 module.exports = (app) => {
-  const spdPelaksanaan = require("../controllers/spdpelaksanaan.controller.js");
+  const spdRealisasiDetail = require("../controllers/spdrealisasidetail.controller.js");
+//   const spdRealisasiPersetujuan = require("../controllers/spdrealisasipersetujuan.controller.js");
 
   var router = require("express").Router();
 
-  // Pelaksanaan //
-  // Create a new SPD Pelaksanaan Data
-  router.post("/", isAuth, spdPelaksanaan.create);
-  // Create a new SPD Pelaksanaan Data
-  router.post("/bulk", isAuth, spdPelaksanaan.bulkCreate);
-  // Retrieve all SPD Pelaksanaan
-  router.get("/", isAuth, spdPelaksanaan.findAllByParam);
-  // Retrieve one SPD Pelaksanaan
-  router.get("/:id", isAuth, spdPelaksanaan.findOne);
-  // Update a SPD Pelaksanaan Data with id
-  router.put("/:id", isAuth, spdPelaksanaan.update);
+  // Realisasi Detail //
+  // Create a new SPD Realisasi Data
+  router.post("/", isAuth, spdRealisasiDetail.create);
+  // Retrieve all SPD Realisasi
+  router.get("/", isAuth, spdRealisasiDetail.findAllByParam);
+  // Retrieve one SPD Realisasi
+  router.get("/:id", isAuth, spdRealisasiDetail.findOne);
+  // Update a SPD Realisasi Data with id
+  router.put("/:id", isAuth, spdRealisasiDetail.update);
 
-  app.use("/api/spdpelaksanaan", router);
+  app.use("/api/spdrealisasidetail", router);
 };
 
 /**

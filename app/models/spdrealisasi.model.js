@@ -10,41 +10,35 @@ module.exports = (sequelize, Sequelize) => {
       n_spd_id: {
         type: Sequelize.INTEGER,
       },
-      d_realisasi_tanggal: {
-        type: Sequelize.DATEONLY,
-      },
       n_realisasi_uangsaku: {
         type: Sequelize.DOUBLE,
+      },
+      c_realisasi_uangsaku_ket: {
+        type: Sequelize.STRING,
       },
       n_realisasi_biayapenginapan: {
         type: Sequelize.DOUBLE,
       },
-      n_realisasi_biayatransportasi: {
+      c_realisasi_biayapenginapan_ket: {
+        type: Sequelize.STRING,
+      },
+      n_realisasi_biayatransport: {
         type: Sequelize.DOUBLE,
+      },
+      c_realisasi_biayatransport_ket: {
+        type: Sequelize.STRING,
       },
       n_realisasi_biayalain: {
         type: Sequelize.DOUBLE,
       },
-      n_realisasi_totalbiaya: {
-        type: Sequelize.DOUBLE,
-      },
-      n_realisasi_hrd_uangsaku: {
-        type: Sequelize.DOUBLE,
-      },
-      n_realisasi_hrd_biayapenginapan: {
-        type: Sequelize.DOUBLE,
-      },
-      n_realisasi_hrd_biayatransportasi: {
-        type: Sequelize.DOUBLE,
-      },
-      n_realisasi_hrd_biayalain: {
-        type: Sequelize.DOUBLE,
-      },
-      n_realisasi_hrd_totalbiaya: {
-        type: Sequelize.DOUBLE,
-      },
-      c_realisasi_keterangan: {
+      c_realisasi_biayalain_ket: {
         type: Sequelize.STRING,
+      },
+      d_realisasi_tanggal: {
+        type: Sequelize.DATEONLY,
+      },
+      n_realisasi_subtotal: {
+        type: Sequelize.DOUBLE,
       },
     },
     {

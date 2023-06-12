@@ -7,7 +7,7 @@ const SpdmainStatus = db.spdmainStatus;
 const SpdmainTransportasi = db.spdmainTransportasi;
 const SpdmainTujuandinas = db.spdmainTujuandinas;
 const SpdmainUangMuka = db.spdmainUangmuka;
-const SpdRealisasi = db.spdrealisasi;
+// const SpdRealisasi = db.spdrealisasi;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new SPD data main
@@ -59,7 +59,7 @@ exports.create = (req, res) => {
     c_spd_atasannama: req.body.c_spd_atasannama,
     n_spd_atasan_hrisId: req.body.n_spd_atasan_hrisId,
     c_spd_tempatdiajukan: req.body.c_spd_tempatdiajukan,
-    n_realisasi_id: req.body.n_realisasi_id,
+    // n_realisasi_id: req.body.n_realisasi_id,
   };
 
   Spdmain.create(spdmainData)
@@ -97,7 +97,7 @@ exports.findAllForTable = (req, res) => {
       const spdDataForTable = data.map((item) => {
         return {
           n_spd_id: item.n_spd_id,
-          n_realisasi_id: item.n_realisasi_id,
+          // n_realisasi_id: item.n_realisasi_id,
           n_spd_company_id: item.n_spd_company_id,
           n_spd_hrisId: item.n_spd_hrisId,
           c_spd_hashid: item.c_spd_hashid,
@@ -193,7 +193,7 @@ exports.findAllForTablePaging = (req, res) => {
       const rowDataFormatted = row.map((item) => {
         return {
           n_spd_id: item.n_spd_id,
-          n_realisasi_id: item.n_realisasi_id,
+          // n_realisasi_id: item.n_realisasi_id,
           n_spd_company_id: item.n_spd_company_id,
           n_spd_hrisId: item.n_spd_hrisId,
           c_spd_hashid: item.c_spd_hashid,
@@ -241,7 +241,7 @@ exports.findAll = (req, res) => {
       { model: SpdmainTransportasi },
       { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
       { model: SpdmainUangMuka },
-      { model: SpdRealisasi, as: 'spd_realisasi' },
+      // { model: SpdRealisasi, as: 'spd_realisasi' },
     ],
   })
     .then((data) => {
@@ -286,7 +286,7 @@ exports.findAllPaging = (req, res) => {
       { model: SpdmainTransportasi },
       { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
       { model: SpdmainUangMuka },
-      { model: SpdRealisasi, as: 'spd_realisasi' },
+      // { model: SpdRealisasi, as: 'spd_realisasi' },
     ],
     where: {
       [Op.or]: [
@@ -350,7 +350,7 @@ exports.findOne = (req, res) => {
       { model: SpdmainTransportasi },
       { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
       { model: SpdmainUangMuka },
-      { model: SpdRealisasi, as: 'spd_realisasi' },
+      // { model: SpdRealisasi, as: 'spd_realisasi' },
     ],
   })
     .then((data) => {
