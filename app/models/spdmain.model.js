@@ -14,6 +14,9 @@ module.exports = (sequelize, Sequelize) => {
       n_spd_hrisId: {
         type: Sequelize.INTEGER
       },
+      n_spd_userId: {
+        type: Sequelize.INTEGER
+      },
       c_spd_hashid: {
         type: Sequelize.STRING
       },
@@ -105,6 +108,9 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING
       },
       n_spd_atasan_hrisId: {
+        type: Sequelize.INTEGER
+      },
+      n_spd_atasan_userId: {
         type: Sequelize.INTEGER
       },
       c_spd_tempatdiajukan: {

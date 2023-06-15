@@ -22,6 +22,7 @@ exports.create = (req, res) => {
   const spdmainData = {
     n_spd_company_id: req.body.n_spd_company_id,
     n_spd_hrisId: req.body.n_spd_hrisId,
+    n_spd_userId: req.body.n_spd_userId,
     c_spd_hashid: req.body.c_spd_hashid,
     c_spd_nomorsurat: req.body.c_spd_nomorsurat,
     c_spd_companynama: req.body.c_spd_companynama,
@@ -58,6 +59,7 @@ exports.create = (req, res) => {
     c_spd_bankatasnama: req.body.c_spd_bankatasnama,
     c_spd_atasannama: req.body.c_spd_atasannama,
     n_spd_atasan_hrisId: req.body.n_spd_atasan_hrisId,
+    n_spd_atasan_userId: req.body.n_spd_atasan_userId,
     c_spd_tempatdiajukan: req.body.c_spd_tempatdiajukan,
     // n_realisasi_id: req.body.n_realisasi_id,
   };
@@ -100,6 +102,7 @@ exports.findAllForTable = (req, res) => {
           // n_realisasi_id: item.n_realisasi_id,
           n_spd_company_id: item.n_spd_company_id,
           n_spd_hrisId: item.n_spd_hrisId,
+          n_spd_userId: item.n_spd_userId,
           c_spd_hashid: item.c_spd_hashid,
           c_spd_companynama: item.c_spd_companynama,
           c_spd_nama: item.c_spd_nama,
@@ -109,6 +112,7 @@ exports.findAllForTable = (req, res) => {
           n_spd_status_id: item.n_spd_status_id,
           c_spd_atasannama: item.c_spd_atasannama,
           n_spd_atasan_hrisId: item.n_spd_atasan_hrisId,
+          n_spd_atasan_userId: item.n_spd_atasan_userId,
           spd_main_jenis: item.spd_main_jenis,
           spd_main_status: item.spd_main_status,
         };
@@ -136,6 +140,7 @@ exports.findAllForTablePaging = (req, res) => {
   const {
     n_spd_company_id,
     n_spd_hrisId,
+    n_spd_userId,
     c_spd_nama,
     c_spd_nomorsurat,
     d_spd_tanggalajukan,
@@ -156,6 +161,7 @@ exports.findAllForTablePaging = (req, res) => {
           [Op.and]: [
             n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
             n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
+            n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
             c_spd_atasannama
               ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
               : null,
@@ -196,6 +202,7 @@ exports.findAllForTablePaging = (req, res) => {
           // n_realisasi_id: item.n_realisasi_id,
           n_spd_company_id: item.n_spd_company_id,
           n_spd_hrisId: item.n_spd_hrisId,
+          n_spd_userId: item.n_spd_userId,
           c_spd_hashid: item.c_spd_hashid,
           c_spd_companynama: item.c_spd_companynama,
           c_spd_nama: item.c_spd_nama,
@@ -205,6 +212,7 @@ exports.findAllForTablePaging = (req, res) => {
           n_spd_status_id: item.n_spd_status_id,
           c_spd_atasannama: item.c_spd_atasannama,
           n_spd_atasan_hrisId: item.n_spd_atasan_hrisId,
+          n_spd_atasan_userId: item.n_spd_atasan_userId,
           spd_main_jenis: item.spd_main_jenis,
           spd_main_status: item.spd_main_status,
         };
@@ -262,6 +270,141 @@ exports.findAll = (req, res) => {
       res.status(500).send(errorResponse);
     });
 };
+// Retrieve all SPD main data by param from the database.
+exports.findAllByParam = (req, res) => {
+  const {
+    n_spd_company_id,
+    n_spd_hrisId,
+    n_spd_userId,
+    c_spd_nama,
+    c_spd_nomorsurat,
+    d_spd_tanggalajukan,
+    n_spd_jenis_id,
+    n_spd_status_id,
+    c_spd_atasannama
+  } = req.body;
+  Spdmain.findAll({
+    include: [
+      { model: SpdmainAkomadasi },
+      { model: SpdmainJenis, as: "spd_main_jenis" },
+      { model: SpdmainStatus },
+      { model: SpdmainTransportasi },
+      { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
+      { model: SpdmainUangMuka },
+      // { model: SpdRealisasi, as: 'spd_realisasi' },
+    ],
+    where: {
+      [Op.and]: [
+        n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
+        n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
+        n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+        c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
+        c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
+        c_spd_nomorsurat
+          ? {
+              c_spd_nomorsurat: {
+                [Op.iLike]: `%${c_spd_nomorsurat}%`,
+              },
+            }
+          : null,
+        d_spd_tanggalajukan
+          ? {
+              d_spd_tanggalajukan: {
+                [Op.gte]: d_spd_tanggalajukan,
+              },
+            }
+          : null,
+        n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
+        n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
+      ],
+    },
+  })
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message || "Some error occurred while retrieving SPD data.",
+      };
+      res.status(500).send(errorResponse);
+    });
+};
+// Retrieve all SPD main data by param from the database.
+exports.findOneByParam = (req, res) => {
+  const {
+    n_spd_company_id,
+    n_spd_hrisId,
+    n_spd_userId,
+    c_spd_nama,
+    c_spd_nomorsurat,
+    d_spd_tanggalajukan,
+    n_spd_jenis_id,
+    n_spd_status_id,
+    c_spd_atasannama
+  } = req.body;
+  Spdmain.findOne({
+    include: [
+      { model: SpdmainAkomadasi },
+      { model: SpdmainJenis, as: "spd_main_jenis" },
+      { model: SpdmainStatus },
+      { model: SpdmainTransportasi },
+      { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
+      { model: SpdmainUangMuka },
+      // { model: SpdRealisasi, as: 'spd_realisasi' },
+    ],
+    where: {
+      [Op.and]: [
+        n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
+        n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
+        n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+        c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
+        c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
+        c_spd_nomorsurat
+          ? {
+              c_spd_nomorsurat: {
+                [Op.iLike]: `%${c_spd_nomorsurat}%`,
+              },
+            }
+          : null,
+        d_spd_tanggalajukan
+          ? {
+              d_spd_tanggalajukan: {
+                [Op.gte]: d_spd_tanggalajukan,
+              },
+            }
+          : null,
+        n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
+        n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
+      ],
+    },
+    order: [['n_spd_id', 'DESC']]
+  })
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message || "Some error occurred while retrieving SPD data.",
+      };
+      res.status(500).send(errorResponse);
+    });
+};
 
 // Find/get paging SPD data main with an id
 exports.findAllPaging = (req, res) => {
@@ -270,6 +413,7 @@ exports.findAllPaging = (req, res) => {
   const {
     n_spd_company_id,
     n_spd_hrisId,
+    n_spd_userId,
     c_spd_nama,
     c_spd_nomorsurat,
     d_spd_tanggalajukan,
@@ -292,6 +436,7 @@ exports.findAllPaging = (req, res) => {
       [Op.or]: [
         n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
         n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
+        n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
         c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
         c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
         c_spd_nomorsurat

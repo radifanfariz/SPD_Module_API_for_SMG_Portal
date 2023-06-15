@@ -13,6 +13,8 @@ module.exports = (app) => {
 
   // Retrieve all SPD Data
   router.get("/", isAuth, spdmain.findAll);
+  router.get("/all/param", isAuth, spdmain.findAllByParam);
+  router.get("/one/param", isAuth, spdmain.findOneByParam);
   router.get("/pagination", isAuth, spdmain.findAllPaging);
   router.get("/table", isAuth, spdmain.findAllForTable);
   router.get("/table/pagination", isAuth, spdmain.findAllForTablePaging);
