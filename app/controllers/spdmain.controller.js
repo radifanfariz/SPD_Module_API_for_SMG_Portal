@@ -61,6 +61,10 @@ exports.create = (req, res) => {
     n_spd_atasan_hrisId: req.body.n_spd_atasan_hrisId,
     n_spd_atasan_userId: req.body.n_spd_atasan_userId,
     c_spd_tempatdiajukan: req.body.c_spd_tempatdiajukan,
+    n_spd_hrdadh_userId: req.body.n_spd_hrdadh_userId,
+    c_spd_hrdadh_name: req.body.c_spd_hrdadh_name,
+    n_spd_finance_userId: req.body.n_spd_finance_userId,
+    c_spd_finance_name: req.body.c_spd_finance_name,
     // n_realisasi_id: req.body.n_realisasi_id,
   };
 
@@ -113,6 +117,10 @@ exports.findAllForTable = (req, res) => {
           c_spd_atasannama: item.c_spd_atasannama,
           n_spd_atasan_hrisId: item.n_spd_atasan_hrisId,
           n_spd_atasan_userId: item.n_spd_atasan_userId,
+          n_spd_hrdadh_userId: item.n_spd_hrdadh_userId,
+          c_spd_hrdadh_name: item.c_spd_hrdadh_name,
+          n_spd_finance_userId: item.n_spd_finance_userId,
+          c_spd_finance_name: item.c_spd_finance_name,
           spd_main_jenis: item.spd_main_jenis,
           spd_main_status: item.spd_main_status,
         };
@@ -147,6 +155,9 @@ exports.findAllForTablePaging = (req, res) => {
     n_spd_jenis_id,
     n_spd_status_id,
     c_spd_atasannama,
+    n_spd_atasan_userId,
+    n_spd_hrdadh_userId,
+    n_spd_finance_userId,
   } = req.body;
 
   const { limit, offset } = getPagination(page, size);
@@ -161,7 +172,6 @@ exports.findAllForTablePaging = (req, res) => {
           [Op.and]: [
             n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
             n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
-            n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
             c_spd_atasannama
               ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
               : null,
@@ -184,6 +194,13 @@ exports.findAllForTablePaging = (req, res) => {
               : null,
             n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
             n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
+          ],
+          /// this is a special case only in this function ///
+          [Op.or]: [
+            n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+            n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
+            n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
+            n_spd_finance_userId ? { n_spd_finance_userId: n_spd_finance_userId } : null,
           ],
         }
       : null,
@@ -213,6 +230,10 @@ exports.findAllForTablePaging = (req, res) => {
           c_spd_atasannama: item.c_spd_atasannama,
           n_spd_atasan_hrisId: item.n_spd_atasan_hrisId,
           n_spd_atasan_userId: item.n_spd_atasan_userId,
+          n_spd_hrdadh_userId: item.n_spd_hrdadh_userId,
+          c_spd_hrdadh_name: item.c_spd_hrdadh_name,
+          n_spd_finance_userId: item.n_spd_finance_userId,
+          c_spd_finance_name: item.c_spd_finance_name,
           spd_main_jenis: item.spd_main_jenis,
           spd_main_status: item.spd_main_status,
         };
@@ -281,7 +302,10 @@ exports.findAllByParam = (req, res) => {
     d_spd_tanggalajukan,
     n_spd_jenis_id,
     n_spd_status_id,
-    c_spd_atasannama
+    c_spd_atasannama,
+    n_spd_atasan_userId,
+    n_spd_hrdadh_userId,
+    n_spd_finance_userId,
   } = req.body;
   Spdmain.findAll({
     include: [
@@ -298,6 +322,9 @@ exports.findAllByParam = (req, res) => {
         n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
         n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
         n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+        n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
+        n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
+        n_spd_finance_userId ? { n_spd_finance_userId: n_spd_finance_userId } : null,
         c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
         c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
         c_spd_nomorsurat
@@ -348,7 +375,10 @@ exports.findOneByParam = (req, res) => {
     d_spd_tanggalajukan,
     n_spd_jenis_id,
     n_spd_status_id,
-    c_spd_atasannama
+    c_spd_atasannama,
+    n_spd_atasan_userId,
+    n_spd_hrdadh_userId,
+    n_spd_finance_userId,
   } = req.body;
   Spdmain.findOne({
     include: [
@@ -365,6 +395,9 @@ exports.findOneByParam = (req, res) => {
         n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
         n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
         n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+        n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
+        n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
+        n_spd_finance_userId ? { n_spd_finance_userId: n_spd_finance_userId } : null,
         c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
         c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
         c_spd_nomorsurat
@@ -391,7 +424,7 @@ exports.findOneByParam = (req, res) => {
       const successResponse = {
         status: true,
         message: "Ok",
-        totalItems: data.length,
+        totalItems: data?.length,
         data: data,
       };
       res.send(successResponse);
@@ -419,7 +452,10 @@ exports.findAllPaging = (req, res) => {
     d_spd_tanggalajukan,
     n_spd_jenis_id,
     n_spd_status_id,
-    c_spd_atasannama
+    c_spd_atasannama,
+    n_spd_atasan_userId,
+    n_spd_hrdadh_userId,
+    n_spd_finance_userId,
   } = req.body;
 
   Spdmain.findAndCountAll({
@@ -437,6 +473,9 @@ exports.findAllPaging = (req, res) => {
         n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
         n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
         n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+        n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
+        n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
+        n_spd_finance_userId ? { n_spd_finance_userId: n_spd_finance_userId } : null,
         c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
         c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
         c_spd_nomorsurat

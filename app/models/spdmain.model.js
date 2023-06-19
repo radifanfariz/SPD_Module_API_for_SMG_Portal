@@ -131,6 +131,19 @@ module.exports = (sequelize, Sequelize) => {
       n_spd_approval_id: {
         type: Sequelize.INTEGER
       },
+      n_spd_hrdadh_userId: {
+        type: Sequelize.INTEGER
+      },
+      c_spd_hrdadh_name: {
+        type: Sequelize.STRING
+      },
+      n_spd_finance_userId: {
+        type: Sequelize.INTEGER
+      },
+      c_spd_finance_name: {
+        type: Sequelize.STRING
+      },
+
       // n_realisasi_id: {
       //   type: Sequelize.INTEGER
       // },
