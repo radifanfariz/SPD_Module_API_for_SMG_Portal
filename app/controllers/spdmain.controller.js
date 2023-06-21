@@ -171,6 +171,10 @@ exports.findAllForTablePaging = (req, res) => {
       ? {
           [Op.and]: [
             n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
+            n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+            n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
+            n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
+            n_spd_finance_userId ? { n_spd_finance_userId: n_spd_finance_userId } : null,
             n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
             c_spd_atasannama
               ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
@@ -194,13 +198,6 @@ exports.findAllForTablePaging = (req, res) => {
               : null,
             n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
             n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
-          ],
-          /// this is a special case only in this function ///
-          [Op.or]: [
-            n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
-            n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
-            n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
-            n_spd_finance_userId ? { n_spd_finance_userId: n_spd_finance_userId } : null,
           ],
         }
       : null,
