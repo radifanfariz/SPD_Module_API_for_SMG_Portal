@@ -58,12 +58,18 @@ app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(express.json());
+app.use(bodyParser.json()); //alternative
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true })); //alternative
 
 // routes of api
 require("./app/routes/spdmain.route")(app);
+require("./app/routes/spdpelaksanaan.route")(app);
+require("./app/routes/spdrealisasi.route")(app);
+require("./app/routes/spdrealisasidetail.route")(app);
+require("./app/routes/spdrealisasipersetujuan.route")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 9999;

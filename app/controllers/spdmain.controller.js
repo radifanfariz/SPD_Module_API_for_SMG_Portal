@@ -1,6 +1,13 @@
 const db = require("../models");
 const { getPagingData, getPagination } = require("../utils/spdmain.util");
 const Spdmain = db.spdmain;
+const SpdmainAkomadasi = db.spdmainAkomodasi;
+const SpdmainJenis = db.spdmainJenis;
+const SpdmainStatus = db.spdmainStatus;
+const SpdmainTransportasi = db.spdmainTransportasi;
+const SpdmainTujuandinas = db.spdmainTujuandinas;
+const SpdmainUangMuka = db.spdmainUangmuka;
+// const SpdRealisasi = db.spdrealisasi;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new SPD data main
@@ -13,10 +20,12 @@ exports.create = (req, res) => {
   }
 
   const spdmainData = {
-    n_company_id: req.body.n_company_id,
-    n_employee_id: req.body.n_employee_id,
+    n_spd_company_id: req.body.n_spd_company_id,
+    n_spd_hrisId: req.body.n_spd_hrisId,
+    n_spd_userId: req.body.n_spd_userId,
     c_spd_hashid: req.body.c_spd_hashid,
-    c_spd_businessunit: req.body.c_spd_businessunit,
+    c_spd_nomorsurat: req.body.c_spd_nomorsurat,
+    c_spd_companynama: req.body.c_spd_companynama,
     c_spd_nama: req.body.c_spd_nama,
     c_spd_nik: req.body.c_spd_nik,
     c_spd_unit: req.body.c_spd_unit,
@@ -26,35 +35,56 @@ exports.create = (req, res) => {
     c_spd_pangkat: req.body.c_spd_pangkat,
     c_spd_grade: req.body.c_spd_grade,
     c_spd_tempattujuan: req.body.c_spd_tempatdiajukan,
-    c_spd_costcenterbeban: req.body.c_spd_costcenterbeban,
+    c_spd_costcenterpenanggung: req.body.c_spd_costcenterpenanggung,
     d_spd_tanggalberangkat: req.body.d_spd_tanggalberangkat,
     d_spd_tanggalkembali: req.body.d_spd_tanggalkembali,
-    c_spd_tujuandinas: req.body.c_spd_tujuandinas,
+    n_spd_tujuandinas_id: req.body.n_spd_tujuandinas_id,
     c_spd_keterangandinas: req.body.c_spd_keterangandinas,
-    c_spd_akomodasi: req.body.c_spd_akomodasi,
+    n_spd_transportasi_id: req.body.n_spd_transportasi_id,
+    c_spd_keterangantransportasi: req.body.c_spd_keterangantransportasi,
+    n_spd_akomodasi_id: req.body.n_spd_akomodasi_id,
     c_spd_keteranganakomodasi: req.body.c_spd_keteranganakomodasi,
-    n_spd_uangmukajenis: req.body.n_spd_uangmukajenis,
+    // n_spd_uangjenis: req.body.n_spd_uangjenis,
+    n_spd_jenis_id: req.body.n_spd_jenis_id,
+    d_spd_tanggalajukan: req.body.d_spd_tanggalajukan,
+    n_spd_status_id: req.body.n_spd_status_id,
+    n_spd_uangmuka_id: req.body.n_spd_uangmuka_id,
     n_spd_uangsaku: req.body.n_spd_uangsaku,
-    n_spd_uangpenginapan: req.body.n_spd_uangpenginapan,
+    n_spd_biayapenginapan: req.body.n_spd_biayapenginapan,
     n_spd_biayatransport: req.body.n_spd_biayatransport,
     n_spd_biayalain: req.body.n_spd_biayalain,
     n_spd_totalbiaya: req.body.n_spd_totalbiaya,
     c_spd_banknama: req.body.c_spd_banknama,
     c_spd_banknorek: req.body.c_spd_banknorek,
     c_spd_bankatasnama: req.body.c_spd_bankatasnama,
-    c_spd_atasan: req.body.c_spd_atasan,
+    c_spd_atasannama: req.body.c_spd_atasannama,
+    n_spd_atasan_hrisId: req.body.n_spd_atasan_hrisId,
+    n_spd_atasan_userId: req.body.n_spd_atasan_userId,
     c_spd_tempatdiajukan: req.body.c_spd_tempatdiajukan,
+    n_spd_hrdadh_userId: req.body.n_spd_hrdadh_userId,
+    c_spd_hrdadh_name: req.body.c_spd_hrdadh_name,
+    n_spd_finance_userId: req.body.n_spd_finance_userId,
+    c_spd_finance_name: req.body.c_spd_finance_name,
+    // n_realisasi_id: req.body.n_realisasi_id,
   };
 
   Spdmain.create(spdmainData)
     .then((data) => {
-      res.send(data);
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
     })
     .catch((err) => {
-      res.status(500).send({
+      const errorResponse = {
+        status: false,
         message:
           err.message || "Some error occurred while creating the SPD data.",
-      });
+      };
+      res.status(500).send(errorResponse);
     });
 };
 
@@ -63,17 +93,36 @@ exports.findAllForTable = (req, res) => {
   // const title = req.query.title;
   // var condition = title ? { title: { [Op.iLike]: `%${title}%` } } : null;
   // { where: condition }
-  Spdmain.findAll()
+  Spdmain.findAll({
+    include: [
+      { model: SpdmainJenis, as: "spd_main_jenis" },
+      { model: SpdmainStatus },
+    ],
+  })
     .then((data) => {
       const spdDataForTable = data.map((item) => {
         return {
           n_spd_id: item.n_spd_id,
-          c_spd_businessunit: item.c_spd_businessunit,
+          // n_realisasi_id: item.n_realisasi_id,
+          n_spd_company_id: item.n_spd_company_id,
+          n_spd_hrisId: item.n_spd_hrisId,
+          n_spd_userId: item.n_spd_userId,
+          c_spd_hashid: item.c_spd_hashid,
+          c_spd_companynama: item.c_spd_companynama,
           c_spd_nama: item.c_spd_nama,
-          c_spd_jenis: item.c_spd_jenis,
-          c_spd_identifikasi: item.c_spd_identifikasi,
+          n_spd_jenis_id: item.n_spd_jenis_id,
+          c_spd_nomorsurat: item.c_spd_nomorsurat,
           d_spd_tanggalajukan: item.d_spd_tanggalajukan,
-          c_spd_status: item.c_spd_status,
+          n_spd_status_id: item.n_spd_status_id,
+          c_spd_atasannama: item.c_spd_atasannama,
+          n_spd_atasan_hrisId: item.n_spd_atasan_hrisId,
+          n_spd_atasan_userId: item.n_spd_atasan_userId,
+          n_spd_hrdadh_userId: item.n_spd_hrdadh_userId,
+          c_spd_hrdadh_name: item.c_spd_hrdadh_name,
+          n_spd_finance_userId: item.n_spd_finance_userId,
+          c_spd_finance_name: item.c_spd_finance_name,
+          spd_main_jenis: item.spd_main_jenis,
+          spd_main_status: item.spd_main_status,
         };
       });
       const successResponse = {
@@ -85,51 +134,73 @@ exports.findAllForTable = (req, res) => {
       res.send(successResponse);
     })
     .catch((err) => {
-      res.status(500).send({
+      const errorResponse = {
+        status: false,
         message:
           err.message || "Some error occurred while retrieving SPD data.",
-      });
+      };
+      res.status(500).send(errorResponse);
     });
 };
 // Retrieve all SPD main data for table from the database.
 exports.findAllForTablePaging = (req, res) => {
   const { page, size } = req.query;
   const {
-    n_company_id,
-    n_employee_id,
+    n_spd_company_id,
+    n_spd_hrisId,
+    n_spd_userId,
     c_spd_nama,
-    c_spd_identifikasi,
+    c_spd_nomorsurat,
     d_spd_tanggalajukan,
-    c_spd_jenis,
-    c_spd_status,
+    n_spd_jenis_id,
+    n_spd_status_id,
+    c_spd_atasannama,
+    n_spd_atasan_userId,
+    n_spd_hrdadh_userId,
+    n_spd_finance_userId,
   } = req.body;
 
   const { limit, offset } = getPagination(page, size);
 
   Spdmain.findAndCountAll({
-    where: req.body ? {
-      [Op.or]: [
-        { n_company_id: n_company_id ? n_company_id : null },
-        { n_employee_id: n_company_id ? n_employee_id : null },
-        { c_spd_nama: { [Op.iLike]: c_spd_nama ? `%${c_spd_nama}%` : `` } },
-        {
-          c_spd_identifikasi: {
-            [Op.iLike]: c_spd_identifikasi ? `%${c_spd_identifikasi}%` : ``,
-          },
-        },
-        {
-          d_spd_tanggalajukan: {
-            [Op.gte]: d_spd_tanggalajukan
-              ? new Date(`${d_spd_tanggalajukan}`)
+    include: [
+      { model: SpdmainJenis, as: "spd_main_jenis" },
+      { model: SpdmainStatus },
+    ],
+    where: req.body
+      ? {
+          [Op.and]: [
+            n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
+            n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+            n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
+            n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
+            n_spd_finance_userId ? { n_spd_finance_userId: n_spd_finance_userId } : null,
+            n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
+            c_spd_atasannama
+              ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
               : null,
-          },
-        },
-        { c_spd_jenis: { [Op.iLike]: c_spd_jenis ? `%${c_spd_jenis}%` : `` } },
-        {
-          c_spd_status: { [Op.iLike]: c_spd_status ? `%${c_spd_status}%` : `` },
-        },
-      ],
-    } : null,
+            c_spd_nama
+              ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } }
+              : null,
+            c_spd_nomorsurat
+              ? {
+                  c_spd_nomorsurat: {
+                    [Op.iLike]: `%${c_spd_nomorsurat}%`,
+                  },
+                }
+              : null,
+            d_spd_tanggalajukan
+              ? {
+                  d_spd_tanggalajukan: {
+                    [Op.gte]: d_spd_tanggalajukan,
+                  },
+                }
+              : null,
+            n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
+            n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
+          ],
+        }
+      : null,
     limit: limit,
     offset: offset,
   })
@@ -142,15 +213,26 @@ exports.findAllForTablePaging = (req, res) => {
       const rowDataFormatted = row.map((item) => {
         return {
           n_spd_id: item.n_spd_id,
-          n_company_id: req.body.n_company_id,
-          n_employee_id: req.body.n_employee_id,
-          c_spd_hashid: req.body.c_spd_hashid,
-          c_spd_businessunit: item.c_spd_businessunit,
+          // n_realisasi_id: item.n_realisasi_id,
+          n_spd_company_id: item.n_spd_company_id,
+          n_spd_hrisId: item.n_spd_hrisId,
+          n_spd_userId: item.n_spd_userId,
+          c_spd_hashid: item.c_spd_hashid,
+          c_spd_companynama: item.c_spd_companynama,
           c_spd_nama: item.c_spd_nama,
-          c_spd_jenis: item.c_spd_jenis,
-          c_spd_identifikasi: item.c_spd_identifikasi,
+          n_spd_jenis_id: item.n_spd_jenis_id,
+          c_spd_nomorsurat: item.c_spd_nomorsurat,
           d_spd_tanggalajukan: item.d_spd_tanggalajukan,
-          c_spd_status: item.c_spd_status,
+          n_spd_status_id: item.n_spd_status_id,
+          c_spd_atasannama: item.c_spd_atasannama,
+          n_spd_atasan_hrisId: item.n_spd_atasan_hrisId,
+          n_spd_atasan_userId: item.n_spd_atasan_userId,
+          n_spd_hrdadh_userId: item.n_spd_hrdadh_userId,
+          c_spd_hrdadh_name: item.c_spd_hrdadh_name,
+          n_spd_finance_userId: item.n_spd_finance_userId,
+          c_spd_finance_name: item.c_spd_finance_name,
+          spd_main_jenis: item.spd_main_jenis,
+          spd_main_status: item.spd_main_status,
         };
       });
       const successResponse = {
@@ -167,15 +249,27 @@ exports.findAllForTablePaging = (req, res) => {
       res.send(successResponse);
     })
     .catch((err) => {
-      res.status(500).send({
+      const errorResponse = {
+        status: false,
         message:
           err.message || "Some error occurred while retrieving SPD data.",
-      });
+      };
+      res.status(500).send(errorResponse);
     });
 };
 // Retrieve all SPD main data from the database.
 exports.findAll = (req, res) => {
-  Spdmain.findAll()
+  Spdmain.findAll({
+    include: [
+      { model: SpdmainAkomadasi },
+      { model: SpdmainJenis, as: "spd_main_jenis" },
+      { model: SpdmainStatus },
+      { model: SpdmainTransportasi },
+      { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
+      { model: SpdmainUangMuka },
+      // { model: SpdRealisasi, as: 'spd_realisasi' },
+    ],
+  })
     .then((data) => {
       const successResponse = {
         status: true,
@@ -186,10 +280,159 @@ exports.findAll = (req, res) => {
       res.send(successResponse);
     })
     .catch((err) => {
-      res.status(500).send({
+      const errorResponse = {
+        status: false,
         message:
           err.message || "Some error occurred while retrieving SPD data.",
-      });
+      };
+      res.status(500).send(errorResponse);
+    });
+};
+// Retrieve all SPD main data by param from the database.
+exports.findAllByParam = (req, res) => {
+  const {
+    n_spd_company_id,
+    n_spd_hrisId,
+    n_spd_userId,
+    c_spd_nama,
+    c_spd_nomorsurat,
+    d_spd_tanggalajukan,
+    n_spd_jenis_id,
+    n_spd_status_id,
+    c_spd_atasannama,
+    n_spd_atasan_userId,
+    n_spd_hrdadh_userId,
+    n_spd_finance_userId,
+  } = req.body;
+  Spdmain.findAll({
+    include: [
+      { model: SpdmainAkomadasi },
+      { model: SpdmainJenis, as: "spd_main_jenis" },
+      { model: SpdmainStatus },
+      { model: SpdmainTransportasi },
+      { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
+      { model: SpdmainUangMuka },
+      // { model: SpdRealisasi, as: 'spd_realisasi' },
+    ],
+    where: {
+      [Op.and]: [
+        n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
+        n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
+        n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+        n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
+        n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
+        n_spd_finance_userId ? { n_spd_finance_userId: n_spd_finance_userId } : null,
+        c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
+        c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
+        c_spd_nomorsurat
+          ? {
+              c_spd_nomorsurat: {
+                [Op.iLike]: `%${c_spd_nomorsurat}%`,
+              },
+            }
+          : null,
+        d_spd_tanggalajukan
+          ? {
+              d_spd_tanggalajukan: {
+                [Op.gte]: d_spd_tanggalajukan,
+              },
+            }
+          : null,
+        n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
+        n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
+      ],
+    },
+  })
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message || "Some error occurred while retrieving SPD data.",
+      };
+      res.status(500).send(errorResponse);
+    });
+};
+// Retrieve all SPD main data by param from the database.
+exports.findOneByParam = (req, res) => {
+  const {
+    n_spd_company_id,
+    n_spd_hrisId,
+    n_spd_userId,
+    c_spd_nama,
+    c_spd_nomorsurat,
+    d_spd_tanggalajukan,
+    n_spd_jenis_id,
+    n_spd_status_id,
+    c_spd_atasannama,
+    n_spd_atasan_userId,
+    n_spd_hrdadh_userId,
+    n_spd_finance_userId,
+  } = req.body;
+  Spdmain.findOne({
+    include: [
+      { model: SpdmainAkomadasi },
+      { model: SpdmainJenis, as: "spd_main_jenis" },
+      { model: SpdmainStatus },
+      { model: SpdmainTransportasi },
+      { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
+      { model: SpdmainUangMuka },
+      // { model: SpdRealisasi, as: 'spd_realisasi' },
+    ],
+    where: {
+      [Op.and]: [
+        n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
+        n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
+        n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+        n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
+        n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
+        n_spd_finance_userId ? { n_spd_finance_userId: n_spd_finance_userId } : null,
+        c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
+        c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
+        c_spd_nomorsurat
+          ? {
+              c_spd_nomorsurat: {
+                [Op.iLike]: `%${c_spd_nomorsurat}%`,
+              },
+            }
+          : null,
+        d_spd_tanggalajukan
+          ? {
+              d_spd_tanggalajukan: {
+                [Op.gte]: d_spd_tanggalajukan,
+              },
+            }
+          : null,
+        n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
+        n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
+      ],
+    },
+    order: [['n_spd_id', 'DESC']]
+  })
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data?.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message || "Some error occurred while retrieving SPD data.",
+      };
+      res.status(500).send(errorResponse);
     });
 };
 
@@ -198,37 +441,56 @@ exports.findAllPaging = (req, res) => {
   const { page, size } = req.query;
   const { limit, offset } = getPagination(page, size);
   const {
-    n_company_id,
-    n_employee_id,
+    n_spd_company_id,
+    n_spd_hrisId,
+    n_spd_userId,
     c_spd_nama,
-    c_spd_identifikasi,
+    c_spd_nomorsurat,
     d_spd_tanggalajukan,
-    c_spd_jenis,
-    c_spd_status,
+    n_spd_jenis_id,
+    n_spd_status_id,
+    c_spd_atasannama,
+    n_spd_atasan_userId,
+    n_spd_hrdadh_userId,
+    n_spd_finance_userId,
   } = req.body;
 
   Spdmain.findAndCountAll({
+    include: [
+      { model: SpdmainAkomadasi },
+      { model: SpdmainJenis, as: "spd_main_jenis" },
+      { model: SpdmainStatus },
+      { model: SpdmainTransportasi },
+      { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
+      { model: SpdmainUangMuka },
+      // { model: SpdRealisasi, as: 'spd_realisasi' },
+    ],
     where: {
       [Op.or]: [
-        { n_company_id: n_company_id ? n_company_id : null },
-        { n_employee_id: n_company_id ? n_employee_id : null },
-        { c_spd_nama: { [Op.iLike]: c_spd_nama ? `%${c_spd_nama}%` : `` } },
-        {
-          c_spd_identifikasi: {
-            [Op.iLike]: c_spd_identifikasi ? `%${c_spd_identifikasi}%` : ``,
-          },
-        },
-        {
-          d_spd_tanggalajukan: {
-            [Op.gte]: d_spd_tanggalajukan
-              ? new Date(`${d_spd_tanggalajukan}`)
-              : null,
-          },
-        },
-        { c_spd_jenis: { [Op.iLike]: c_spd_jenis ? `%${c_spd_jenis}%` : `` } },
-        {
-          c_spd_status: { [Op.iLike]: c_spd_status ? `%${c_spd_status}%` : `` },
-        },
+        n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
+        n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
+        n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+        n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
+        n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
+        n_spd_finance_userId ? { n_spd_finance_userId: n_spd_finance_userId } : null,
+        c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
+        c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
+        c_spd_nomorsurat
+          ? {
+              c_spd_nomorsurat: {
+                [Op.iLike]: `%${c_spd_nomorsurat}%`,
+              },
+            }
+          : null,
+        d_spd_tanggalajukan
+          ? {
+              d_spd_tanggalajukan: {
+                [Op.gte]: d_spd_tanggalajukan,
+              },
+            }
+          : null,
+        n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
+        n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
       ],
     },
     limit: limit,
@@ -248,10 +510,12 @@ exports.findAllPaging = (req, res) => {
       res.send(successResponse);
     })
     .catch((err) => {
-      res.status(500).send({
+      const errorResponse = {
+        status: false,
         message:
-          err.message || "Some error occurred while retrieving SPD main.",
-      });
+          err.message || "Some error occurred while retrieving SPD data.",
+      };
+      res.status(500).send(errorResponse);
     });
 };
 
@@ -259,7 +523,17 @@ exports.findAllPaging = (req, res) => {
 exports.findOne = (req, res) => {
   const spd_id = req.params.id;
 
-  Spdmain.findByPk(spd_id)
+  Spdmain.findByPk(spd_id, {
+    include: [
+      { model: SpdmainAkomadasi },
+      { model: SpdmainJenis, as: "spd_main_jenis" },
+      { model: SpdmainStatus },
+      { model: SpdmainTransportasi },
+      { model: SpdmainTujuandinas, as: "spd_main_tujuandinas" },
+      { model: SpdmainUangMuka },
+      // { model: SpdRealisasi, as: 'spd_realisasi' },
+    ],
+  })
     .then((data) => {
       const successResponse = {
         status: true,
@@ -275,43 +549,63 @@ exports.findOne = (req, res) => {
       }
     })
     .catch((err) => {
-      res.status(500).send({
-        message: `Error retrieving SPD data with spd_id=${spd_id}.`,
-      });
+      const errorResponse = {
+        status: false,
+        message:
+          err.message || "Some error occurred while retrieving SPD data.",
+      };
+      res.status(500).send(errorResponse);
     });
 };
 
+
+
+
+
+/*--------------------------------- considered deprecated---------------------------------*/
 // Update a SPD main data after created by the id in the request
 exports.updateAfterCreated = (req, res) => {
   const spdId = req.params.id;
   const spdmainData = {
-    c_spd_jenis: req.body.c_spd_jenis,
-    c_spd_identifikasi: req.body.c_spd_identifikasi,
-    d_spd_tanggalajuan: req.body.d_spd_tanggalajuan,
-    c_spd_status: req.body.c_spd_status,
+    n_spd_jenis_id: req.body.n_spd_jenis_id,
+    d_spd_tanggalajukan: req.body.d_spd_tanggalajukan,
+    n_spd_status_id: req.body.n_spd_status_id,
   };
 
   Spdmain.update(spdmainData, {
     where: { n_spd_id: spdId },
-    // fields: ['c_spd_jenis','c_employee_identifikasi','d_spd_tanggalajuan','c_spd_status']
   })
     .then((num) => {
       if (num == 1) {
-        res.send({
+        const successResponse = {
+          status: true,
           message: "SPD data after created was updated succesfully !",
-        });
+        };
+        res.send(successResponse);
       } else {
-        res.send({
+        const errorResponse = {
+          status: false,
           message: `Cannot update SPD data after created with id=${spdId} !`,
-        });
+        };
+        res.send(errorResponse);
       }
     })
     .catch((err) => {
-      res.status(500).send({
-        message: `Error updating SPD data after created with id=${spdId}`,
-      });
+      const errorResponse = {
+        status: false,
+        message:
+          err.message ||
+          `Cannot update SPD data after created with id=${spdId} !`,
+      };
+      res.status(500).send(errorResponse);
     });
 };
+/*----------------------------------------------------------------------------------------*/
+
+
+
+
+
 // Update a SPD main data by the id in the request
 exports.update = (req, res) => {
   const spdId = req.params.id;
@@ -321,19 +615,25 @@ exports.update = (req, res) => {
   })
     .then((num) => {
       if (num == 1) {
-        res.send({
+        const successResponse = {
+          status: true,
           message: "SPD data was updated succesfully !",
-        });
+        };
+        res.send(successResponse);
       } else {
-        res.send({
+        const errorResponse = {
+          status: false,
           message: `Cannot update SPD data with id=${spdId} !`,
-        });
+        };
+        res.send(errorResponse);
       }
     })
     .catch((err) => {
-      res.status(500).send({
-        message: `Error updating SPD data with id=${spdId}`,
-      });
+      const errorResponse = {
+        status: false,
+        message: err.message || `Cannot update SPD data with id=${spdId} !`,
+      };
+      res.status(500).send(errorResponse);
     });
 };
 
@@ -348,18 +648,23 @@ exports.delete = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.send({
+          status: true,
           message: "SPD data was deleted successfully!",
         });
       } else {
-        res.send({
+        const errorResponse = {
+          status: false,
           message: `Cannot delete SPD data with id=${spdId} !`,
-        });
+        };
+        res.send(errorResponse);
       }
     })
     .catch((err) => {
-      res.status(500).send({
-        message: `Could not delete SPD data with id=${spdId}`,
-      });
+      const errorResponse = {
+        status: false,
+        message: err.message || `Cannot delete SPD data with id=${spdId} !`,
+      };
+      res.status(500).send(errorResponse);
     });
 };
 

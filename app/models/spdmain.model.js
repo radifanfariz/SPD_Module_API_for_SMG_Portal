@@ -5,16 +5,19 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         primaryKey: true
       },
-      n_company_id: {
+      n_spd_company_id: {
         type: Sequelize.INTEGER
       },
-      n_employee_id: {
+      c_spd_companynama: {
+        type: Sequelize.STRING
+      },
+      n_spd_hrisId: {
+        type: Sequelize.INTEGER
+      },
+      n_spd_userId: {
         type: Sequelize.INTEGER
       },
       c_spd_hashid: {
-        type: Sequelize.STRING
-      },
-      c_spd_businessunit: {
         type: Sequelize.STRING
       },
       c_spd_nama: {
@@ -44,7 +47,7 @@ module.exports = (sequelize, Sequelize) => {
       c_spd_tempattujuan: {
         type: Sequelize.STRING
       },
-      c_spd_costcenterbeban: {
+      c_spd_costcenterpenanggung: {
         type: Sequelize.STRING
       },
       d_spd_tanggalberangkat: {
@@ -53,25 +56,34 @@ module.exports = (sequelize, Sequelize) => {
       d_spd_tanggalkembali: {
         type: Sequelize.DATEONLY
       },
-      c_spd_tujuandinas: {
+      n_spd_tujuandinas_id: {
+        type: Sequelize.INTEGER
+      },
+      n_spd_transportasi_id: {
+        type: Sequelize.INTEGER
+      },
+      c_spd_keterangantransportasi: {
         type: Sequelize.STRING
       },
       c_spd_keterangandinas: {
         type: Sequelize.STRING
       },
-      c_spd_akomodasi: {
-        type: Sequelize.STRING
+      n_spd_akomodasi_id: {
+        type: Sequelize.INTEGER
       },
       c_spd_keteranganakomodasi: {
         type: Sequelize.STRING
       },
-      n_spd_uangmukajenis: {
+      // n_spd_uangjenis: {
+      //   type: Sequelize.INTEGER
+      // },
+      n_spd_uangmuka_id: {
         type: Sequelize.INTEGER
       },
       n_spd_uangsaku: {
         type: Sequelize.DOUBLE
       },
-      n_spd_uangpenginapan: {
+      n_spd_biayapenginapan: {
         type: Sequelize.DOUBLE
       },
       n_spd_biayatransport: {
@@ -92,24 +104,49 @@ module.exports = (sequelize, Sequelize) => {
       c_spd_bankatasnama: {
         type: Sequelize.STRING
       },
-      c_spd_atasan: {
+      c_spd_atasannama: {
         type: Sequelize.STRING
+      },
+      n_spd_atasan_hrisId: {
+        type: Sequelize.INTEGER
+      },
+      n_spd_atasan_userId: {
+        type: Sequelize.INTEGER
       },
       c_spd_tempatdiajukan: {
         type: Sequelize.STRING
       },
-      c_spd_status: {
-        type: Sequelize.STRING
+      n_spd_status_id: {
+        type: Sequelize.INTEGER
       },
       d_spd_tanggalajukan: {
         type: Sequelize.DATEONLY
       },
-      c_spd_jenis: {
+      n_spd_jenis_id: {
+        type: Sequelize.INTEGER
+      },
+      c_spd_nomorsurat: {
         type: Sequelize.STRING
       },
-      c_spd_identifikasi: {
+      n_spd_approval_id: {
+        type: Sequelize.INTEGER
+      },
+      n_spd_hrdadh_userId: {
+        type: Sequelize.INTEGER
+      },
+      c_spd_hrdadh_name: {
         type: Sequelize.STRING
       },
+      n_spd_finance_userId: {
+        type: Sequelize.INTEGER
+      },
+      c_spd_finance_name: {
+        type: Sequelize.STRING
+      },
+
+      // n_realisasi_id: {
+      //   type: Sequelize.INTEGER
+      // },
     },{
         freezeTableName: true,
         timestamps: false,

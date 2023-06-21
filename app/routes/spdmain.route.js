@@ -2,6 +2,9 @@ const { isAuth } = require("../middlewares/index.js");
 
 module.exports = (app) => {
   const spdmain = require("../controllers/spdmain.controller.js");
+  const spdmainParts = require("../controllers/spdmain.parts.controller.js");
+  const spdPelaksanaan = require("../controllers/spdpelaksanaan.controller.js");
+  const spdRealisasi = require("../controllers/spdrealisasi.controller.js");
 
   var router = require("express").Router();
 
@@ -10,9 +13,18 @@ module.exports = (app) => {
 
   // Retrieve all SPD Data
   router.get("/", isAuth, spdmain.findAll);
+  router.get("/all/param", isAuth, spdmain.findAllByParam);
+  router.get("/one/param", isAuth, spdmain.findOneByParam);
   router.get("/pagination", isAuth, spdmain.findAllPaging);
   router.get("/table", isAuth, spdmain.findAllForTable);
   router.get("/table/pagination", isAuth, spdmain.findAllForTablePaging);
+  router.get("/akomodasi", isAuth, spdmainParts.findAllAkomodasi);
+  router.get("/jenis", isAuth, spdmainParts.findAllJenis);
+  router.get("/status", isAuth, spdmainParts.findAllStatus);
+  router.get("/transportasi", isAuth, spdmainParts.findAllTransportasi);
+  router.get("/tujuandinas", isAuth, spdmainParts.findAllTujuanDinas);
+  router.get("/uangmuka", isAuth, spdmainParts.findAllUangMuka);
+  router.get("/jenisbiaya", isAuth, spdmainParts.findAllJenisBiaya);
 
   // Retrieve all published SPD Data
   // router.get("/published", spdmain.findAllPublished);
@@ -26,6 +38,22 @@ module.exports = (app) => {
 
   // Delete a SPD Data with id
   router.delete("/:id", isAuth, spdmain.delete);
+
+  // Pelaksanaan //
+  // Create a new SPD Pelaksanaan Data
+  router.post("/pelaksanaan", isAuth, spdPelaksanaan.create);
+  // Retrieve all SPD Pelaksanaan
+  router.get("/pelaksanaan", isAuth, spdPelaksanaan.findAllByParam);
+  // Update a SPD Pelaksanaan Data with id
+  router.put("/pelaksanaan/:id", isAuth, spdPelaksanaan.update);
+
+  // Realisasi //
+  // Create a new SPD Realisasi Data
+  router.post("/realisasi", isAuth, spdRealisasi.create);
+  // Retrieve all SPD Realisasi
+  router.get("/realisasi", isAuth, spdRealisasi.findAllByParam);
+  // Update a SPD Realisasi Data with id
+  router.put("/realisasi/:id", isAuth, spdRealisasi.update);
 
   app.use("/api/spdmain", router);
 };
