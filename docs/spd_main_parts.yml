@@ -1,0 +1,98 @@
+openapi: 3.0.0
+info:
+  title: SPD-Main-Parts
+  version: 1.0.0
+servers:
+  - url: http://localhost:9999
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+  - basicAuth: []
+paths:
+  /api/spdmain/akomodasi:
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Main-Parts) Akomodasi
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/jenis:
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Main-Parts) Jenis
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/status:
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Main-Parts) Status
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/transportasi:
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Main-Parts) Transportasi
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/tujuandinas:
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Main-Parts) TujuanDinas
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/uangmuka:
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Main-Parts) UangMuka
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/jenisbiaya:
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Main-Parts) JenisBiaya
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

@@ -1,0 +1,91 @@
+openapi: 3.0.0
+info:
+  title: SPD-Realisasi Persetujuan
+  version: 1.0.0
+servers:
+  - url: http://localhost:9999
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+  - basicAuth: []
+paths:
+  /api/spdrealisasipersetujuan:
+    post:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Realisasi Persetujuan)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                n_spd_id: '5'
+                n_rpersetujuan_uangsaku_total: '50000'
+                n_rpersetujuan_biayapenginapan_total: '50000'
+                n_rpersetujuan_biayatransport_total: '50000'
+                n_rpersetujuan_biayalain_total: '50000'
+                n_rpersetujuan_totalrealisasi: '50000'
+                n_rpersetujuan_uangmuka: '50000'
+                n_rpersetujuan_selisih: '50000'
+                n_rket_id: '1'
+                c_rpersetujuan_norek: '84774784848'
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Realisasi Persetujuan) BySpdId
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdrealisasipersetujuan/1:
+    put:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Realisasi Persetujuan)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                n_spd_id: '5'
+                n_rpersetujuan_uangsaku_total: '50000'
+                n_rpersetujuan_biayapenginapan_total: '50000'
+                n_rpersetujuan_biayatransport_total: '50000'
+                n_rpersetujuan_biayalain_total: '50000'
+                n_rpersetujuan_totalrealisasi: '50000'
+                n_rpersetujuan_uangmuka: '50000'
+                n_rpersetujuan_selisih: '50000'
+                n_rket_id: '1'
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Realisasi Persetujuan) ById
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

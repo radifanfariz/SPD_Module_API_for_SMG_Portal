@@ -1,0 +1,215 @@
+openapi: 3.0.0
+info:
+  title: SPD-Main
+  version: 1.0.0
+servers:
+  - url: http://localhost:9999
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+  - basicAuth: []
+paths:
+  /api/spdmain:
+    get:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main)
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    post:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example: "{\r\n    \"n_spd_company_id\": 11,\r\n    \"n_spd_hrisId\": 11,\r\n    \"c_spd_hashid\": \"test\",\r\n    \"c_spd_nomorsurat\": \"test\",\r\n    \"c_spd_companynama\": \"test\",\r\n    \"c_spd_nama\": \"test3-nama\",\r\n    \"c_spd_nik\": \"test\",\r\n    \"c_spd_unit\": \"test\",\r\n    \"c_spd_costcenterkaryawan\": \"test\",\r\n    \"c_spd_jabatan\": \"test\",\r\n    \"c_spd_nohp\": \"test\",\r\n    \"c_spd_pangkat\": \"test\",\r\n    \"c_spd_grade\": \"test\",\r\n    \"c_spd_tempattujuan\": \"test\",\r\n    \"c_spd_costcenterpenanggung\": \"test\",\r\n    \"d_spd_tanggalberangkat\": \"2023-01-01\",\r\n    \"d_spd_tanggalkembali\": \"2019-01-01\",\r\n    \"n_spd_tujuandinas_id\": 1,\r\n    \"c_spd_keterangandinas\": \"test\",\r\n    \"n_spd_transportasi_id\": 1,\r\n    \"c_spd_keterangantransportasi\": \"test\",\r\n    \"n_spd_akomodasi_id\": 1,\r\n    \"c_spd_keteranganakomodasi\": \"test\",\r\n    // \"n_spd_uangjenis\": 1000,\r\n    \"n_spd_uangmuka_id\": 1,\r\n    \"n_spd_uangsaku\": 1000,\r\n    \"n_spd_biayapenginapan\": 1000,\r\n    \"n_spd_biayatransport\": 1000,\r\n    \"n_spd_biayalain\": \"1000\",\r\n    \"n_spd_totalbiaya\": 1000,\r\n    \"c_spd_banknama\": \"test\",\r\n    \"c_spd_banknorek\": \"test\",\r\n    \"c_spd_bankatasnama\": \"test\",\r\n    \"c_spd_atasan\": \"test\",\r\n    \"c_spd_tempatdiajukan\": \"test\",\r\n    \"n_spd_jenis_id\": \"2\",\r\n    \"d_spd_tanggalajukan\": \"2019-01-01\",\r\n    \"n_spd_status_id\": \"3\",\r\n    \"n_realisasi_id\":2\r\n}"
+      security:
+        - basicAuth: []
+      parameters:
+        - name: Content-Type
+          in: header
+          schema:
+            type: string
+          example: '*/*'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/146:
+    get:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main) byId
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/pagination:
+    get:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main) pagination
+      security:
+        - basicAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '3'
+        - name: size
+          in: query
+          schema:
+            type: integer
+          example: '2'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/table/:
+    get:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main) forTable
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/table/pagination:
+    get:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main) forTable pagination
+      security:
+        - basicAuth: []
+      parameters:
+        - name: size
+          in: query
+          schema:
+            type: integer
+          example: '10'
+        - name: page
+          in: query
+          schema:
+            type: integer
+          example: '0'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/all/param:
+    get:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main) AllbyParam
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/one/param:
+    get:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main) OnebyParam
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/67:
+    delete:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main)
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/40:
+    put:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main) update status
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                n_spd_status_id: '7'
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/131:
+    put:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main) update adh
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                n_spd_adh_userId: '0'
+                n_spd_adh_name: test
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdmain/after-created/39:
+    put:
+      tags:
+        - default
+      summary: apiPortalFZ (SPD-Main) updateAfterCreated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                n_spd_jenis_id: 1
+                d_spd_tanggalajukan: '2023-05-16'
+                n_spd_status_id: 1
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}

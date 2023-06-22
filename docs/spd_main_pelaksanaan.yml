@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: SPD-Pelaksanaan
+  version: 1.0.0
+servers:
+  - url: http://localhost:9999
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+  - basicAuth: []
+paths:
+  /api/spdpelaksanaan/:
+    post:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Pelaksanaan)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                n_spd_id: '5'
+                d_pelaksanaan_tanggal: '2023-06-11'
+                c_pelaksanaan_aktifitas: test
+                c_pelaksanaan_keterangan: test
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Pelaksanaan) ById
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdpelaksanaan/bulk:
+    post:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Pelaksanaan) Bulk
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                - n_spd_id: '5'
+                  d_pelaksanaan_tanggal: '2023-11-11'
+                  c_pelaksanaan_aktifitas: testbulkcreate
+                  c_pelaksanaan_keterangan: testbulkcreate
+                - n_spd_id: '5'
+                  d_pelaksanaan_tanggal: '2023-11-11'
+                  c_pelaksanaan_aktifitas: testbulkcreate
+                  c_pelaksanaan_keterangan: testbulkcreate
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdpelaksanaan/1:
+    put:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Pelaksanaan) Copy 2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                n_spd_id: 5
+                d_pelaksanaan_tanggal: '2023-01-01'
+                c_pelaksanaan_aktifitas: test2
+                c_pelaksanaan_keterangan: test2
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
