@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: SPD-Realisasi Detail
+  version: 1.0.0
+servers:
+  - url: http://localhost:9999
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+  - basicAuth: []
+paths:
+  /api/spdrealisasidetail:
+    post:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Realisasi Detail)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                n_spd_id: '5'
+                n_rdetail_uangsaku_total: '50000'
+                n_rdetail_biayapenginapan_total: '50000'
+                n_rdetail_biayatransport_total: '50000'
+                n_rdetail_biayalain_total: '50000'
+                n_rdetail_totalrealisasi: '50000'
+                n_rdetail_uangmuka: '50000'
+                n_rdetail_selisih: '50000'
+                n_rket_id: '1'
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdrealisasidetail/1:
+    put:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Realisasi Detail)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                n_spd_id: 38
+                d_realisasi_tanggal: '2023-01-01'
+                n_realisasi_uangsaku: 20000
+                n_realisasi_biayapenginapan: 200000
+                n_realisasi_biayatransportasi: 200000
+                n_realisasi_biayalain: 20000
+                n_realisasi_totalbiaya: 200000
+                n_realisasi_hrd_uangsaku: 200000
+                n_realisasi_hrd_biayapenginapan: 2000000
+                n_realisasi_hrd_biayatransportasi: 20000
+                n_realisasi_hrd_biayalain: 200000
+                n_realisasi_hrd_totalbiaya: 20000
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdrealisasidetail/2:
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Realisasi Detail) BySpdId
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
+  /api/spdrealisasidetail/:
+    get:
+      tags:
+        - General
+      summary: apiPortalFZ (SPD-Realisasi Detail) ById
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json: {}
