@@ -184,7 +184,7 @@ exports.findAllForTablePaging = (req, res) => {
             d_spd_tanggalajukan
               ? {
                   d_spd_tanggalajukan: {
-                    [Op.gte]: d_spd_tanggalajukan,
+                    [Op.eq]: d_spd_tanggalajukan,
                   },
                 }
               : null,
