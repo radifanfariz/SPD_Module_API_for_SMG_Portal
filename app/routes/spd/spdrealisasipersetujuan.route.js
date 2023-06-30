@@ -1,9 +1,7 @@
-const { isAuth } = require("../middlewares/index.js");
+const { isAuth } = require("../../middlewares/index.js");
 
 module.exports = (app) => {
-  const spdRealisasi = require("../controllers/spdrealisasi.controller.js");
-  const spdRealisasiDetail = require("../controllers/spdrealisasidetail.controller.js");
-  const spdRealisasiPersetujuan = require("../controllers/spdrealisasipersetujuan.controller.js");
+  const spdRealisasiPersetujuan = require("../../controllers/spd/spdrealisasipersetujuan.controller.js");
 //   const spdRealisasiPersetujuan = require("../controllers/spdrealisasipersetujuan.controller.js");
 
   var router = require("express").Router();

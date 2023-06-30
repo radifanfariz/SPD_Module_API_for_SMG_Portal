@@ -1,5 +1,5 @@
-const db = require("../models");
-const { getPagingData, getPagination } = require("../utils/spdmain.util");
+const db = require("../../models/spd");
+const { getPagingData, getPagination } = require("../../utils/spdmain.util");
 const Spdmain = db.spdmain;
 const SpdmainAkomadasi = db.spdmainAkomodasi;
 const SpdmainJenis = db.spdmainJenis;
@@ -62,6 +62,7 @@ exports.create = (req, res) => {
     c_spd_tempatdiajukan: req.body.c_spd_tempatdiajukan,
     n_spd_hrdadh_userId: req.body.n_spd_hrdadh_userId,
     c_spd_hrdadh_name: req.body.c_spd_hrdadh_name,
+    n_spd_gradeId: req.body.n_spd_gradeId,
   };
 
   Spdmain.create(spdmainData)
@@ -115,6 +116,7 @@ exports.findAllForTable = (req, res) => {
           n_spd_atasan_userId: item.n_spd_atasan_userId,
           n_spd_hrdadh_userId: item.n_spd_hrdadh_userId,
           c_spd_hrdadh_name: item.c_spd_hrdadh_name,
+          n_spd_gradeId: item.n_spd_gradeId,
           spd_main_jenis: item.spd_main_jenis,
           spd_main_status: item.spd_main_status,
         };
@@ -221,6 +223,7 @@ exports.findAllForTablePaging = (req, res) => {
           n_spd_atasan_userId: item.n_spd_atasan_userId,
           n_spd_hrdadh_userId: item.n_spd_hrdadh_userId,
           c_spd_hrdadh_name: item.c_spd_hrdadh_name,
+          n_spd_gradeId: item.n_spd_gradeId,
           spd_main_jenis: item.spd_main_jenis,
           spd_main_status: item.spd_main_status,
         };

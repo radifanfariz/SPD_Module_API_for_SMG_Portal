@@ -5,17 +5,17 @@ module.exports = (app) => {
   const router = require("express").Router();
 
   // middleware
-  const spdMainDocument = YAML.load("./docs/spd_main.yml");
-  const spdMainPartDocument = YAML.load("./docs/spd_main_parts.yml");
+  const spdMainDocument = YAML.load("./docs/spd/spd_main.yml");
+  const spdMainPartDocument = YAML.load("./docs/spd/spd_main_parts.yml");
   const spdPelaksanaanDocument = YAML.load(
-    "./docs/spd_main_pelaksanaan.yml"
+    "./docs/spd/spd_main_pelaksanaan.yml"
   );
-  const spdRealisasiDocument = YAML.load("./docs/spd_main_realisasi.yml");
+  const spdRealisasiDocument = YAML.load("./docs/spd/spd_main_realisasi.yml");
   const spdRealisasiDetailDocument = YAML.load(
-    "./docs/spd_main_realisasi_detail.yml"
+    "./docs/spd/spd_main_realisasi_detail.yml"
   );
   const spdRealisasiPersetujuanDocument = YAML.load(
-    "./docs/spd_main_realisasi_persetujuan.yml"
+    "./docs/spd/spd_main_realisasi_persetujuan.yml"
   );
 
   

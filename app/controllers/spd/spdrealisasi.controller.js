@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require("../../models/spd");
 // const { getPagingData, getPagination } = require("../utils/spdmain.util");
 const Spdmain = db.spdmain;
 const Spdrealisasi = db.spdrealisasi;

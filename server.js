@@ -27,7 +27,7 @@ const options = {
       },
     ],
   },
-  apis: ["./app/routes/spdmain.route.js"],
+  apis: ["./app/routes/spd/spdmain.route.js"],
 };
 
 const swaggerspecs = swaggerJsdoc(options);
@@ -37,7 +37,7 @@ app.use(
   swaggerUi.setup(swaggerspecs, { explorer: true })
 );
 
-const db = require("./app/models");
+const db = require("./app/models/spd");
 db.sequelize
   .sync()
   .then(() => {
@@ -58,19 +58,22 @@ app.use(cors(corsOptions));
 
 // parse requests of content-type - application/json
 app.use(express.json());
-app.use(bodyParser.json()); //alternative
+// app.use(bodyParser.json()); //alternative
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 // app.use(bodyParser.urlencoded({ extended: true })); //alternative
 
-// routes of api
-require("./app/routes/spdmain.route")(app);
-require("./app/routes/spdpelaksanaan.route")(app);
-require("./app/routes/spdrealisasi.route")(app);
-require("./app/routes/spdrealisasidetail.route")(app);
-require("./app/routes/spdrealisasipersetujuan.route")(app);
-require("./app/routes/spddocs.route")(app);
+// routes of api SPD
+require("./app/routes/spd/spdmain.route")(app);
+require("./app/routes/spd/spdpelaksanaan.route")(app);
+require("./app/routes/spd/spdrealisasi.route")(app);
+require("./app/routes/spd/spdrealisasidetail.route")(app);
+require("./app/routes/spd/spdrealisasipersetujuan.route")(app);
+require("./app/routes/spd/spddocs.route")(app);
+
+// routes of api SFO
+require("./app/routes/sfo/sfo.otomotif.route")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 9999;
