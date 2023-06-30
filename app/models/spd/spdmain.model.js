@@ -131,6 +131,9 @@ module.exports = (sequelize, Sequelize) => {
       c_spd_hrdadh_name: {
         type: Sequelize.STRING
       },
+      n_spd_gradeId: {
+        type: Sequelize.INTEGER
+      },
 
       // n_realisasi_id: {
       //   type: Sequelize.INTEGER

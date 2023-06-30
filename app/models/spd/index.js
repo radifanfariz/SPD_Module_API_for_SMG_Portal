@@ -1,4 +1,4 @@
-const dbConfig = require("../config/db.config.js");
+const dbConfig = require("../../config/spd/db.config.js");
 
 const Sequelize = require("sequelize");
 const { SpdmainAkomodasi, SpdmainJenis, SpdmainStatus, SpdmainTransportasi, SpdmainTujuanDinas, SpdmainUangMuka, SpdmainJenisBiaya } = require("./spdmain.parts.model.js");

@@ -1,8 +1,8 @@
-const db = require("../models");
+const db = require("../../models/spd");
 // const { getPagingData, getPagination } = require("../utils/spdmain.util");
 const Spdmain = db.spdmain;
 const SpdrealisasiKetJenis = db.spdrealisasiKetJenis;
-const Spdrealisasidetail = db.spdrealisasidetail;
+const Spdrealisasipersetujuan = db.spdrealisasipersetujuan;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new SPD pelaksanaan main
@@ -14,19 +14,20 @@ exports.create = (req, res) => {
     return;
   }
 
-  const spdrealisasidetailData = {
+  const spdrealisasipersetujuanData = {
     n_spd_id: req.body.n_spd_id,
-    n_rdetail_uangsaku_total: req.body.n_rdetail_uangsaku_total,
-    n_rdetail_biayapenginapan_total: req.body.n_rdetail_biayapenginapan_total,
-    n_rdetail_biayatransport_total: req.body.n_rdetail_biayatransport_total,
-    n_rdetail_biayalain_total: req.body.n_rdetail_biayalain_total,
-    n_rdetail_totalrealisasi: req.body.n_rdetail_totalrealisasi,
-    n_rdetail_uangmuka: req.body.n_rdetail_uangmuka,
-    n_rdetail_selisih: req.body.n_rdetail_selisih,
+    n_rpersetujuan_uangsaku_total: req.body.n_rpersetujuan_uangsaku_total,
+    n_rpersetujuan_biayapenginapan_total: req.body.n_rpersetujuan_biayapenginapan_total,
+    n_rpersetujuan_biayatransport_total: req.body.n_rpersetujuan_biayatransport_total,
+    n_rpersetujuan_biayalain_total: req.body.n_rpersetujuan_biayalain_total,
+    n_rpersetujuan_totalrealisasi: req.body.n_rpersetujuan_totalrealisasi,
+    n_rpersetujuan_uangmuka: req.body.n_rpersetujuan_uangmuka,
+    n_rpersetujuan_selisih: req.body.n_rpersetujuan_selisih,
     n_rket_id: req.body.n_rket_id,
+    c_rpersetujuan_norek: req.body.c_rpersetujuan_norek,
   };
 
-  Spdrealisasidetail.create(spdrealisasidetailData)
+  Spdrealisasipersetujuan.create(spdrealisasipersetujuanData)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -48,10 +49,10 @@ exports.create = (req, res) => {
 
 // Update a SPD pelaksanaan data by the id in the request
 exports.update = (req, res) => {
-  const spdrealisasidetailId = req.params.id;
+  const spdrealisasipersetujuanId = req.params.id;
 
-  Spdrealisasidetail.update(req.body, {
-    where: { n_rdetail_id: spdrealisasidetailId },
+  Spdrealisasipersetujuan.update(req.body, {
+    where: { n_rpersetujuan_id: spdrealisasipersetujuanId },
   })
     .then((num) => {
       if (num == 1) {
@@ -63,7 +64,7 @@ exports.update = (req, res) => {
       } else {
         const errorResponse = {
           status: false,
-          message: `Cannot update SPD Realisasi data with id=${spdrealisasidetailId} !`,
+          message: `Cannot update SPD Realisasi data with id=${spdrealisasipersetujuanId} !`,
         };
         res.send(errorResponse);
       }
@@ -72,7 +73,7 @@ exports.update = (req, res) => {
       const errorResponse = {
         status: false,
         message:
-          err.message || `Cannot update SPD Realisasi data with id=${spdrealisasidetailId} !`,
+          err.message || `Cannot update SPD Realisasi data with id=${spdrealisasipersetujuanId} !`,
       };
       res.status(500).send(errorResponse);
     });
@@ -82,7 +83,7 @@ exports.update = (req, res) => {
 exports.findAllByParam = (req, res) => {
   const { n_spd_id } = req.body;
 
-  Spdrealisasidetail.findAll({
+  Spdrealisasipersetujuan.findAll({
     include: [
       { model: Spdmain, as: "spd_main" },
       { model: SpdrealisasiKetJenis, as: "spd_realisasi_ketjenis" },
@@ -113,9 +114,9 @@ exports.findAllByParam = (req, res) => {
 };
 
 exports.findOne = (req, res) => {
-    const spdrealisasidetailId = req.params.id;
+    const spdrealisasipersetujuanId = req.params.id;
   
-    Spdrealisasidetail.findByPk(spdrealisasidetailId, {
+    Spdrealisasipersetujuan.findByPk(spdrealisasipersetujuanId, {
       include: [
         { model: Spdmain, as: "spd_main" },
         { model: SpdrealisasiKetJenis, as: "spd_realisasi_ketjenis" },
@@ -131,7 +132,7 @@ exports.findOne = (req, res) => {
           res.send(successResponse);
         } else {
           res.status(404).send({
-            message: `Cannot find SPD Realisasi data with id=${spdrealisasidetailId}.`,
+            message: `Cannot find SPD Realisasi data with id=${spdrealisasipersetujuanId}.`,
           });
         }
       })

@@ -1,4 +1,4 @@
-const db = require("../models");
+const db = require("../../models/spd");
 const SpdmainAkomadasi = db.spdmainAkomodasi;
 const SpdmainJenis = db.spdmainJenis;
 const SpdmainStatus = db.spdmainStatus;

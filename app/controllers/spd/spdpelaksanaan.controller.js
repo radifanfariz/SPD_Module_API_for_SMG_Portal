@@ -1,8 +1,7 @@
-const db = require("../models");
+const db = require("../../models/spd");
 // const { getPagingData, getPagination } = require("../utils/spdmain.util");
 const Spdmain = db.spdmain;
-const SpdrealisasiKetJenis = db.spdrealisasiKetJenis;
-const Spdrealisasipersetujuan = db.spdrealisasipersetujuan;
+const Spdpelaksanaan = db.spdpelaksanaan;
 const Op = db.Sequelize.Op;
 
 // Create and Save a new SPD pelaksanaan main
@@ -14,20 +13,14 @@ exports.create = (req, res) => {
     return;
   }
 
-  const spdrealisasipersetujuanData = {
+  const spdpelaksanaanData = {
     n_spd_id: req.body.n_spd_id,
-    n_rpersetujuan_uangsaku_total: req.body.n_rpersetujuan_uangsaku_total,
-    n_rpersetujuan_biayapenginapan_total: req.body.n_rpersetujuan_biayapenginapan_total,
-    n_rpersetujuan_biayatransport_total: req.body.n_rpersetujuan_biayatransport_total,
-    n_rpersetujuan_biayalain_total: req.body.n_rpersetujuan_biayalain_total,
-    n_rpersetujuan_totalrealisasi: req.body.n_rpersetujuan_totalrealisasi,
-    n_rpersetujuan_uangmuka: req.body.n_rpersetujuan_uangmuka,
-    n_rpersetujuan_selisih: req.body.n_rpersetujuan_selisih,
-    n_rket_id: req.body.n_rket_id,
-    c_rpersetujuan_norek: req.body.c_rpersetujuan_norek,
+    d_pelaksanaan_tanggal: req.body.d_pelaksanaan_tanggal,
+    c_pelaksanaan_aktifitas: req.body.c_pelaksanaan_aktifitas,
+    c_pelaksanaan_keterangan: req.body.c_pelaksanaan_keterangan,
   };
 
-  Spdrealisasipersetujuan.create(spdrealisasipersetujuanData)
+  Spdpelaksanaan.create(spdpelaksanaanData)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -41,7 +34,35 @@ exports.create = (req, res) => {
       const errorResponse = {
         status: false,
         message:
-          err.message || "Some error occurred while creating the SPD Realisasi data.",
+          err.message || "Some error occurred while creating the SPD Pelaksanaan data.",
+      };
+      res.status(500).send(errorResponse);
+    });
+};
+// Create and Save a new SPD pelaksanaan main
+exports.bulkCreate = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Data can not be empty!",
+    });
+    return;
+  }
+
+  Spdpelaksanaan.bulkCreate(req.body)
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message || "Some error occurred while creating the SPD Pelaksanaan data.",
       };
       res.status(500).send(errorResponse);
     });
@@ -49,22 +70,22 @@ exports.create = (req, res) => {
 
 // Update a SPD pelaksanaan data by the id in the request
 exports.update = (req, res) => {
-  const spdrealisasipersetujuanId = req.params.id;
+  const spdpelaksanaanId = req.params.id;
 
-  Spdrealisasipersetujuan.update(req.body, {
-    where: { n_rpersetujuan_id: spdrealisasipersetujuanId },
+  Spdpelaksanaan.update(req.body, {
+    where: { n_pelaksanaan_id: spdpelaksanaanId },
   })
     .then((num) => {
       if (num == 1) {
         const successResponse = {
           status: true,
-          message: "SPD Realisasi data was updated succesfully !",
+          message: "SPD Pelaksanaan data was updated succesfully !",
         };
         res.send(successResponse);
       } else {
         const errorResponse = {
           status: false,
-          message: `Cannot update SPD Realisasi data with id=${spdrealisasipersetujuanId} !`,
+          message: `Cannot update SPD Pelaksanaan data with id=${spdpelaksanaanId} !`,
         };
         res.send(errorResponse);
       }
@@ -73,7 +94,7 @@ exports.update = (req, res) => {
       const errorResponse = {
         status: false,
         message:
-          err.message || `Cannot update SPD Realisasi data with id=${spdrealisasipersetujuanId} !`,
+          err.message || `Cannot update SPD Pelaksanaan data with id=${spdpelaksanaanId} !`,
       };
       res.status(500).send(errorResponse);
     });
@@ -83,10 +104,11 @@ exports.update = (req, res) => {
 exports.findAllByParam = (req, res) => {
   const { n_spd_id } = req.body;
 
-  Spdrealisasipersetujuan.findAll({
+  console.log("Test")
+
+  Spdpelaksanaan.findAll({
     include: [
       { model: Spdmain, as: "spd_main" },
-      { model: SpdrealisasiKetJenis, as: "spd_realisasi_ketjenis" },
     ],
     where: {
       [Op.or]: [
@@ -107,19 +129,18 @@ exports.findAllByParam = (req, res) => {
       const errorResponse = {
         status: false,
         message:
-          err.message || "Some error occurred while retrieving SPD Realisasi data.",
+          err.message || "Some error occurred while retrieving SPD Pelaksanaan data.",
       };
       res.status(500).send(errorResponse);
     });
 };
 
 exports.findOne = (req, res) => {
-    const spdrealisasipersetujuanId = req.params.id;
+    const spdpelaksanaanId = req.params.id;
   
-    Spdrealisasipersetujuan.findByPk(spdrealisasipersetujuanId, {
+    Spdpelaksanaan.findByPk(spdpelaksanaanId, {
       include: [
         { model: Spdmain, as: "spd_main" },
-        { model: SpdrealisasiKetJenis, as: "spd_realisasi_ketjenis" },
       ],
     })
       .then((data) => {
@@ -132,7 +153,7 @@ exports.findOne = (req, res) => {
           res.send(successResponse);
         } else {
           res.status(404).send({
-            message: `Cannot find SPD Realisasi data with id=${spdrealisasipersetujuanId}.`,
+            message: `Cannot find SPD Pelaksanaan data with id=${spdpelaksanaanId}.`,
           });
         }
       })
@@ -140,7 +161,7 @@ exports.findOne = (req, res) => {
         const errorResponse = {
           status: false,
           message:
-            err.message || "Some error occurred while retrieving SPD Realisasi data.",
+            err.message || "Some error occurred while retrieving SPD Pelaksanaan data.",
         };
         res.status(500).send(errorResponse);
       });
