@@ -1,6 +1,9 @@
 const db = require("../../models/sfo");
 const { getPagingData, getPagination } = require("../../utils/spdmain.util");
+const SfoTransactionsFields = db.sfoTransactionsFields;
 const SfoTransactions = db.sfoTransactions;
+const SfoSuFields = db.sfoSuFields;
+const SfoFields = db.sfoFields;
 const SfoSu = db.sfoSu;
 
 const sequalize = db.Sequelize;
@@ -13,11 +16,12 @@ exports.create = (req, res) => {
     });
     return;
   }
-  const sfoTransactionsReq = {
-    d_period: req.body.d_period,
-    n_su_id: req.body.n_su_id,
+  const sfoTransactionsFieldsReq = {
+    n_su_field_id: req.body.n_su_field_id,
+    n_transaction_id: req.body.n_transaction_id,
+    n_field_value: req.body.n_field_value,
   };
-  SfoTransactions.create(sfoTransactionsReq)
+  SfoTransactionsFields.create(sfoTransactionsFieldsReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -39,8 +43,14 @@ exports.create = (req, res) => {
 
 // Retrieve all SFO SU Fields data from the database.
 exports.findAll = (req, res) => {
-  SfoTransactions.findAll({
-    include: [{ model: SfoSu }],
+  SfoTransactionsFields.findAll({
+    include: [
+      { model: SfoTransactions },
+      {
+        model: SfoSuFields,
+        include: [{ model: SfoSu }, { model: SfoFields }],
+      },
+    ],
   })
     .then((data) => {
       const successResponse = {
@@ -63,15 +73,19 @@ exports.findAll = (req, res) => {
 
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
-  const { n_su_id, d_period } = req.body;
-  SfoTransactions.findAll({
+  const { n_su_field_id, n_transaction_id } = req.body;
+  SfoTransactionsFields.findAll({
     include: [
-        { model: SfoSu }
+      { model: SfoTransactions },
+      {
+        model: SfoSuFields,
+        include: [{ model: SfoSu }, { model: SfoFields }],
+      },
     ],
     where: {
       [Op.and]: [
-        d_period ? { d_period: d_period } : null,
-        n_su_id ? { n_su_id: n_su_id } : null,
+        n_su_field_id ? { n_su_field_id: n_su_field_id } : null,
+        n_transaction_id ? { n_transaction_id: n_transaction_id } : null,
       ],
     },
   })

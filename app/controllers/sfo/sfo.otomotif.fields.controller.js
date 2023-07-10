@@ -22,6 +22,7 @@ exports.create = (req, res) => {
     c_field_subtype: req.body.c_field_subtype,
     c_field_rule: req.body.c_field_rule,
     c_field_id: req.body.c_field_id,
+    c_field_formula: req.body.c_field_formula,
   };
   SfoFields.create(sfoFieldsReq)
     .then((data) => {

@@ -12,6 +12,7 @@ exports.create = (req, res) => {
   const sfoSuReq = {
     c_su_name: req.body.c_su_name,
     c_su_type: req.body.c_su_type,
+    n_bu_id: req.body.n_bu_id,
   };
   SfoSu.create(sfoSuReq)
     .then((data) => {

@@ -17,6 +17,7 @@ exports.create = (req, res) => {
   const sfoSuFieldsReq = {
     n_su_id: req.body.n_su_id,
     n_field_id: req.body.n_field_id,
+    n_seq: req.body.n_seq,
   };
   SfoSuFields.create(sfoSuFieldsReq)
     .then((data) => {
@@ -64,7 +65,7 @@ exports.findAll = (req, res) => {
 
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
-  const { n_su_id, n_field_id } = req.body;
+  const { n_su_id, n_field_id, n_seq } = req.body;
   SfoSuFields.findAll({
     include: [
         { model: SfoFields }, 
@@ -74,6 +75,7 @@ exports.findAllByParam = (req, res) => {
       [Op.and]: [
         n_su_id ? { n_su_id: n_su_id } : null,
         n_field_id ? { n_field_id: n_field_id } : null,
+        n_seq ? { n_seq: n_seq } : null,
       ],
     },
   })

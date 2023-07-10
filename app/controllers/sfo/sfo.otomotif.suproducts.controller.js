@@ -16,7 +16,7 @@ exports.create = (req, res) => {
   }
   const sfoSuProductsReq = {
     n_su_id: req.body.n_su_id,
-    n_field_id: req.body.n_field_id,
+    n_product_id: req.body.n_product_id,
   };
   SfoSuProducts.create(sfoSuProductsReq)
     .then((data) => {

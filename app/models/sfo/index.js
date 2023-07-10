@@ -2,6 +2,8 @@ const dbConfig = require("../../config/sfo/db.config.js");
 
 const {
   SfoSu,
+  SfoComments,
+  SfoWeekly,
   SfoFields,
   SfoProducts,
   SfoSuFields,
@@ -31,6 +33,8 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 // sfo  table
+db.sfoWeekly = SfoWeekly(sequelize, Sequelize);
+db.sfoComments = SfoComments(sequelize, Sequelize);
 db.sfoSu = SfoSu(sequelize, Sequelize);
 db.sfoFields = SfoFields(sequelize, Sequelize);
 db.sfoProducts = SfoProducts(sequelize, Sequelize);
@@ -41,6 +45,25 @@ db.sfoTransactionsFields = SfoTransactionsFields(sequelize, Sequelize);
 db.sfoTransactionsProducts = SfoTransactionsProducts(sequelize, Sequelize);
 
 ////////////////////////////////////////////////////////////////
+
+// weekly to comments
+db.sfoWeekly.hasMany(db.sfoComments, {
+  foreignKey: "n_id",
+  as: "sfo_weekly",
+});
+db.sfoComments.belongsTo(db.sfoWeekly, {
+  foreignKey: "n_weekly_id",
+  as: "sfo_weekly",
+});
+// su to weekly
+db.sfoSu.hasMany(db.sfoWeekly, {
+  foreignKey: "n_id",
+  as: "sfo_su",
+});
+db.sfoWeekly.belongsTo(db.sfoSu, {
+  foreignKey: "n_su_id",
+  as: "sfo_su",
+});
 
 // su to suFields
 db.sfoSu.hasMany(db.sfoSuFields, {
@@ -110,10 +133,10 @@ db.sfoTransactionsFields.belongsTo(db.sfoSuFields, {
   foreignKey: "n_su_field_id",
 });
 // transactions to transactionsFields
-db.sfoSuFields.hasMany(db.sfoTransactionsFields, {
+db.sfoTransactions.hasMany(db.sfoTransactionsFields, {
   foreignKey: "n_id",
 });
-db.sfoTransactionsFields.belongsTo(db.sfoSuFields, {
+db.sfoTransactionsFields.belongsTo(db.sfoTransactions, {
   foreignKey: "n_transaction_id",
 });
 
@@ -125,10 +148,10 @@ db.sfoTransactionsProducts.belongsTo(db.sfoSuProducts, {
   foreignKey: "n_su_product_id",
 });
 // transactions to transactionsProducts
-db.sfoSuProducts.hasMany(db.sfoTransactionsProducts, {
+db.sfoTransactions.hasMany(db.sfoTransactionsProducts, {
   foreignKey: "n_id",
 });
-db.sfoTransactionsProducts.belongsTo(db.sfoSuProducts, {
+db.sfoTransactionsProducts.belongsTo(db.sfoTransactions, {
   foreignKey: "n_transaction_id",
 });
 

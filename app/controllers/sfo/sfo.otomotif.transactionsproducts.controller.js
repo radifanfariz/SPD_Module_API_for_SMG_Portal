@@ -1,6 +1,9 @@
 const db = require("../../models/sfo");
 const { getPagingData, getPagination } = require("../../utils/spdmain.util");
+const SfoTransactionsProducts = db.sfoTransactionsProducts;
 const SfoTransactions = db.sfoTransactions;
+const SfoSuProducts = db.sfoSuProducts;
+const SfoProducts = db.sfoProducts;
 const SfoSu = db.sfoSu;
 
 const sequalize = db.Sequelize;
@@ -13,11 +16,12 @@ exports.create = (req, res) => {
     });
     return;
   }
-  const sfoTransactionsReq = {
-    d_period: req.body.d_period,
-    n_su_id: req.body.n_su_id,
+  const sfoTransactionsProductsReq = {
+    n_su_product_id: req.body.n_su_product_id,
+    n_transaction_id: req.body.n_transaction_id,
+    n_total_unit: req.body.n_total_unit,
   };
-  SfoTransactions.create(sfoTransactionsReq)
+  SfoTransactionsProducts.create(sfoTransactionsProductsReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -39,8 +43,14 @@ exports.create = (req, res) => {
 
 // Retrieve all SFO SU Fields data from the database.
 exports.findAll = (req, res) => {
-  SfoTransactions.findAll({
-    include: [{ model: SfoSu }],
+  SfoTransactionsProducts.findAll({
+    include: [
+      { model: SfoTransactions },
+      {
+        model: SfoSuProducts,
+        include: [{ model: SfoSu }, { model: SfoProducts }],
+      },
+    ],
   })
     .then((data) => {
       const successResponse = {
@@ -63,15 +73,19 @@ exports.findAll = (req, res) => {
 
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
-  const { n_su_id, d_period } = req.body;
-  SfoTransactions.findAll({
+  const { n_su_product_id, n_transaction_id } = req.body;
+  SfoTransactionsProducts.findAll({
     include: [
-        { model: SfoSu }
+      { model: SfoTransactions },
+      {
+        model: SfoSuProducts,
+        include: [{ model: SfoSu }, { model: SfoProducts }],
+      },
     ],
     where: {
       [Op.and]: [
-        d_period ? { d_period: d_period } : null,
-        n_su_id ? { n_su_id: n_su_id } : null,
+        n_su_product_id ? { n_su_product_id: n_su_product_id } : null,
+        n_transaction_id ? { n_transaction_id: n_transaction_id } : null,
       ],
     },
   })

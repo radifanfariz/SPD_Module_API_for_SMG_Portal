@@ -1,6 +1,6 @@
 const db = require("../../models/sfo");
 const { getPagingData, getPagination } = require("../../utils/spdmain.util");
-const SfoTransactions = db.sfoTransactions;
+const SfoWeekly = db.sfoWeekly;
 const SfoSu = db.sfoSu;
 
 const sequalize = db.Sequelize;
@@ -13,11 +13,21 @@ exports.create = (req, res) => {
     });
     return;
   }
-  const sfoTransactionsReq = {
-    d_period: req.body.d_period,
+  const sfoWeeklyReq = {
     n_su_id: req.body.n_su_id,
+    d_period: req.body.d_period,
+    n_monthlyBudget: req.body.n_monthlyBudget,
+    n_w1: req.body.n_w1,
+    n_w2: req.body.n_w2,
+    n_w3: req.body.n_w3,
+    n_w4: req.body.n_w4,
+    n_totalBudget: req.body.n_totalBudget,
+    n_achBudget: req.body.n_achBudget,
+    c_cell_id: req.body.c_cell_id,
+    n_created_by: req.body.n_created_by,
+    n_updated_by: req.body.n_updated_by,
   };
-  SfoTransactions.create(sfoTransactionsReq)
+  SfoWeekly.create(sfoWeeklyReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -39,8 +49,8 @@ exports.create = (req, res) => {
 
 // Retrieve all SFO SU Fields data from the database.
 exports.findAll = (req, res) => {
-  SfoTransactions.findAll({
-    include: [{ model: SfoSu }],
+  SfoWeekly.findAll({
+    include: [{ model: SfoSu, as: "sfo_su" }],
   })
     .then((data) => {
       const successResponse = {
@@ -63,15 +73,12 @@ exports.findAll = (req, res) => {
 
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
-  const { n_su_id, d_period } = req.body;
-  SfoTransactions.findAll({
-    include: [
-        { model: SfoSu }
-    ],
+  const { d_period } = req.body;
+  SfoWeekly.findAll({
+    include: [{ model: SfoSu, as: "sfo_su" }],
     where: {
       [Op.and]: [
         d_period ? { d_period: d_period } : null,
-        n_su_id ? { n_su_id: n_su_id } : null,
       ],
     },
   })
