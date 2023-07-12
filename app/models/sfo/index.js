@@ -55,6 +55,15 @@ db.sfoComments.belongsTo(db.sfoWeekly, {
   foreignKey: "n_weekly_id",
   as: "sfo_weekly",
 });
+db.sfoWeekly.hasMany(db.sfoComments, {
+  foreignKey: "n_weekly_id",
+  as: "sfo_comments",
+});
+db.sfoComments.belongsTo(db.sfoWeekly, {
+  foreignKey: "n_id",
+  as: "sfo_comments",
+});
+
 // su to weekly
 db.sfoSu.hasMany(db.sfoWeekly, {
   foreignKey: "n_id",

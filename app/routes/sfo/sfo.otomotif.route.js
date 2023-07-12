@@ -22,6 +22,7 @@ module.exports = (app) => {
   // Retrieve SFO Otomotif Data
   router.get("/weekly", isAuth, sfoWeekly.findAll);
   router.get("/weekly/params", isAuth, sfoWeekly.findAllByParam);
+  router.get("/weekly/monthlyParams", isAuth, sfoWeekly.findAllByParamMonthly);
   router.get("/comments", isAuth, sfoComments.findAll);
   router.get("/comments/params", isAuth, sfoComments.findAllByParam);
   router.get("/su", isAuth, sfoSu.findAll);
