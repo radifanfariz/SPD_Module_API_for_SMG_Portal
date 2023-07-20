@@ -15,6 +15,7 @@ exports.create = (req, res) => {
   }
   const sfoCommentsReq = {
     c_weekly_reference: req.body.c_weekly_reference,
+    c_weekly_reference_id: req.body.c_weekly_reference_id,
     c_weekly_cell_id: req.body.c_weekly_cell_id,
     c_comments: req.body.c_comments,
     n_weekly_id: req.body.n_weekly_id,

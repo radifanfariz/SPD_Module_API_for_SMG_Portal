@@ -10,6 +10,9 @@ exports.SfoComments = (sequelize, Sequelize) => {
       c_weekly_reference: {
         type: Sequelize.STRING,
       },
+      c_weekly_reference_id: {
+        type: Sequelize.STRING,
+      },
       c_weekly_cell_id: {
         type: Sequelize.STRING,
       },

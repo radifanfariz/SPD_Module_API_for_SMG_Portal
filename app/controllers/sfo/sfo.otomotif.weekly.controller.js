@@ -100,6 +100,9 @@ exports.findAllByParam = (req, res) => {
       res.status(500).send(errorResponse);
     });
 };
+
+///////////////////////////////////////////////////
+//this API has special configuration
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParamMonthly = (req, res) => {
   const { date_start, date_end } = req.body;
@@ -160,7 +163,7 @@ exports.findAllByParamMonthly = (req, res) => {
       const monthlyData = data.map((item) => {
         const xFieldMonth = yFields.map((yFieldItem) => [
           {
-            id: DateTime.fromISO(item.d_period).toLocaleString({
+            month: DateTime.fromISO(item.d_period).toLocaleString({
               month: "long",
               day: "numeric",
             }),
@@ -172,9 +175,9 @@ exports.findAllByParamMonthly = (req, res) => {
             xFieldMonthItem.reduce(
               (acc, cur) => ({
                 ...acc,
-                id: cur.id.replace(/\s/, ""),
+                id: cur.month.replace(/\s/, ""),
                 color: "",
-                value: cur.id,
+                value: cur.month,
               }),
               {}
             )
@@ -182,31 +185,33 @@ exports.findAllByParamMonthly = (req, res) => {
           .reduce((acc, cur) => ({ ...cur }), {});
         const xFieldMonthData = xFieldMonth.map((xFieldMonthItem) =>
           xFieldMonthItem.reduce(
-            (acc, cur) => ({ [cur.id.replace(/\s/, "")]: cur.value }),
+            (acc, cur) => ({ [cur.month.replace(/\s/, "")]: cur.value }),
             {}
           )
         );
-        const dataForMontly = {data:[...yFields.map((yFieldItem, index) => ({
-          bu: item.sfo_su.c_su_name,
-          buId: item.sfo_su.c_su_name.toLowerCase(),
-          buReferenceId: item.n_su_id,
-          yField: yFieldItem.value,
-          yFieldId: yFieldItem.id,
-          yFieldReference: yFieldItem.reference_field,
-          ...xFieldMonthData[index],
-        }))]
-      }
+        const dataForMontly = {
+          data: [
+            ...yFields.map((yFieldItem, index) => ({
+              bu: item.sfo_su.c_su_name,
+              buId: item.sfo_su.c_su_name.toLowerCase(),
+              buReferenceId: item.n_su_id,
+              yField: yFieldItem.value,
+              yFieldId: yFieldItem.id,
+              yFieldReference: yFieldItem.reference_field,
+              ...xFieldMonthData[index],
+            })),
+          ],
+        };
+
         return {
           xFieldMonthHeader: xFieldMonthHeader,
           dataForMontly: dataForMontly,
-          // trendData: trendData
         };
       });
-      // const monthlyDataFormatted = monthlyData.reduce(
-      //   (acc, cur) => ({ ...acc, [cur.id.replace(/\s/, "")]: cur.value }),
-      //   {}
-      // );
-      const xField = [
+      const suDataSet = Array.from(
+        new Set(data.map((item) => item.sfo_su.c_su_name.toLowerCase()))
+      );
+      const xFieldMonthly = [
         {
           id: "bu",
           value: "Business Unit",
@@ -220,8 +225,9 @@ exports.findAllByParamMonthly = (req, res) => {
           color: "green",
           value: "Last 6 Months Trend",
         },
-        ...(monthlyData
-          .map((itemMonthly) => itemMonthly.xFieldMonthHeader)).map((item)=> item),
+        ...monthlyData
+          .map((itemMonthly) => itemMonthly.xFieldMonthHeader)
+          .map((item) => item),
         {
           id: "lm",
           color: "green",
@@ -233,27 +239,105 @@ exports.findAllByParamMonthly = (req, res) => {
           value: "Δ LY",
         },
       ];
-      // const dataMonthly = headerMonthly.map(() => ({
-      //   data: {
-      //     bu: "Toyota",
-      //     buId: "toyota",
-      //     buReferenceId: "1",
-      //     yField: "W1",
-      //     yFieldId: "w1",
-      //     yFieldReference: "n_w1",
-      //     ...monthlyDataFormatted,
-      //   },
-      // }));
+      const dataMonthly = [].concat(
+        ...[
+          ...Object.values(
+            monthlyData.map((itemMonthly, index) => itemMonthly.dataForMontly)
+          ),
+        ].map((item) => item.data)
+      );
+
+      const trendDataMonthly = {
+        ...suDataSet.map((item) => ({
+          [item]: {
+            w1: [
+              ...data.map((item) => ({
+                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                  month: "long",
+                  day: "numeric",
+                }),
+                Unit: item.n_w1,
+              })),
+            ],
+            w2: [
+              ...data.map((item) => ({
+                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                  month: "long",
+                  day: "numeric",
+                }),
+                Unit: item.n_w2,
+              })),
+            ],
+            w3: [
+              ...data.map((item) => ({
+                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                  month: "long",
+                  day: "numeric",
+                }),
+                Unit: item.n_w3,
+              })),
+            ],
+            w4: [
+              ...data.map((item) => ({
+                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                  month: "long",
+                  day: "numeric",
+                }),
+                Unit: item.n_w4,
+              })),
+            ],
+            totalBudget: [
+              ...data.map((item) => ({
+                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                  month: "long",
+                  day: "numeric",
+                }),
+                Unit: item.n_totalBudget,
+              })),
+            ],
+            monthlyBudget: [
+              ...data.map((item) => ({
+                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                  month: "long",
+                  day: "numeric",
+                }),
+                Unit: item.n_monthlyBudget,
+              })),
+            ],
+            achBudget: [
+              ...data.map((item) => ({
+                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                  month: "long",
+                  day: "numeric",
+                }),
+                Unit: item.n_achBudget,
+              })),
+            ],
+          },
+        })),
+      };
+
+      const trendDataMonthlyFormatted = Object.assign({}, ...Object.values(trendDataMonthly).map(
+        (item) => ({ ...item })
+      ));
+
+      // const commentDataMonthly = Object.values({
+      //   ...suDataSet.map((item) => ({
+      //     [item]: data.map((item) => Object.values(item.sfo_comments)),
+      //   })),
+      // });
+      const commentDataMonthly = [].concat(...data.map((item) => (item.sfo_comments)))
+
       const successResponse = {
         status: true,
         message: "Ok",
         totalItems: data?.length,
         data: {
           // data,
-          header: xField,
-          ...monthlyData
-            .map((itemMonthly) => itemMonthly.dataForMontly),
-          // trendData:monthlyData
+          header: xFieldMonthly,
+          data: dataMonthly,
+          trendData: trendDataMonthlyFormatted,
+          commentData: commentDataMonthly,
           // .map((itemMonthly) => itemMonthly.trendData)
           // .reduce((acc, cur) => cur, {}),
         },
