@@ -1,4 +1,4 @@
-const dbConfig = require("../../config/pm-otomotif/db.config");
+const dbConfig = require("../../../config/sfo/pm-monthly/db.config");
 
 const {
 PmOtomotifProducts,

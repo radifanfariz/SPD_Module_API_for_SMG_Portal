@@ -1,8 +1,8 @@
-const { isAuth } = require("../../middlewares/index.js");
+const { isAuth } = require("../../../middlewares/index.js");
 
 module.exports = (app) => {
-  const pmOtomotifProducts = require("../../controllers/pm-otomotif/pm.otomotif.products.controller.js");
-  const pmOtomotifFields = require("../../controllers/pm-otomotif/pm.otomotif.fields.controller.js");
+  const pmOtomotifProducts = require("../../../controllers/sfo/pm-monthly/pm.otomotif.products.controller.js");
+  const pmOtomotifFields = require("../../../controllers/sfo/pm-monthly/pm.otomotif.fields.controller.js");
 
   var router = require("express").Router();
 

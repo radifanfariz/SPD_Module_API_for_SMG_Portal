@@ -1,23 +1,27 @@
 const { DateTime } = require("luxon");
-const db = require("../../models/sfo");
-const { getPagingData, getPagination } = require("../../utils/spdmain.util");
-const SfoWeekly = db.sfoWeekly;
-const SfoSu = db.sfoSu;
-const SfoComments = db.sfoComments;
+const db = require("../../../models/sfo/pm-weekly");
+const {
+  getPagingData,
+  getPagination,
+  upsert,
+} = require("../../../utils/spdmain.util");
+const PmWeeklyOtomotif = db.pmWeeklyOtomotif;
+const PmCommentsOtomotif = db.pmCommentsOtomotif;
 
 const sequalize = db.Sequelize;
 const Op = db.Sequelize.Op;
 
-exports.create = (req, res) => {
+exports.upsert = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: "Data can not be empty!",
     });
     return;
   }
-  const sfoWeeklyReq = {
-    n_su_id: req.body.n_su_id,
-    d_period: req.body.d_period,
+  const pmWeeklyOtomotifReq = {
+    n_bu_id: req.body.n_bu_id,
+    c_bu_name: req.body.c_bu_name,
+    d_periode: req.body.d_periode,
     n_monthlyBudget: req.body.n_monthlyBudget,
     n_w1: req.body.n_w1,
     n_w2: req.body.n_w2,
@@ -29,7 +33,70 @@ exports.create = (req, res) => {
     n_created_by: req.body.n_created_by,
     n_updated_by: req.body.n_updated_by,
   };
-  SfoWeekly.create(sfoWeeklyReq)
+  const upsertObj = upsert(PmWeeklyOtomotif, pmWeeklyOtomotifReq, {
+    [Op.and]: [
+      pmWeeklyReq.d_periode
+        ? { d_periode: {
+          [Op.between]: [
+            new Date(
+              new Date(pmWeeklyReq.d_periode).getFullYear(),
+              new Date(pmWeeklyReq.d_periode).getMonth(),
+              1
+            ),
+            new Date(
+              new Date(pmWeeklyReq.d_periode).getFullYear(),
+              new Date(pmWeeklyReq.d_periode).getMonth() + 1,
+              0
+            ),
+          ],
+        }, }
+        : null,
+      pmWeeklyReq.n_bu_id ? { n_bu_id: pmWeeklyReq.n_bu_id } : null,
+    ],
+  });
+  upsertObj
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message || "Some error occurred while creating the SPD data.",
+      };
+      res.status(500).send(errorResponse);
+    });
+};
+
+exports.create = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Data can not be empty!",
+    });
+    return;
+  }
+  const pmWeeklyOtomotifReq = {
+    n_bu_id: req.body.n_bu_id,
+    c_bu_name: req.body.c_bu_name,
+    d_periode: req.body.d_periode,
+    n_monthlyBudget: req.body.n_monthlyBudget,
+    n_w1: req.body.n_w1,
+    n_w2: req.body.n_w2,
+    n_w3: req.body.n_w3,
+    n_w4: req.body.n_w4,
+    n_totalBudget: req.body.n_totalBudget,
+    n_achBudget: req.body.n_achBudget,
+    c_cell_id: req.body.c_cell_id,
+    n_created_by: req.body.n_created_by,
+    n_updated_by: req.body.n_updated_by,
+  };
+  PmWeeklyOtomotif.create(pmWeeklyOtomotifReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -51,9 +118,7 @@ exports.create = (req, res) => {
 
 // Retrieve all SFO SU Fields data from the database.
 exports.findAll = (req, res) => {
-  SfoWeekly.findAll({
-    include: [{ model: SfoSu, as: "sfo_su" }],
-  })
+  PmWeeklyOtomotif.findAll()
     .then((data) => {
       const successResponse = {
         status: true,
@@ -75,11 +140,30 @@ exports.findAll = (req, res) => {
 
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
-  const { d_period } = req.body;
-  SfoWeekly.findAll({
-    include: [{ model: SfoSu, as: "sfo_su" }],
+  const { d_periode, n_bu_id } = req.body;
+  PmWeeklyOtomotif.findAll({
     where: {
-      [Op.and]: [d_period ? { d_period: d_period } : null],
+      [Op.and]: [
+        d_periode
+          ? {
+              d_periode: {
+                [Op.between]: [
+                  new Date(
+                    new Date(d_periode).getFullYear(),
+                    new Date(d_periode).getMonth(),
+                    1
+                  ),
+                  new Date(
+                    new Date(d_periode).getFullYear(),
+                    new Date(d_periode).getMonth() + 1,
+                    0
+                  ),
+                ],
+              },
+            }
+          : null,
+        n_bu_id ? { n_bu_id: n_bu_id } : null,
+      ],
     },
   })
     .then((data) => {
@@ -106,19 +190,21 @@ exports.findAllByParam = (req, res) => {
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParamMonthly = (req, res) => {
   const { date_start, date_end } = req.body;
-  SfoWeekly.findAll({
-    include: [
-      { model: SfoSu, as: "sfo_su" },
-      { model: SfoComments, as: "sfo_comments" },
-    ],
+  PmWeeklyOtomotif.findAll({
+    include: [{ model: PmCommentsOtomotif, as: "pm_comments" }],
     where: {
       [Op.and]: [
         date_start && date_end
           ? {
-              d_period: { [Op.between]: [date_start, date_end] },
+              d_periode: {
+                [Op.between]: [
+                  DateTime.fromISO(date_start).toISODate(),
+                  DateTime.fromISO(date_end).toISODate(),
+                ],
+              },
             }
           : null,
-        // sequalize.where(sequalize.cast(sequalize.col('d_period'), 'month'), '>=', '12:00'),
+        // sequalize.where(sequalize.cast(sequalize.col('d_periode'), 'month'), '>=', '12:00'),
       ],
     },
   })
@@ -164,10 +250,10 @@ exports.findAllByParamMonthly = (req, res) => {
 
       const monthlyDataPeriod = yFields.map((yFieldItem) =>
         data.map((item) => ({
-          [DateTime.fromISO(item.d_period)
+          [DateTime.fromISO(item.d_periode)
             .toLocaleString({
               month: "long",
-              day: "numeric",
+              year: "numeric",
             })
             .replace(/\s/, "")]: item[yFieldItem.reference_field],
         }))
@@ -176,9 +262,9 @@ exports.findAllByParamMonthly = (req, res) => {
       const monthlyData = data.map((item) => {
         const xFieldMonth = yFields.map((yFieldItem) => [
           {
-            month: DateTime.fromISO(item.d_period).toLocaleString({
+            month: DateTime.fromISO(item.d_periode).toLocaleString({
               month: "long",
-              day: "numeric",
+              year: "numeric",
             }),
             value: item[yFieldItem.reference_field],
           },
@@ -206,9 +292,9 @@ exports.findAllByParamMonthly = (req, res) => {
             ...yFields.map((yFieldItem, index) =>
               index === 0
                 ? {
-                    bu: item.sfo_su.c_su_name,
-                    buId: item.sfo_su.c_su_name.toLowerCase(),
-                    buReferenceId: item.n_su_id,
+                    bu: item.c_bu_name,
+                    buId: item.c_bu_name?.toLowerCase(),
+                    buReferenceId: item.n_bu_id,
                     yField: yFieldItem.value,
                     yFieldId: yFieldItem.id,
                     yFieldReference: yFieldItem.reference_field,
@@ -217,9 +303,9 @@ exports.findAllByParamMonthly = (req, res) => {
                     ...Object.assign({}, ...xFieldMonthData[index]),
                   }
                 : {
-                    bu: item.sfo_su.c_su_name,
-                    buId: item.sfo_su.c_su_name.toLowerCase(),
-                    buReferenceId: item.n_su_id,
+                    bu: item.c_bu_name,
+                    buId: item.c_bu_name?.toLowerCase(),
+                    buReferenceId: item.n_bu_id,
                     yField: yFieldItem.value,
                     yFieldId: yFieldItem.id,
                     yFieldReference: yFieldItem.reference_field,
@@ -237,8 +323,25 @@ exports.findAllByParamMonthly = (req, res) => {
       });
 
       const suDataSet = Array.from(
-        new Set(data.map((item) => item.sfo_su.c_su_name.toLowerCase()))
+        new Set(data.map((item) => item.c_bu_name?.toLowerCase()))
       );
+
+      const monthlyDataArray = monthlyData.map(
+        (itemMonthly) => itemMonthly.xFieldMonthHeader
+      );
+
+      const monthlyDataUnique = []
+      monthlyDataArray.forEach((datum) => {
+        if (
+          !monthlyDataUnique.find(
+            (item) =>
+              item.id === datum.id
+          )
+        ) {
+          monthlyDataUnique.push(datum)
+        }
+      });
+
       const xFieldMonthly = [
         {
           id: "bu",
@@ -248,8 +351,7 @@ exports.findAllByParamMonthly = (req, res) => {
           id: "periode",
           value: "Periode",
         },
-        ...monthlyData
-          .map((itemMonthly) => itemMonthly.xFieldMonthHeader)
+       ...monthlyDataUnique
           .map((item) => item),
         {
           id: "trend",
@@ -287,72 +389,88 @@ exports.findAllByParamMonthly = (req, res) => {
         }
       });
 
+      function getUniqueTrenData(arr) {
+        const trendDataUnique = []
+        arr.forEach((datum) => {
+          if (
+            !trendDataUnique.find(
+              (item) =>
+                item.Month === datum.Month
+            )
+          ) {
+            trendDataUnique.push(datum)
+          }
+        });
+
+        return trendDataUnique;
+      };
+
       const trendDataMonthly = {
         ...suDataSet.map((item) => ({
           [item]: {
-            w1: [
+            w1: getUniqueTrenData([
               ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                Month: DateTime.fromISO(item.d_periode).toLocaleString({
                   month: "long",
                   day: "numeric",
                 }),
                 Unit: item.n_w1,
               })),
-            ],
-            w2: [
+            ]),
+            w2: getUniqueTrenData([
               ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                Month: DateTime.fromISO(item.d_periode).toLocaleString({
                   month: "long",
                   day: "numeric",
                 }),
                 Unit: item.n_w2,
               })),
-            ],
-            w3: [
+            ]),
+            w3: getUniqueTrenData([
               ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                Month: DateTime.fromISO(item.d_periode).toLocaleString({
                   month: "long",
                   day: "numeric",
                 }),
                 Unit: item.n_w3,
               })),
-            ],
-            w4: [
+            ]),
+            w4: getUniqueTrenData([
               ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                Month: DateTime.fromISO(item.d_periode).toLocaleString({
                   month: "long",
                   day: "numeric",
                 }),
                 Unit: item.n_w4,
               })),
-            ],
-            totalBudget: [
+            ]),
+            totalBudget: getUniqueTrenData([
               ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                Month: DateTime.fromISO(item.d_periode).toLocaleString({
                   month: "long",
                   day: "numeric",
                 }),
                 Unit: item.n_totalBudget,
               })),
-            ],
-            monthlyBudget: [
+            ]),
+            monthlyBudget: getUniqueTrenData([
               ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                Month: DateTime.fromISO(item.d_periode).toLocaleString({
                   month: "long",
                   day: "numeric",
                 }),
                 Unit: item.n_monthlyBudget,
               })),
-            ],
-            achBudget: [
+            ]),
+            achBudget: getUniqueTrenData([
               ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_period).toLocaleString({
+                Month: DateTime.fromISO(item.d_periode).toLocaleString({
                   month: "long",
                   day: "numeric",
                 }),
                 Unit: item.n_achBudget,
               })),
-            ],
+            ]),
           },
         })),
       };
@@ -364,11 +482,11 @@ exports.findAllByParamMonthly = (req, res) => {
 
       // const commentDataMonthly = Object.values({
       //   ...suDataSet.map((item) => ({
-      //     [item]: data.map((item) => Object.values(item.sfo_comments)),
+      //     [item]: data.map((item) => Object.values(item.pm_comments)),
       //   })),
       // });
       const commentDataMonthly = [].concat(
-        ...data.map((item) => item.sfo_comments)
+        ...data.map((item) => item.pm_comments)
       );
 
       const successResponse = {

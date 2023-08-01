@@ -1,5 +1,5 @@
-const db = require("../../models/pm-otomotif");
-const { getPagingData, getPagination } = require("../../utils/spdmain.util");
+const db = require("../../../models/sfo/pm-monthly");
+const { getPagingData, getPagination } = require("../../../utils/spdmain.util");
 const PmOtomotifProducts = db.pmOtomotifProducts;
 const PmOtomotifProductsTransactions = db.pmOtomotifProductsTransactions;
 
@@ -20,6 +20,7 @@ exports.createProduct = (req, res) => {
     c_rule: req.body.c_rule,
     c_product_name: req.body.c_product_name,
     c_product_id: req.body.c_product_id,
+    c_product_type: req.body.c_product_type,
     c_identification_id: req.body.c_identification_id,
   };
   PmOtomotifProducts.create(pmOtomotifProductsReq)

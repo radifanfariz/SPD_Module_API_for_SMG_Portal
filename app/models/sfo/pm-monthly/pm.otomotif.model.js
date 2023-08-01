@@ -22,6 +22,9 @@ exports.PmOtomotifProducts = (sequelize, Sequelize) => {
       c_identification_id: {
         type: Sequelize.STRING,
       },
+      c_type: {
+        type: Sequelize.STRING,
+      },
     },
     {
       freezeTableName: true,
@@ -48,6 +51,9 @@ exports.PmOtomotifProductsTransactions = (sequelize, Sequelize) => {
       },
       n_product_value: {
         type: Sequelize.INTEGER,
+      },
+      c_product_type: {
+        type: Sequelize.STRING,
       },
       d_created_at: {
         type: Sequelize.DATEONLY,

@@ -75,8 +75,14 @@ require("./app/routes/spd/spddocs.route")(app);
 // routes of api SFO
 require("./app/routes/sfo/sfo.otomotif.route")(app);
 
-// routes of api PM-Otomotif
-require("./app/routes/pm-otomotif/pm.otomotif.route")(app);
+// routes of api PM-Otomotif weekly
+require("./app/routes/sfo/pm-weekly/pm.otomotif.route")(app);
+// routes of api PM-Otomotif monthly
+require("./app/routes/sfo/pm-monthly/pm.otomotif.route")(app);
+// routes of api PM-Finser weekly
+require("./app/routes/sfo/pm-weekly/pm.finser.route")(app);
+// routes of api PM-Finser monthly
+// require("./app/routes/sfo/pm-monthly/pm.otomotif.route")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 9999;
