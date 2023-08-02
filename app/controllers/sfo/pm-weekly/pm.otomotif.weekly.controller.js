@@ -35,23 +35,23 @@ exports.upsert = (req, res) => {
   };
   const upsertObj = upsert(PmWeeklyOtomotif, pmWeeklyOtomotifReq, {
     [Op.and]: [
-      pmWeeklyReq.d_periode
+      pmWeeklyOtomotifReq.d_periode
         ? { d_periode: {
           [Op.between]: [
             new Date(
-              new Date(pmWeeklyReq.d_periode).getFullYear(),
-              new Date(pmWeeklyReq.d_periode).getMonth(),
+              new Date(pmWeeklyOtomotifReq.d_periode).getFullYear(),
+              new Date(pmWeeklyOtomotifReq.d_periode).getMonth(),
               1
             ),
             new Date(
-              new Date(pmWeeklyReq.d_periode).getFullYear(),
-              new Date(pmWeeklyReq.d_periode).getMonth() + 1,
+              new Date(pmWeeklyOtomotifReq.d_periode).getFullYear(),
+              new Date(pmWeeklyOtomotifReq.d_periode).getMonth() + 1,
               0
             ),
           ],
         }, }
         : null,
-      pmWeeklyReq.n_bu_id ? { n_bu_id: pmWeeklyReq.n_bu_id } : null,
+      pmWeeklyOtomotifReq.n_bu_id ? { n_bu_id: pmWeeklyOtomotifReq.n_bu_id } : null,
     ],
   });
   upsertObj
