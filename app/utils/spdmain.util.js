@@ -22,14 +22,8 @@ exports.upsert = function upsert(model, values, condition) {
   });
 };
 
-exports.getUnique = function getUnique(arr) {
-  let mapObj = new Map();
-
-  arr.forEach((v) => {
-    let prevValue = mapObj.get(v.name);
-    if (!prevValue || prevValue.type === "new") {
-      mapObj.set(v.name, v);
-    }
-  });
-  return [...mapObj.values()];
-};
+exports.isContentTableExist = function isContentTableExist (model) {
+  const count = model.count();
+  console.log(count)
+  return (count === 0) ? false : true
+}

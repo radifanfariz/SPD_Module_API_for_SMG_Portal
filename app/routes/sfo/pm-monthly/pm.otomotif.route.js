@@ -3,24 +3,40 @@ const { isAuth } = require("../../../middlewares/index.js");
 module.exports = (app) => {
   const pmOtomotifProducts = require("../../../controllers/sfo/pm-monthly/pm.otomotif.products.controller.js");
   const pmOtomotifFields = require("../../../controllers/sfo/pm-monthly/pm.otomotif.fields.controller.js");
+  const pmOtomotifBu = require("../../../controllers/sfo/pm-monthly/pm.otomotif.bu.controller.js");
 
   var router = require("express").Router();
 
+  // Create a new BU Data
+  router.post("/otomotifBu", isAuth, pmOtomotifBu.createBu);
+  router.post("/otomotifBu/bulk", isAuth, pmOtomotifBu.bulkCreateBu);
   // Create a new Products Data
   router.post("/products", isAuth, pmOtomotifProducts.createProduct);
-  router.post("/productsTransactions", isAuth, pmOtomotifProducts.createProductTransaction);
+  router.post("/products/bulk", isAuth, pmOtomotifProducts.bulkCreateProduct);
+  router.post("/productTransactions", isAuth, pmOtomotifProducts.createProductTransaction);
+  router.post("/productTransactions/bulk", isAuth, pmOtomotifProducts.bulkCreateProductTransaction);
    // Create a new Fields Data
   router.post("/fields", isAuth, pmOtomotifFields.createField);
-  router.post("/fieldsTransactions", isAuth, pmOtomotifFields.createFieldTransaction);
+  router.post("/fields/bulk", isAuth, pmOtomotifFields.bulkCreateField);
+  router.post("/fieldTransactions", isAuth, pmOtomotifFields.createFieldTransaction);
+  router.post("/fieldTransactions/bulk", isAuth, pmOtomotifFields.bulkCreateFieldTransaction);
 
+
+  // Retrieve BU Data
+  router.get("/otomotifBu", isAuth, pmOtomotifBu.findAll);
+  router.post("/otomotifBu/params", isAuth, pmOtomotifBu.findAllByParam);
 
   // Retrieve Products Data
-  router.get("/products", isAuth, pmOtomotifProducts.findAll);
-  router.get("/products/params", isAuth, pmOtomotifProducts.findAllByParam);
+  router.get("/products", isAuth, pmOtomotifProducts.findAllProduct);
+  router.post("/products/params", isAuth, pmOtomotifProducts.findAllByParam);
+  router.get("/productTransactions", isAuth, pmOtomotifProducts.findAll);
+  router.post("/productTransactions/params", isAuth, pmOtomotifProducts.findAllByParam);
 
   // Retrieve Fields Data
-  router.get("/fields", isAuth, pmOtomotifFields.findAll);
-  router.get("/fields/params", isAuth, pmOtomotifFields.findAllByParam);
+  router.get("/fields", isAuth, pmOtomotifFields.findAllField);
+  router.post("/fields/params", isAuth, pmOtomotifFields.findAllByParam);
+  router.get("/fieldTransactions", isAuth, pmOtomotifFields.findAll);
+  router.post("/fieldTransactions/params", isAuth, pmOtomotifFields.findAllByParam);
 
   app.use("/api/pm/otomotif/monthly", router);
 };

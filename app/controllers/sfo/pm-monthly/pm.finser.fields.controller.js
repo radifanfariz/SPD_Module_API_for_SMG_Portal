@@ -4,9 +4,9 @@ const {
   getPagination,
   isContentTableExist,
 } = require("../../../utils/spdmain.util");
-const PmOtomotifFields = db.pmOtomotifFields;
-const PmOtomotifFieldsTransactions = db.pmOtomotifFieldsTransactions;
-const PmOtomotifBu = db.pmOtomotifBu;
+const PmFinserFields = db.pmFinserFields;
+const PmFinserFieldsTransactions = db.pmFinserFieldsTransactions;
+const PmFinserBu = db.pmFinserBu;
 
 const sequalize = db.Sequelize;
 const Op = db.Sequelize.Op;
@@ -19,7 +19,7 @@ exports.createField = (req, res) => {
     });
     return;
   }
-  const pmOtomotifFieldsReq = {
+  const pmFinserFieldsReq = {
     n_bu_id: req.body.n_bu_id,
     c_rule: req.body.c_rule,
     c_field_name: req.body.c_field_name,
@@ -28,7 +28,7 @@ exports.createField = (req, res) => {
     c_identification_id: req.body.c_identification_id,
     b_field_isshow: req.body.b_field_isshow,
   };
-  PmOtomotifFields.create(pmOtomotifFieldsReq)
+  PmFinserFields.create(pmFinserFieldsReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -54,14 +54,14 @@ exports.createFieldTransaction = (req, res) => {
     });
     return;
   }
-  const pmOtomotifFieldsTransactionsReq = {
+  const pmFinserFieldsTransactionsReq = {
     d_periode: req.body.n_bu_id,
     n_bu_id: req.body.n_bu_id,
     n_field_id: req.body.n_product_id,
     n_field_value: req.body.n_product_value,
     c_field_id: req.body.c_field_id,
   };
-  PmOtomotifFieldsTransactions.create(pmOtomotifFieldsTransactionsReq)
+  PmFinserFieldsTransactions.create(pmFinserFieldsTransactionsReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -91,9 +91,9 @@ exports.bulkCreateField = (req, res) => {
     return;
   }
 
-  PmOtomotifFields.bulkCreate(
+  PmFinserFields.bulkCreate(
     req.body,
-    isContentTableExist(PmOtomotifFields)
+    isContentTableExist(PmFinserFields)
       ? {
           updateOnDuplicate: [
             "n_bu_id",
@@ -133,9 +133,14 @@ exports.bulkCreateFieldTransaction = (req, res) => {
     return;
   }
 
-  PmOtomotifFieldsTransactions.bulkCreate(req.body, {
-    updateOnDuplicate: ["n_field_value"],
-  })
+  PmFinserFieldsTransactions.bulkCreate(
+    req.body,
+    isContentTableExist(PmFinserFieldsTransactions)
+      ? {
+          updateOnDuplicate: ["n_field_value"],
+        }
+      : { ignoreDuplicates: true }
+  )
     .then((data) => {
       const successResponse = {
         status: true,
@@ -160,7 +165,7 @@ exports.bulkCreateFieldTransaction = (req, res) => {
 exports.updateField = (req, res) => {
   const fieldId = req.params.id;
 
-  PmOtomotifFields.update(req.body, {
+  PmFinserFields.update(req.body, {
     where: { n_id: fieldId },
   })
     .then((num) => {
@@ -189,7 +194,7 @@ exports.updateField = (req, res) => {
 exports.updateFieldTransaction = (req, res) => {
   const fieldTransactionId = req.params.id;
 
-  PmOtomotifFieldsTransactions.update(req.body, {
+  PmFinserFieldsTransactions.update(req.body, {
     where: { n_id: fieldTransactionId },
   })
     .then((num) => {
@@ -221,11 +226,11 @@ exports.updateFieldTransaction = (req, res) => {
 
 // Retrieve all products data from the database.
 exports.findAllField = (req, res) => {
-  PmOtomotifFields.findAll({
+  PmFinserFields.findAll({
     // include: [
     //   {
-    //     model: PmOtomotifFieldsTransactions,
-    //     // as: "pm_otomotif_fields_transactions",
+    //     model: PmFinserFieldsTransactions,
+    //     // as: "pm_finser_fields_transactions",
     //   },
     // ],
   })
@@ -248,8 +253,8 @@ exports.findAllField = (req, res) => {
     });
 };
 exports.findAll = (req, res) => {
-  PmOtomotifFieldsTransactions.findAll({
-    include: [{ model: PmOtomotifFields, as: "pm_otomotif_fields" }],
+  PmFinserFieldsTransactions.findAll({
+    include: [{ model: PmFinserFields, as: "pm_finser_fields" }],
   })
     .then((data) => {
       const successResponse = {
@@ -273,10 +278,10 @@ exports.findAll = (req, res) => {
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
   const { d_periode, n_field_id, c_field_id, n_bu_id } = req.body;
-  PmOtomotifFieldsTransactions.findAll({
+  PmFinserFieldsTransactions.findAll({
     include: [
-      { model: PmOtomotifFields, as: "pm_otomotif_fields" },
-      { model: PmOtomotifBu, as: "pm_otomotif_bu" },
+      { model: PmFinserFields, as: "pm_finser_fields" },
+      { model: PmFinserBu, as: "pm_finser_bu" },
     ],
     where: {
       [Op.and]: [
@@ -301,12 +306,12 @@ exports.findAllByParam = (req, res) => {
         n_bu_id ? { n_bu_id: n_bu_id } : null,
         n_field_id ? { n_field_id: n_field_id } : null,
         c_field_id
-          ? Array.isArray(c_field_id)
-            ? {
-                c_field_id: { [Op.in]: c_field_id },
-              }
-            : { c_field_id: { [Op.iLike]: `%${c_field_id}%` } }
-          : null,
+        ? Array.isArray(c_field_id)
+          ? {
+              c_field_id: { [Op.in]: c_field_id },
+            }
+          : { c_field_id: { [Op.iLike]: `%${c_field_id}%` } }
+        : null,
       ],
     },
   })

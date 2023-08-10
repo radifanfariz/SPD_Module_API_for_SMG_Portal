@@ -1,6 +1,6 @@
-exports.PmOtomotifProducts = (sequelize, Sequelize) => {
-  const PmOtomotifProducts = sequelize.define(
-    "pm_otomotif_products",
+exports.PmFinserProducts = (sequelize, Sequelize) => {
+  const PmFinserProducts = sequelize.define(
+    "pm_finser_products",
     {
       n_id: {
         type: Sequelize.INTEGER,
@@ -42,11 +42,11 @@ exports.PmOtomotifProducts = (sequelize, Sequelize) => {
     }
   );
 
-  return PmOtomotifProducts;
+  return PmFinserProducts;
 };
-exports.PmOtomotifProductsTransactions = (sequelize, Sequelize) => {
-  const PmOtomotifProductsTransactions = sequelize.define(
-    "pm_otomotif_products_transactions",
+exports.PmFinserProductsTransactions = (sequelize, Sequelize) => {
+  const PmFinserProductsTransactions = sequelize.define(
+    "pm_finser_products_transactions",
     {
       n_id: {
         type: Sequelize.INTEGER,
@@ -94,12 +94,12 @@ exports.PmOtomotifProductsTransactions = (sequelize, Sequelize) => {
     }
   );
 
-  return PmOtomotifProductsTransactions;
+  return PmFinserProductsTransactions;
 };
 
-exports.PmOtomotifFields = (sequelize, Sequelize) => {
-  const PmOtomotifFields = sequelize.define(
-    "pm_otomotif_fields",
+exports.PmFinserFields = (sequelize, Sequelize) => {
+  const PmFinserFields = sequelize.define(
+    "pm_finser_fields",
     {
       n_id: {
         type: Sequelize.INTEGER,
@@ -141,12 +141,12 @@ exports.PmOtomotifFields = (sequelize, Sequelize) => {
     }
   );
 
-  return PmOtomotifFields;
+  return PmFinserFields;
 };
 
-exports.PmOtomotifFieldsTransactions = (sequelize, Sequelize) => {
-  const PmOtomotifFieldsTransactions = sequelize.define(
-    "pm_otomotif_fields_transactions",
+exports.PmFinserFieldsTransactions = (sequelize, Sequelize) => {
+  const PmFinserFieldsTransactions = sequelize.define(
+    "pm_finser_fields_transactions",
     {
       n_id: {
         type: Sequelize.INTEGER,
@@ -155,7 +155,6 @@ exports.PmOtomotifFieldsTransactions = (sequelize, Sequelize) => {
       },
       d_periode: {
         type: Sequelize.DATEONLY,
-        unique:true
       },
       n_bu_id: {
         type: Sequelize.INTEGER,
@@ -194,12 +193,12 @@ exports.PmOtomotifFieldsTransactions = (sequelize, Sequelize) => {
     }
   );
 
-  return PmOtomotifFieldsTransactions;
+  return PmFinserFieldsTransactions;
 };
 
-exports.PmOtomotifBu = (sequelize, Sequelize) => {
-  const PmOtomotifBu = sequelize.define(
-    "pm_otomotif_bu",
+exports.PmFinserBu = (sequelize, Sequelize) => {
+  const PmFinserBu = sequelize.define(
+    "pm_finser_bu",
     {
       n_id: {
         type: Sequelize.INTEGER,
@@ -220,5 +219,5 @@ exports.PmOtomotifBu = (sequelize, Sequelize) => {
     }
   );
 
-  return PmOtomotifBu;
+  return PmFinserBu;
 };
