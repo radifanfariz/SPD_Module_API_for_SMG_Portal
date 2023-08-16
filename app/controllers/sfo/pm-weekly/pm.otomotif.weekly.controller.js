@@ -27,7 +27,7 @@ exports.upsert = (req, res) => {
     n_w2: req.body.n_w2,
     n_w3: req.body.n_w3,
     n_w4: req.body.n_w4,
-    n_totalBudget: req.body.n_totalBudget,
+    n_totalMonthly: req.body.n_totalMonthly,
     n_achBudget: req.body.n_achBudget,
     c_cell_id: req.body.c_cell_id,
     n_created_by: req.body.n_created_by,
@@ -90,7 +90,7 @@ exports.create = (req, res) => {
     n_w2: req.body.n_w2,
     n_w3: req.body.n_w3,
     n_w4: req.body.n_w4,
-    n_totalBudget: req.body.n_totalBudget,
+    n_totalMonthly: req.body.n_totalMonthly,
     n_achBudget: req.body.n_achBudget,
     c_cell_id: req.body.c_cell_id,
     n_created_by: req.body.n_created_by,
@@ -193,9 +193,15 @@ exports.findAllByParamMonthly = (req, res) => {
   PmWeeklyOtomotif.findAll({
     include: [{ model: PmCommentsOtomotif, as: "pm_comments" }],
     where: {
-      [Op.and]: [
+      [Op.or]: [
         date_start && date_end
           ? {
+              d_periode: {
+                [Op.between]: [
+                  DateTime.fromISO(date_start).toISODate(),
+                  DateTime.fromISO(date_end).toISODate(),
+                ],
+              },
               d_periode: {
                 [Op.between]: [
                   DateTime.fromISO(date_start).toISODate(),
@@ -231,9 +237,9 @@ exports.findAllByParamMonthly = (req, res) => {
           value: "W4",
         },
         {
-          id: "totalBudget",
-          reference_field: "n_totalBudget",
-          value: "Total Budget",
+          id: "totalMonthly",
+          reference_field: "n_totalMonthly",
+          value: "Total Monthly",
         },
         {
           id: "monthlyBudget",
@@ -444,13 +450,13 @@ exports.findAllByParamMonthly = (req, res) => {
                 Unit: item.n_w4,
               })),
             ]),
-            totalBudget: getUniqueTrenData([
+            totalMonthly: getUniqueTrenData([
               ...data.map((item) => ({
                 Month: DateTime.fromISO(item.d_periode).toLocaleString({
                   month: "long",
                   day: "numeric",
                 }),
-                Unit: item.n_totalBudget,
+                Unit: item.n_totalMonthly,
               })),
             ]),
             monthlyBudget: getUniqueTrenData([

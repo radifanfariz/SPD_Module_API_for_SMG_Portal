@@ -274,23 +274,23 @@ exports.findAllByParamMonthly = (req, res) => {
           value: "W4",
         },
         {
-          id: "totalMonthly",
+          id: "totalBooking",
           field_id: 0,
           reference_field: "n_totalBudgetBooking",
-          value: "Total Budget",
+          value: "Total Booking",
         },
         {
-          id: "monthlyBudget",
+          id: "monthlyBudgetBooking",
           field_id: 0,
           reference_field: "n_monthlyBudgetBooking",
-          value: "Monthly Budget",
+          value: "Monthly Booking",
         },
         {
-          id: "achBudget",
+          id: "achBudgetBooking",
           field_id: 0,
           reference_field: "n_achBudgetBooking",
           field_color: "gray",
-          value: "% Ach to Budget",
+          value: "% Ach to Booking",
         },
       ];
 
@@ -512,7 +512,7 @@ exports.findAllByParamMonthly = (req, res) => {
                 Unit: item.n_weekField_id === 4 ? item.n_booking : null,
               })),
             ]),
-            totalBudget: getUniqueTrenData([
+            totalBooking: getUniqueTrenData([
               ...data.map((item) => ({
                 Month: DateTime.fromISO(item.d_periode).toLocaleString({
                   month: "long",
@@ -521,7 +521,7 @@ exports.findAllByParamMonthly = (req, res) => {
                 Unit: item.n_totalBudgetBooking,
               })),
             ]),
-            monthlyBudget: getUniqueTrenData([
+            monthlyBudgetBooking: getUniqueTrenData([
               ...data.map((item) => ({
                 Month: DateTime.fromISO(item.d_periode).toLocaleString({
                   month: "long",
@@ -530,7 +530,7 @@ exports.findAllByParamMonthly = (req, res) => {
                 Unit: item.n_monthlyBudgetBooking,
               })),
             ]),
-            achBudget: getUniqueTrenData([
+            achBudgetBooking: getUniqueTrenData([
               ...data.map((item) => ({
                 Month: DateTime.fromISO(item.d_periode).toLocaleString({
                   month: "long",

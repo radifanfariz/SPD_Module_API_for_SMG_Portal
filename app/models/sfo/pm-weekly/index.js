@@ -3,10 +3,12 @@ const dbConfig = require("../../../config/sfo/pm-weekly/db.config.js");
 const {
   PmCommentsOtomotif,
   PmWeeklyOtomotif,
+  PmOtomotifBu
 } = require("./pm.otomotif.model.js");
 const {
   PmCommentsFinser,
   PmWeeklyFinser,
+  PmFinserBu
 } = require("./pm.finser.model.js");
 
 const Sequelize = require("sequelize");
@@ -31,9 +33,11 @@ db.sequelize = sequelize;
 // sfo pm-otomotif table
 db.pmWeeklyOtomotif = PmWeeklyOtomotif(sequelize, Sequelize);
 db.pmCommentsOtomotif = PmCommentsOtomotif(sequelize, Sequelize);
+db.pmOtomotifBu = PmOtomotifBu(sequelize, Sequelize);
 // sfo pm-finser table
 db.pmWeeklyFinser = PmWeeklyFinser(sequelize, Sequelize);
 db.pmCommentsFinser = PmCommentsFinser(sequelize, Sequelize);
+db.pmFinserBu = PmFinserBu(sequelize, Sequelize);
 
 ////////////////////////////////////////////////////////////////
 

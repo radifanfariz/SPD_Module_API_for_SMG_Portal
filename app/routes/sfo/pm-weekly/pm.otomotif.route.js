@@ -1,24 +1,28 @@
 const { isAuth } = require("../../../middlewares/index.js");
 
 module.exports = (app) => {
-  const pmWeekly = require("../../../controllers/sfo/pm-weekly/pm.otomotif.weekly.controller.js");
-  const pmComments = require("../../../controllers/sfo/pm-weekly/pm.otomotif.comments.controller.js");
+  const pmWeeklyOtomotif = require("../../../controllers/sfo/pm-weekly/pm.otomotif.weekly.controller.js");
+  const pmCommentsOtomotif = require("../../../controllers/sfo/pm-weekly/pm.otomotif.comments.controller.js");
+  const pmOtomotifBu = require("../../../controllers/sfo/pm-weekly/pm.otomotif.bu.controller.js");
 
   var router = require("express").Router();
 
   // Create a new otomotif weekly Data
-  router.post("/", isAuth, pmWeekly.create);
+  router.post("/", isAuth, pmWeeklyOtomotif.create);
   // Upsert a new otomotif weekly Data
-  router.post("/upsert", isAuth, pmWeekly.upsert);
+  router.post("/upsert", isAuth, pmWeeklyOtomotif.upsert);
   // Create a new otomotif comment Data
-  router.post("/comments", isAuth, pmComments.create);
+  router.post("/comments", isAuth, pmCommentsOtomotif.create);
 
+  // Retrieve BU Data
+  router.get("/otomotifBu", isAuth, pmOtomotifBu.findAll);
+  router.post("/otomotifBu/params", isAuth, pmOtomotifBu.findAllByParam);
   // Retrieve SFO Otomotif Data
-  router.get("/", isAuth, pmWeekly.findAll);
-  router.post("/params", isAuth, pmWeekly.findAllByParam);
-  router.post("/monthlyParams", isAuth, pmWeekly.findAllByParamMonthly);
-  router.get("/comments", isAuth, pmComments.findAll);
-  router.post("/comments/params", isAuth, pmComments.findAllByParam);
+  router.get("/", isAuth, pmWeeklyOtomotif.findAll);
+  router.post("/params", isAuth, pmWeeklyOtomotif.findAllByParam);
+  router.post("/monthlyParams", isAuth, pmWeeklyOtomotif.findAllByParamMonthly);
+  router.get("/comments", isAuth, pmCommentsOtomotif.findAll);
+  router.post("/comments/params", isAuth, pmCommentsOtomotif.findAllByParam);
 
   app.use("/api/pm/otomotif/weekly", router);
 };

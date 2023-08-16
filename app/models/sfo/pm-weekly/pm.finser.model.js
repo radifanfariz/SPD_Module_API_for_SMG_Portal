@@ -148,3 +148,29 @@ exports.PmWeeklyFinser = (sequelize, Sequelize) => {
 
   return PmWeeklyFinser;
 };
+
+exports.PmFinserBu = (sequelize, Sequelize) => {
+  const PmFinserBu = sequelize.define(
+    "pm_finser_bu",
+    {
+      n_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      n_bu_id: {
+        type: Sequelize.INTEGER,
+        unique: true,
+      },
+      c_bu_name: {
+        type: Sequelize.STRING,
+      },
+    },
+    {
+      freezeTableName: true,
+      timestamps: false,
+    }
+  );
+
+  return PmFinserBu;
+};

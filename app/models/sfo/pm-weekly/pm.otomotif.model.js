@@ -76,7 +76,7 @@ exports.PmWeeklyOtomotif = (sequelize, Sequelize) => {
       n_w4: {
         type: Sequelize.INTEGER,
       },
-      n_totalBudget: {
+      n_totalMonthly: {
         type: Sequelize.INTEGER,
       },
       n_achBudget: {
@@ -105,4 +105,30 @@ exports.PmWeeklyOtomotif = (sequelize, Sequelize) => {
   );
 
   return PmWeeklyOtomotif;
+};
+
+exports.PmOtomotifBu = (sequelize, Sequelize) => {
+  const PmOtomotifBu = sequelize.define(
+    "pm_otomotif_bu",
+    {
+      n_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      n_bu_id: {
+        type: Sequelize.INTEGER,
+        unique: true,
+      },
+      c_bu_name: {
+        type: Sequelize.STRING,
+      },
+    },
+    {
+      freezeTableName: true,
+      timestamps: false,
+    }
+  );
+
+  return PmOtomotifBu;
 };

@@ -3,6 +3,7 @@ const { isAuth } = require("../../../middlewares/index.js");
 module.exports = (app) => {
   const pmWeeklyFinser = require("../../../controllers/sfo/pm-weekly/pm.finser.weekly.controller.js");
   const pmCommentsFinser = require("../../../controllers/sfo/pm-weekly/pm.finser.comments.controller.js");
+  const pmFinserBu = require("../../../controllers/sfo/pm-weekly/pm.finser.bu.controller.js");
 
   var router = require("express").Router();
 
@@ -13,6 +14,9 @@ module.exports = (app) => {
   // Create a new otomotif comment Data
   router.post("/comments", isAuth, pmCommentsFinser.create);
 
+  // Retrieve BU Data
+  router.get("/finserBu", isAuth, pmFinserBu.findAll);
+  router.post("/finserBu/params", isAuth, pmFinserBu.findAllByParam);
   // Retrieve SFO Otomotif Data
   router.get("/", isAuth, pmWeeklyFinser.findAll);
   router.post("/params", isAuth, pmWeeklyFinser.findAllByParam);
