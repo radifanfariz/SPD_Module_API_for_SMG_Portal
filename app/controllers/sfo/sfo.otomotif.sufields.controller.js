@@ -1,5 +1,5 @@
 const db = require("../../models/sfo");
-const { getPagingData, getPagination } = require("../../utils/spdmain.util");
+const { getPagingData, getPagination } = require("../../utils/util");
 const SfoSuFields = db.sfoSuFields;
 const SfoFields = db.sfoFields;
 const SfoSu = db.sfoSu;

@@ -1,158 +1,64 @@
 const { DateTime } = require("luxon");
 const db = require("../../../models/sfo/pm-weekly");
+const { getPagingData, getPagination, upsert } = require("../../../utils/util");
+const { validateDate } = require("../../../validations/sfo/pm.validation");
 const {
-  getPagingData,
-  getPagination,
-  upsert,
-} = require("../../../utils/spdmain.util");
-const PmWeeklyFinser = db.pmWeeklyFinser;
+  deepMergeObjectsWithSameKey,
+  mergeObjectsWithSameKey,
+  getUniqueDataWithFunc,
+  getUniqueData,
+  formatDigit,
+} = require("../../../utils/sfo/pm.util");
+const PmFinserFields = db.pmFinserFields;
+const PmFinserFieldsTransactions = db.pmFinserFieldsTransactions;
+const PmFinserDashboardWeekly = db.pmFinserDashboardWeekly;
+const PmFinserDashboardWeeklyBooking = db.PmFinserDashboardWeeklyBooking;
 const PmCommentsFinser = db.pmCommentsFinser;
 
 const sequalize = db.Sequelize;
 const Op = db.Sequelize.Op;
 
-exports.upsert = (req, res) => {
+exports.bulkUpsert = (req, res) => {
   if (!req.body) {
     res.status(400).send({
       message: "Data can not be empty!",
     });
     return;
   }
-  const pmWeeklyFinserReq = {
-    n_bu_id: req.body.n_bu_id,
-    c_bu_name: req.body.c_bu_name,
-    n_weekField_id: req.body.n_weekField_id,
-    c_weekField_name: req.body.c_weekField_name,
-    d_periode: req.body.d_periode,
-    n_monthlyBudgetBooking: req.body.n_monthlyBudgetBooking,
-    n_achBudgetBooking: req.body.n_achBudgetBooking,
-    n_booking: req.body.n_booking,
-    n_monthlyBudgetOsar: req.body.n_monthlyBudgetOsar,
-    n_achBudgetOsar: req.body.n_achBudgetOsar,
-    n_osar130: req.body.n_osar130,
-    n_osar3190: req.body.n_osar3190,
-    n_osar90: req.body.n_osar90,
-    n_osarCurrent: req.body.n_osarCurrent,
-    n_osarKospin: req.body.n_osarKospin,
-    n_osarKsu: req.body.n_osarKsu,
-    n_osarOthers: req.body.n_osarOthers,
-    n_osarInstitusi: req.body.n_osarInstitusi,
-    n_osarIndividu: req.body.n_osarIndividu,
-    n_osar: req.body.n_osar,
-    n_dpkEkternal: req.body.n_dpkEkternal,
-    n_dpkFamily: req.body.n_dpkFamily,
-    n_totalDPK: req.body.n_totalDPK,
-    n_totalBudgetBooking: req.body.n_totalBudgetBooking,
-    c_cell_id: req.body.c_cell_id,
-    n_created_by: req.body.n_created_by,
-    n_updated_by: req.body.n_updated_by,
-  };
-  const upsertObj = upsert(PmWeeklyFinser, pmWeeklyFinserReq, {
-    [Op.and]: [
-      pmWeeklyFinserReq.d_periode
-        ? {
-            d_periode: {
-              [Op.between]: [
-                new Date(
-                  new Date(pmWeeklyFinserReq.d_periode).getFullYear(),
-                  new Date(pmWeeklyFinserReq.d_periode).getMonth(),
-                  1
-                ),
-                new Date(
-                  new Date(pmWeeklyFinserReq.d_periode).getFullYear(),
-                  new Date(pmWeeklyFinserReq.d_periode).getMonth() + 1,
-                  0
-                ),
-              ],
-            },
-          }
-        : null,
-      pmWeeklyFinserReq.n_bu_id ? { n_bu_id: pmWeeklyFinserReq.n_bu_id } : null,
-      pmWeeklyFinserReq.n_weekField_id ? { n_weekField_id: pmWeeklyFinserReq.n_weekField_id } : null,
-    ],
+
+  const PmFinserFieldsTransactionsReq = req.body.map((item) => {
+    return {
+      n_bu_id: item.n_bu_id,
+      n_field_id: item.n_field_id,
+      c_field_id: item.c_field_id,
+      c_periode: item.c_periode,
+      n_field_value: item.n_field_value,
+      d_created_at: item.d_created_at,
+      d_updated_at: item.d_updated_at,
+      n_created_by: item.n_created_by,
+      n_updated_by: item.n_updated_by,
+    };
   });
-  upsertObj
-    .then((data) => {
-      const successResponse = {
-        status: true,
-        message: "Ok",
-        totalItems: data.length,
-        data: data,
-      };
-      res.send(successResponse);
-    })
-    .catch((err) => {
+  // console.log(PmFinserFieldsTransactionsReq);
+  PmFinserFieldsTransactionsReq.map((item) => {
+    if (!validateDate(item.c_periode)) {
+      // throw new Error('c_periode is not a valid date!');
       const errorResponse = {
         status: false,
-        message:
-          err.message || "Some error occurred while creating the SPD data.",
+        message: "c_periode is not a valid date!",
       };
       res.status(500).send(errorResponse);
-    });
-};
+      return;
+    }
+  });
 
-exports.create = (req, res) => {
-  if (!req.body) {
-    res.status(400).send({
-      message: "Data can not be empty!",
-    });
-    return;
-  }
-  const pmWeeklyFinserReq = {
-    n_bu_id: req.body.n_bu_id,
-    c_bu_name: req.body.c_bu_name,
-    n_weekField_id: req.body.n_weekField_id,
-    c_weekField_name: req.body.c_weekField_name,
-    d_periode: req.body.d_periode,
-    n_monthlyBudgetBooking: req.body.n_monthlyBudgetBooking,
-    n_achBudgetBooking: req.body.n_achBudgetBooking,
-    n_booking: req.body.n_booking,
-    n_monthlyBudgetOsar: req.body.n_monthlyBudgetOsar,
-    n_achBudgetOsar: req.body.n_achBudgetOsar,
-    n_osar130: req.body.n_osar130,
-    n_osar3190: req.body.n_osar3190,
-    n_osar90: req.body.n_osar90,
-    n_osarCurrent: req.body.n_osarCurrent,
-    n_osarKospin: req.body.n_osarKospin,
-    n_osarKsu: req.body.n_osarKsu,
-    n_osarOthers: req.body.n_osarOthers,
-    n_osarInstitusi: req.body.n_osarInstitusi,
-    n_osarIndividu: req.body.n_osarIndividu,
-    n_osar: req.body.n_osar,
-    n_dpkEkternal: req.body.n_dpkEkternal,
-    n_dpkFamily: req.body.n_dpkFamily,
-    n_totalDPK: req.body.n_totalDPK,
-    n_totalBudgetBooking: req.body.n_totalBudgetBooking,
-    c_cell_id: req.body.c_cell_id,
-    n_created_by: req.body.n_created_by,
-    n_updated_by: req.body.n_updated_by,
-  };
-  PmWeeklyFinser.create(pmWeeklyFinserReq)
-    .then((data) => {
-      const successResponse = {
-        status: true,
-        message: "Ok",
-        totalItems: data.length,
-        data: data,
-      };
-      res.send(successResponse);
-    })
-    .catch((err) => {
-      const errorResponse = {
-        status: false,
-        message:
-          err.message || "Some error occurred while creating the SPD data.",
-      };
-      res.status(500).send(errorResponse);
-    });
-};
-
-// Retrieve all SFO SU Fields data from the database.
-exports.findAll = (req, res) => {
-  PmWeeklyFinser.findAll({
-    order: [
-      ["n_id", "DESC"],
-      ["name", "ASC"],
+  PmFinserFieldsTransactions.bulkCreate(PmFinserFieldsTransactionsReq, {
+    updateOnDuplicate: [
+      "n_bu_id",
+      "n_field_id",
+      "c_field_id",
+      "c_periode",
+      "n_field_value",
     ],
   })
     .then((data) => {
@@ -168,19 +74,201 @@ exports.findAll = (req, res) => {
       const errorResponse = {
         status: false,
         message:
-          err.message || "Some error occurred while retrieving SPD data.",
+          err.message || "Some error occurred while creating the Field data.",
       };
       res.status(500).send(errorResponse);
     });
 };
 
-// Retrieve all SFO SU Fields data by param from the database.
+exports.upsert = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Data can not be empty!",
+    });
+    return;
+  }
+  const PmFinserFieldsTransactionsReq = {
+    n_bu_id: req.body.n_bu_id,
+    n_field_id: req.body.n_field_id,
+    c_field_id: req.body.c_field_id,
+    c_periode: req.body.c_periode,
+    n_field_value: req.body.n_field_value,
+    d_created_at: req.body.d_created_at,
+    d_updated_at: req.body.d_updated_at,
+    n_created_by: req.body.n_created_by,
+    n_updated_by: req.body.n_updated_by,
+  };
+  if (!validateDate(PmFinserFieldsTransactionsReq.c_periode)) {
+    // throw new Error('c_periode is not a valid date!');
+    const errorResponse = {
+      status: false,
+      message: "c_periode is not a valid date!",
+    };
+    res.status(500).send(errorResponse);
+    return;
+  }
+  const upsertObj = upsert(
+    PmFinserFieldsTransactions,
+    PmFinserFieldsTransactionsReq,
+    {
+      [Op.and]: [
+        PmFinserFieldsTransactionsReq.c_periode
+          ? {
+              c_periode: {
+                [Op.iLike]: `%${PmFinserFieldsTransactionsReq.c_periode}%`,
+              },
+            }
+          : null,
+        PmFinserFieldsTransactionsReq.n_bu_id
+          ? { n_bu_id: PmFinserFieldsTransactionsReq.n_bu_id }
+          : null,
+      ],
+    }
+  );
+  upsertObj
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message ||
+          "Some error occurred while creating the PM-Finser Weekly data.",
+      };
+      console.log(err.errors);
+      res.status(500).send(errorResponse);
+    });
+};
+
+exports.create = (req, res) => {
+  if (!req.body) {
+    res.status(400).send({
+      message: "Data can not be empty!",
+    });
+    return;
+  }
+  const PmFinserFieldsTransactionsReq = {
+    n_bu_id: req.body.n_bu_id,
+    n_field_id: req.body.n_field_id,
+    c_field_id: req.body.c_field_id,
+    c_periode: req.body.c_periode,
+    n_field_value: req.body.n_field_value,
+    d_created_at: req.body.d_created_at,
+    d_updated_at: req.body.d_updated_at,
+    n_created_by: req.body.n_created_by,
+    n_updated_by: req.body.n_updated_by,
+  };
+  PmFinserFieldsTransactions.create(PmFinserFieldsTransactionsReq)
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message ||
+          "Some error occurred while creating the PM-Finser data.",
+      };
+      res.status(500).send(errorResponse);
+    });
+};
+
+// Retrieve all PM-Finser Fields Transactions data from the database.
+exports.findAll = (req, res) => {
+  PmFinserDashboardWeekly.findAll()
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message || "Some error occurred while retrieving PM-Finser data.",
+      };
+      res.status(500).send(errorResponse);
+    });
+};
+// Retrieve all PM-Finser Fields Transactions data booking from the database.
+exports.findAllBooking = (req, res) => {
+  PmFinserDashboardWeeklyBooking.findAll()
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message || "Some error occurred while retrieving PM-Finser data.",
+      };
+      res.status(500).send(errorResponse);
+    });
+};
+
+// Retrieve all PM-Finser Fields data from the database.
+exports.findAllFields = (req, res) => {
+  const { j_field_bu } = req.body;
+  PmFinserFields.findAll({
+    where: j_field_bu
+      ? {
+          j_field_bu: {
+            [Op.contains]: [j_field_bu],
+          },
+        }
+      : null,
+    order: [
+      ["n_field_groupseq", "ASC"],
+      ["n_field_seq", "ASC"],
+    ],
+  })
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message ||
+          "Some error occurred while retrieving PM-Finser data.",
+      };
+      res.status(500).send(errorResponse);
+    });
+};
+
+// Retrieve all PM_Finser Fields Transactions data by param from the database.
 exports.findAllByParam = (req, res) => {
   const { d_periode, n_bu_id } = req.body;
-  PmWeeklyFinser.findAll({
-    order: [
-      ["n_id", "DESC"],
-    ],
+  PmFinserDashboardWeekly.findAll({
     where: {
       [Op.and]: [
         d_periode
@@ -218,7 +306,53 @@ exports.findAllByParam = (req, res) => {
       const errorResponse = {
         status: false,
         message:
-          err.message || "Some error occurred while retrieving SPD data.",
+          err.message || "Some error occurred while retrieving PM-Finser data.",
+      };
+      res.status(500).send(errorResponse);
+    });
+};
+// Retrieve all PM_Finser Fields Transactions data by param from the database.
+exports.findAllByParamBooking = (req, res) => {
+  const { d_periode, n_bu_id } = req.body;
+  PmFinserDashboardWeeklyBooking.findAll({
+    where: {
+      [Op.and]: [
+        d_periode
+          ? {
+              d_periode: {
+                [Op.between]: [
+                  new Date(
+                    new Date(d_periode).getFullYear(),
+                    new Date(d_periode).getMonth(),
+                    1
+                  ),
+                  new Date(
+                    new Date(d_periode).getFullYear(),
+                    new Date(d_periode).getMonth() + 1,
+                    0
+                  ),
+                ],
+              },
+            }
+          : null,
+        n_bu_id ? { n_bu_id: n_bu_id } : null,
+      ],
+    },
+  })
+    .then((data) => {
+      const successResponse = {
+        status: true,
+        message: "Ok",
+        totalItems: data?.length,
+        data: data,
+      };
+      res.send(successResponse);
+    })
+    .catch((err) => {
+      const errorResponse = {
+        status: false,
+        message:
+          err.message || "Some error occurred while retrieving PM-Finser data.",
       };
       res.status(500).send(errorResponse);
     });
@@ -226,349 +360,265 @@ exports.findAllByParam = (req, res) => {
 
 ///////////////////////////////////////////////////
 //this API has special configuration
-// Retrieve all SFO SU Fields data by param from the database.
+// Retrieve all SFO PM-Weekly Fields data by param from the database.
 exports.findAllByParamMonthly = (req, res) => {
-  const { date_start, date_end } = req.body;
-  PmWeeklyFinser.findAll({
-    include: [{ model: PmCommentsFinser, as: "pm_comments" }],
+  const { d_periode, n_bu_id, n_lastMonth } = req.body;
+  // Parse the parameter using Luxon and format it to the first day of the month
+  // const parameterDate = DateTime.fromFormat(d_periode, "MMM-yy", {
+  //   lowerCase: true,
+  // }).startOf("month");
+  const parameterDate = DateTime.fromISO(d_periode, "MMM-yy", {
+    lowerCase: true,
+  }).startOf("month");
+  console.log(parameterDate);
+  // Calculate the start of the month 6 months ago from the parameter
+  const nLastMonthsAgoStart = parameterDate.minus({ months: n_lastMonth });
+
+  // Calculate the start of the same month in the previous year
+  const lastYearSameMonthStart = parameterDate.minus({ years: 1 });
+  PmFinserDashboardWeeklyBooking.findAll({
     where: {
       [Op.and]: [
-        date_start && date_end
+        d_periode
           ? {
-              d_periode: {
-                [Op.between]: [
-                  DateTime.fromISO(date_start).toISODate(),
-                  DateTime.fromISO(date_end).toISODate(),
-                ],
-              },
+              [Op.or]: [
+                {
+                  d_periode: {
+                    [Op.gt]: nLastMonthsAgoStart.toJSDate(),
+                    [Op.lte]: parameterDate.toJSDate(),
+                  },
+                },
+                {
+                  d_periode: {
+                    [Op.eq]: lastYearSameMonthStart.toJSDate(),
+                  },
+                },
+              ],
             }
           : null,
-        // sequalize.where(sequalize.cast(sequalize.col('d_periode'), 'month'), '>=', '12:00'),
+        n_bu_id ? { n_bu_id: n_bu_id } : null,
       ],
     },
+    order: [
+      ["d_periode", "ASC"],
+      ["n_bu_id", "ASC"],
+      ["n_field_id", "ASC"],
+    ],
   })
     .then((data) => {
-      const yFields = [
-        {
-          id: "w1",
-          field_id: 1,
-          reference_field: "n_booking",
-          value: "W1",
-        },
-        {
-          id: "w2",
-          field_id: 2,
-          reference_field: "n_booking",
-          value: "W2",
-        },
-        {
-          id: "w3",
-          field_id: 3,
-          reference_field: "n_booking",
-          value: "W3",
-        },
-        {
-          id: "w4",
-          field_id: 4,
-          reference_field: "n_booking",
-          value: "W4",
-        },
-        {
-          id: "totalBooking",
-          field_id: 0,
-          reference_field: "n_totalBudgetBooking",
-          value: "Total Booking",
-        },
-        {
-          id: "monthlyBudgetBooking",
-          field_id: 0,
-          reference_field: "n_monthlyBudgetBooking",
-          value: "Monthly Booking",
-        },
-        {
-          id: "achBudgetBooking",
-          field_id: 0,
-          reference_field: "n_achBudgetBooking",
-          field_color: "gray",
-          value: "% Ach to Booking",
-        },
-      ];
-
-      const monthlyDataPeriod = yFields.map((yFieldItem) =>
+      ////////////////////////////////
+      const paramMonth = DateTime.fromISO(d_periode, "MMM-yy", {
+        lowerCase: true,
+      }).toFormat("LLL-yy");
+      const lastMonth = DateTime.fromISO(d_periode, "MMM-yy", {
+        lowerCase: true,
+      })
+        .minus({ months: 1 })
+        .toFormat("LLL-yy");
+      const lastYearSameMonth = DateTime.fromISO(d_periode, "MMM-yy", {
+        lowerCase: true,
+      })
+        .minus({ years: 1 })
+        .toFormat("LLL-yy");
+      ////////////////////////////////////////
+      const trendData = data.map((item) => {
+        if (lastYearSameMonth !== item.c_periode.replace(/ /g, "")) {
+          return {
+            [item.c_bu_name]: {
+              [item.c_field_name]: {
+                ["Month"]: item.c_periode.replace(/ /g, "") + " (Juta)",
+                ["Revenue"]: (parseFloat(item.n_field_value) / 1000000).toFixed(
+                  2
+                ),
+              },
+            },
+          };
+        }
+      });
+      const periodeValue = mergeObjectsWithSameKey(
         data.map((item) => {
-          if (yFieldItem.field_id === item.n_weekField_id) {
-            return {
-              [DateTime.fromISO(item.d_periode)
-                .toLocaleString({
-                  month: "long",
-                  year: "numeric",
-                })
-                .replace(/\s/, "")]: item[yFieldItem.reference_field],
-            };
-          } else if (yFieldItem.field_id === 0) {
-            return {
-              [DateTime.fromISO(item.d_periode)
-                .toLocaleString({
-                  month: "long",
-                  year: "numeric",
-                })
-                .replace(/\s/, "")]: item[yFieldItem.reference_field],
-            };
-          } else {
-            return {};
-          }
+          return {
+            [item.n_bu_id]: {
+              [item.c_field_id.replace(/ /g, "")]: {
+                ///special condition
+                [item.c_periode.replace(/ /g, "")]:
+                  item.c_field_id !== "FBAB"
+                    ? formatDigit(
+                        (parseFloat(item.n_field_value) / 1000000).toFixed(2)
+                      )
+                    : `${formatDigit(
+                        (parseFloat(item.n_field_value) * 100).toFixed(0)
+                      )}%`,
+              },
+            },
+          };
         })
       );
+      const periodeHeader = getUniqueData(
+        data.map((item) => {
+          switch (item.c_periode.replace(/ /g, "")) {
+            case lastYearSameMonth:
+              return {
+                id: item.c_periode.replace(/ /g, ""),
+                flag: paramMonth,
+                value: item.c_periode.replace(/ /g, "") + " (Juta)",
+                color: "blue",
+              };
+              break;
+            case lastMonth:
+              return {
+                id: item.c_periode.replace(/ /g, ""),
+                flag: paramMonth,
+                value: item.c_periode.replace(/ /g, "") + " (Juta)",
+                color: "green",
+              };
+              break;
+            case paramMonth:
+              return {
+                id: item.c_periode.replace(/ /g, ""),
+                flag: paramMonth,
+                value: item.c_periode.replace(/ /g, "") + " (Juta)",
+                color: "green",
+              };
+              break;
 
-      const monthlyData = data.map((item) => {
-        const xFieldMonth = yFields.map((yFieldItem) => {
-          {
-            if (yFieldItem.field_id === item.n_weekField_id) {
-              return [
-                {
-                  month: DateTime.fromISO(item.d_periode).toLocaleString({
-                    month: "long",
-                    year: "numeric",
-                  }),
-                  value: item[yFieldItem.reference_field],
-                },
-              ];
-            } else if (yFieldItem.field_id === 0) {
-              return [
-                {
-                  month: DateTime.fromISO(item.d_periode).toLocaleString({
-                    month: "long",
-                    year: "numeric",
-                  }),
-                  value: item[yFieldItem.reference_field],
-                },
-              ];
-            } else {
-              return [];
-            }
+            default:
+              return {
+                id: item.c_periode.replace(/ /g, ""),
+                flag: paramMonth,
+                value: item.c_periode.replace(/ /g, "") + " (Juta)",
+              };
+              break;
           }
-        });
-        const xFieldMonthHeader = xFieldMonth
-          .map((xFieldMonthItem) =>
-            xFieldMonthItem.reduce(
-              (acc, cur) => ({
-                ...acc,
-                id: cur.month.replace(/\s/, ""),
-                color: "",
-                value: cur.month,
-              }),
-              {}
-            )
-          )
-          .reduce((acc, cur) => ({ ...cur }), {});
-
-        const xFieldMonthData = monthlyDataPeriod.map(
-          (monthlyDataPeriodItem) => monthlyDataPeriodItem
-        );
-
-        const dataForMontly = {
-          data: [
-            ...yFields.map((yFieldItem, index) =>
-              index === 0
-                ? {
-                    bu: item.c_bu_name,
-                    buId: item.c_bu_name?.toLowerCase(),
-                    buReferenceId: item.n_bu_id,
-                    yField: yFieldItem.value,
-                    yFieldId: yFieldItem.id,
-                    yFieldReference: yFieldItem.reference_field,
-                    yFieldColor: yFieldItem.field_color,
-                    rowspan: yFields.length,
-                    ...Object.assign({}, ...xFieldMonthData[index]),
-                  }
-                : {
-                    bu: item.c_bu_name,
-                    buId: item.c_bu_name?.toLowerCase(),
-                    buReferenceId: item.n_bu_id,
-                    yField: yFieldItem.value,
-                    yFieldId: yFieldItem.id,
-                    yFieldReference: yFieldItem.reference_field,
-                    yFieldColor: yFieldItem.field_color,
-                    ...Object.assign({}, ...xFieldMonthData[index]),
-                  }
-            ),
-          ],
-        };
-
-        return {
-          xFieldMonthHeader: xFieldMonthHeader,
-          dataForMontly: dataForMontly,
-        };
-      });
-
-      const suDataSet = Array.from(
-        new Set(data.map((item) => item.c_bu_name?.toLowerCase()))
+        }),
+        "id"
       );
-      const monthlyDataArray = monthlyData.map(
-        (itemMonthly) => itemMonthly.xFieldMonthHeader
-      );
-
-      const monthlyDataUnique = [];
-      monthlyDataArray.forEach((datum) => {
-        if (!monthlyDataUnique.find((item) => item.id === datum.id)) {
-          monthlyDataUnique.push(datum);
-        }
-      });
-      // console.log(monthlyDataUnique)
-
-      const xFieldMonthly = [
-        {
-          id: "bu",
-          value: "Business Unit",
-        },
-        {
-          id: "periode",
-          value: "Periode",
-        },
-        ...monthlyDataUnique.map((item) => item),
-        {
-          id: "trend",
-          color: "green",
-          value: "Last 6 Months Trend",
-        },
-        {
-          id: "lm",
-          color: "green",
-          value: "Δ LM",
-        },
-        {
-          id: "ly",
-          color: "blue",
-          value: "Δ LY",
-        },
-      ];
-      const dataMonthlyRaw = [].concat(
-        ...[
-          ...Object.values(
-            monthlyData.map((itemMonthly, index) => itemMonthly.dataForMontly)
-          ),
-        ].map((item) => item.data)
-      );
-
-      const dataMonthly = [];
-      dataMonthlyRaw.forEach((datum) => {
-        if (
-          !dataMonthly.find(
-            (item) =>
-              item.buId === datum.buId && item.yFieldId === datum.yFieldId
-          )
-        ) {
-          dataMonthly.push(datum);
-        }
-      });
-
-      function getUniqueTrenData(arr) {
-        const trendDataUnique = [];
-        arr.forEach((datum) => {
-          if (!trendDataUnique.find((item) => item.Month === datum.Month)) {
-            trendDataUnique.push(datum);
-          }
-        });
-
-        return trendDataUnique;
-      }
-
-      const trendDataMonthly = {
-        ...suDataSet.map((item) => ({
-          [item]: {
-            w1: getUniqueTrenData([
-              ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_periode).toLocaleString({
-                  month: "long",
-                  day: "numeric",
-                }),
-                Unit: item.n_weekField_id === 1 ? item.n_booking : null,
-              })),
-            ]),
-            w2: getUniqueTrenData([
-              ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_periode).toLocaleString({
-                  month: "long",
-                  day: "numeric",
-                }),
-                Unit: item.n_weekField_id === 2 ? item.n_booking : null,
-              })),
-            ]),
-            w3: getUniqueTrenData([
-              ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_periode).toLocaleString({
-                  month: "long",
-                  day: "numeric",
-                }),
-                Unit: item.n_weekField_id === 3 ? item.n_booking : null,
-              })),
-            ]),
-            w4: getUniqueTrenData([
-              ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_periode).toLocaleString({
-                  month: "long",
-                  day: "numeric",
-                }),
-                Unit: item.n_weekField_id === 4 ? item.n_booking : null,
-              })),
-            ]),
-            totalBooking: getUniqueTrenData([
-              ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_periode).toLocaleString({
-                  month: "long",
-                  day: "numeric",
-                }),
-                Unit: item.n_totalBudgetBooking,
-              })),
-            ]),
-            monthlyBudgetBooking: getUniqueTrenData([
-              ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_periode).toLocaleString({
-                  month: "long",
-                  day: "numeric",
-                }),
-                Unit: item.n_monthlyBudgetBooking,
-              })),
-            ]),
-            achBudgetBooking: getUniqueTrenData([
-              ...data.map((item) => ({
-                Month: DateTime.fromISO(item.d_periode).toLocaleString({
-                  month: "long",
-                  day: "numeric",
-                }),
-                Unit: item.n_achBudgetBooking,
-              })),
-            ]),
-          },
-        })),
-      };
-
-      const trendDataMonthlyFormatted = Object.assign(
-        {},
-        ...Object.values(trendDataMonthly).map((item) => ({ ...item }))
-      );
-
-      // const commentDataMonthly = Object.values({
-      //   ...suDataSet.map((item) => ({
-      //     [item]: data.map((item) => Object.values(item.pm_comments)),
-      //   })),
-      // });
-      const commentDataMonthly = [].concat(
-        ...data.map((item) => item.pm_comments)
-      );
-
       const successResponse = {
         status: true,
         message: "Ok",
         totalItems: data?.length,
         data: {
           // data,
-          header: xFieldMonthly,
-          data: dataMonthly,
-          trendData: trendDataMonthlyFormatted,
-          commentData: commentDataMonthly,
-          // .map((itemMonthly) => itemMonthly.trendData)
-          // .reduce((acc, cur) => cur, {}),
+          header: [
+            {
+              id: "bu",
+              flag: paramMonth,
+              value: "Business Unit",
+            },
+            {
+              id: "param",
+              flag: paramMonth,
+              value: "",
+            },
+            ...periodeHeader,
+            {
+              id: "trend",
+              color: "green",
+              flag: paramMonth,
+              value: `Last ${periodeHeader.length - 1} Months Trend`,
+            },
+            {
+              id: "lm",
+              color: "green",
+              flag: paramMonth,
+              value: "Δ LM",
+            },
+            {
+              id: "ly",
+              color: "blue",
+              flag: paramMonth,
+              value: "Δ LY",
+            },
+          ],
+          data: getUniqueDataWithFunc(
+            data.map((item) => {
+              const valueData = mergeObjectsWithSameKey(
+                periodeValue[item.n_bu_id]
+              )[item.c_field_id];
+              const buDataLength = Object.keys(
+                mergeObjectsWithSameKey(periodeValue[item.n_bu_id])
+              ).length;
+
+              ////////////////////////////////
+              const paramMonth = DateTime.fromISO(d_periode, "MMM-yy", {
+                lowerCase: true,
+              }).toFormat("LLL-yy");
+              const lastMonth = DateTime.fromISO(d_periode, "MMM-yy", {
+                lowerCase: true,
+              })
+                .minus({ months: 1 })
+                .toFormat("LLL-yy");
+              const lastYearSameMonth = DateTime.fromISO(d_periode, "MMM-yy", {
+                lowerCase: true,
+              })
+                .minus({ years: 1 })
+                .toFormat("LLL-yy");
+
+              const mergedValueData = Object.assign({}, ...valueData);
+              ////special condition
+              const specificColorTable =
+                item.c_field_id === "FTOB" ||
+                item.c_field_id === "FBMB" ||
+                item.c_field_id === "FBAB"
+                  ? "#C8FFE0"
+                  : "";
+              ///special condition
+              const deltaLm =
+                item.c_field_id !== "FBAB"
+                  ? (parseFloat(
+                      mergedValueData[paramMonth] /
+                        parseFloat(mergedValueData[lastMonth])
+                    ) -
+                      1) *
+                    100
+                  : null;
+              ///special condition
+              const deltaLy =
+                item.c_field_id !== "FBAB"
+                  ? (parseFloat(mergedValueData[paramMonth]) /
+                      parseFloat(mergedValueData[lastYearSameMonth]) -
+                      1) *
+                    100
+                  : null;
+              //////////////////////////////
+
+              return Object.assign(
+                {
+                  bu: item.c_bu_name,
+                  buId: item.c_bu_name,
+                  buReferenceId: item.n_bu_id,
+                  yField: item.c_field_name,
+                  yFieldId: item.c_field_name,
+                  yFieldReference: item.c_field_id,
+                  yFieldColor: specificColorTable,
+                  ///special condition
+                  lm: deltaLm
+                    ? `${parseFloat(deltaLm).toFixed(2)}%`
+                    : deltaLm === null
+                    ? ""
+                    : "0%",
+                  ///special condition
+                  ly: deltaLy
+                    ? `${parseFloat(deltaLy).toFixed(2)}%`
+                    : deltaLy === null
+                    ? ""
+                    : "0%",
+                  // rowspan: buDataLength,
+                },
+                ...valueData
+              );
+            }),
+            (item, datum) => {
+              const filteredKey = "buReferenceId";
+              const filteredKey2 = "yFieldReference";
+              return (
+                item[filteredKey] === datum[filteredKey] &&
+                item[filteredKey2] === datum[filteredKey2]
+              );
+            }
+          ),
+          trendData: deepMergeObjectsWithSameKey(trendData),
+          // commentData: commentDataMonthly,
         },
       };
       res.send(successResponse);
@@ -577,7 +627,7 @@ exports.findAllByParamMonthly = (req, res) => {
       const errorResponse = {
         status: false,
         message:
-          err.message || "Some error occurred while retrieving SPD data.",
+          err.message || "Some error occurred while retrieving PM-Finser data.",
       };
       res.status(500).send(errorResponse);
     });

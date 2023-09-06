@@ -1,5 +1,5 @@
 const db = require("../../../models/sfo/pm-weekly");
-const { getPagingData, getPagination } = require("../../../utils/spdmain.util");
+const { getPagingData, getPagination } = require("../../../utils/util");
 const PmWeeklyOtomotif = db.pmWeeklyOtomotif;
 const PmCommentsOtomotif = db.pmCommentsOtomotif;
 

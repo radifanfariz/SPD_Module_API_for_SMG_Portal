@@ -11,17 +11,13 @@ module.exports = (app) => {
   router.post("/", isAuth, pmWeeklyOtomotif.create);
   // Upsert a new otomotif weekly Data
   router.post("/upsert", isAuth, pmWeeklyOtomotif.upsert);
-  // Bulk Upsert a new otomotif weekly Data
-  router.post("/bulkUpsert", isAuth, pmWeeklyOtomotif.bulkUpsert);
   // Create a new otomotif comment Data
   router.post("/comments", isAuth, pmCommentsOtomotif.create);
 
-  // Retrieve PM-Otomotif BU Data
+  // Retrieve BU Data
   router.get("/otomotifBu", isAuth, pmOtomotifBu.findAll);
   router.post("/otomotifBu/params", isAuth, pmOtomotifBu.findAllByParam);
-  // Retrieve PM-Otomotif Fields Data
-  router.post("/fields", isAuth, pmWeeklyOtomotif.findAllFields);
-  // Retrieve PM-Otomotif Data
+  // Retrieve SFO Otomotif Data
   router.get("/", isAuth, pmWeeklyOtomotif.findAll);
   router.post("/params", isAuth, pmWeeklyOtomotif.findAllByParam);
   router.post("/monthlyParams", isAuth, pmWeeklyOtomotif.findAllByParamMonthly);

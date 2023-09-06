@@ -7,25 +7,19 @@ module.exports = (app) => {
 
   var router = require("express").Router();
 
-  // Create a new finser weekly Data
+  // Create a new otomotif weekly Data
   router.post("/", isAuth, pmWeeklyFinser.create);
-  // Upsert a new finser weekly Data
+  // Upsert a new otomotif weekly Data
   router.post("/upsert", isAuth, pmWeeklyFinser.upsert);
-  // Bulk Upsert a new otomotif weekly Data
-  router.post("/bulkUpsert", isAuth, pmWeeklyFinser.bulkUpsert);
-  // Create a new finser comment Data
+  // Create a new otomotif comment Data
   router.post("/comments", isAuth, pmCommentsFinser.create);
 
-  // Retrieve PM-Finser BU Data
+  // Retrieve BU Data
   router.get("/finserBu", isAuth, pmFinserBu.findAll);
   router.post("/finserBu/params", isAuth, pmFinserBu.findAllByParam);
-  // Retrieve PM-Finser Fields Data
-  router.post("/fields", isAuth, pmWeeklyFinser.findAllFields);
-  // Retrieve PM-Finser Data
+  // Retrieve SFO Otomotif Data
   router.get("/", isAuth, pmWeeklyFinser.findAll);
   router.post("/params", isAuth, pmWeeklyFinser.findAllByParam);
-  router.get("/booking", isAuth, pmWeeklyFinser.findAllBooking);
-  router.post("/booking/params", isAuth, pmWeeklyFinser.findAllByParamBooking);
   router.post("/monthlyParams", isAuth, pmWeeklyFinser.findAllByParamMonthly);
   router.get("/comments", isAuth, pmCommentsFinser.findAll);
   router.post("/comments/params", isAuth, pmCommentsFinser.findAllByParam);

@@ -43,111 +43,6 @@ exports.PmCommentsFinser = (sequelize, Sequelize) => {
 
   return PmCommentsFinser;
 };
-exports.PmWeeklyFinser = (sequelize, Sequelize) => {
-  const PmWeeklyFinser = sequelize.define(
-    "pm_finser_weekly",
-    {
-      n_id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      n_bu_id: {
-        type: Sequelize.INTEGER,
-      },
-      c_bu_name: {
-        type: Sequelize.STRING,
-      },
-      n_weekField_id: {
-        type: Sequelize.INTEGER,
-      },
-      c_weekField_name: {
-        type: Sequelize.STRING,
-      },
-      d_periode: {
-        type: Sequelize.DATEONLY,
-      },
-      n_monthlyBudgetBooking: {
-        type: Sequelize.DOUBLE,
-      },
-      n_achBudgetBooking: {
-        type: Sequelize.DOUBLE,
-      },
-      n_booking: {
-        type: Sequelize.DOUBLE,
-      },
-      n_monthlyBudgetOsar: {
-        type: Sequelize.DOUBLE,
-      },
-      n_achBudgetOsar: {
-        type: Sequelize.DOUBLE,
-      },
-      n_osar130: {
-        type: Sequelize.DOUBLE,
-      },
-      n_osar3190: {
-        type: Sequelize.DOUBLE,
-      },
-      n_osar90: {
-        type: Sequelize.DOUBLE,
-      },
-      n_osarCurrent: {
-        type: Sequelize.DOUBLE,
-      },
-      n_osarKospin: {
-        type: Sequelize.DOUBLE,
-      },
-      n_osarKsu: {
-        type: Sequelize.DOUBLE,
-      },
-      n_osarOthers: {
-        type: Sequelize.DOUBLE,
-      },
-      n_osarInstitusi: {
-        type: Sequelize.DOUBLE,
-      },
-      n_osarIndividu: {
-        type: Sequelize.DOUBLE,
-      },
-      n_osar: {
-        type: Sequelize.DOUBLE,
-      },
-      n_dpkEkternal: {
-        type: Sequelize.DOUBLE,
-      },
-      n_dpkFamily: {
-        type: Sequelize.DOUBLE,
-      },
-      n_totalDPK: {
-        type: Sequelize.DOUBLE,
-      },
-      n_totalBudgetBooking: {
-        type: Sequelize.DOUBLE,
-      },
-      c_cell_id: {
-        type: Sequelize.STRING,
-      },
-      d_created_at: {
-        type: Sequelize.DATEONLY,
-      },
-      d_updated_at: {
-        type: Sequelize.DATEONLY,
-      },
-      n_created_by: {
-        type: Sequelize.INTEGER,
-      },
-      n_updated_by: {
-        type: Sequelize.INTEGER,
-      },
-    },
-    {
-      freezeTableName: true,
-      timestamps: false,
-    }
-  );
-
-  return PmWeeklyFinser;
-};
 
 exports.PmFinserBu = (sequelize, Sequelize) => {
   const PmFinserBu = sequelize.define(
@@ -173,4 +68,225 @@ exports.PmFinserBu = (sequelize, Sequelize) => {
   );
 
   return PmFinserBu;
+};
+
+exports.PmFinserFields = (sequelize, Sequelize) => {
+  const PmFinserFields = sequelize.define(
+    "pm_finser_fields",
+    {
+      n_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      n_field_id: {
+        type: Sequelize.INTEGER,
+      },
+      c_field_id: {
+        type: Sequelize.STRING,
+      },
+      c_field_groupid: {
+        type: Sequelize.STRING,
+      },
+      c_field_groupname: {
+        type: Sequelize.STRING,
+      },
+      n_field_groupseq: {
+        type: Sequelize.INTEGER,
+      },
+      n_field_seq: {
+        type: Sequelize.INTEGER,
+      },
+      c_field_name: {
+        type: Sequelize.STRING,
+      },
+      j_field_rules: {
+        type: Sequelize.JSON,
+      },
+      j_field_bu: {
+        type: Sequelize.JSON,
+      },
+    },
+    {
+      freezeTableName: true,
+      timestamps: false,
+    }
+  );
+
+  return PmFinserFields;
+};
+exports.PmFinserFieldsTransactions = (sequelize, Sequelize) => {
+  const PmFinserFieldsTransactions = sequelize.define(
+    "pm_finser_fields_transactions",
+    {
+      n_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      n_bu_id: {
+        type: Sequelize.INTEGER,
+      },
+      n_field_id: {
+        type: Sequelize.INTEGER,
+      },
+      c_field_id: {
+        type: Sequelize.STRING,
+      },
+      c_periode: {
+        type: Sequelize.STRING,
+      },
+      d_periode: {
+        type: Sequelize.DATEONLY,
+      },
+      n_field_value: {
+        type: Sequelize.DOUBLE,
+      },
+      // d_created_at: {
+      //   type: Sequelize.DATEONLY,
+      // },
+      // d_updated_at: {
+      //   type: Sequelize.DATEONLY,
+      // },
+      // n_created_by: {
+      //   type: Sequelize.INTEGER,
+      // },
+      // n_updated_by: {
+      //   type: Sequelize.INTEGER,
+      // },
+    },
+    {
+      freezeTableName: true,
+      timestamps: false,
+      indexes: [
+        {
+          unique: true,
+          fields: ["c_periode", "c_field_id", "n_field_id", "n_bu_id"],
+        },
+      ],
+    }
+  );
+
+  return PmFinserFieldsTransactions;
+};
+
+exports.PmFinserDashboardWeekly = (sequelize, Sequelize) => {
+  const PmFinserDashboardWeekly = sequelize.define(
+    "dashboard_pm_finser_weekly",
+    {
+      n_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      n_bu_id: {
+        type: Sequelize.INTEGER,
+      },
+      c_bu_name: {
+        type: Sequelize.STRING,
+      },
+      n_field_id: {
+        type: Sequelize.INTEGER,
+      },
+      c_field_id: {
+        type: Sequelize.STRING,
+      },
+      c_field_name: {
+        type: Sequelize.STRING,
+      },
+      c_periode: {
+        type: Sequelize.STRING,
+      },
+      d_periode: {
+        type: Sequelize.DATEONLY,
+      },
+      n_field_value: {
+        type: Sequelize.DOUBLE,
+      },
+      j_field_rules: {
+        type: Sequelize.JSON,
+      },
+      j_field_bu: {
+        type: Sequelize.JSON,
+      },
+      // d_created_at: {
+      //   type: Sequelize.DATEONLY,
+      // },
+      // d_updated_at: {
+      //   type: Sequelize.DATEONLY,
+      // },
+      // n_created_by: {
+      //   type: Sequelize.INTEGER,
+      // },
+      // n_updated_by: {
+      //   type: Sequelize.INTEGER,
+      // },
+    },
+    {
+      freezeTableName: true,
+      timestamps: false,
+    }
+  );
+
+  return PmFinserDashboardWeekly;
+};
+exports.PmFinserDashboardWeeklyBooking = (sequelize, Sequelize) => {
+  const PmFinserDashboardWeeklyBooking = sequelize.define(
+    "dashboard_pm_finser_weekly_booking",
+    {
+      n_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      n_bu_id: {
+        type: Sequelize.INTEGER,
+      },
+      c_bu_name: {
+        type: Sequelize.STRING,
+      },
+      n_field_id: {
+        type: Sequelize.INTEGER,
+      },
+      c_field_id: {
+        type: Sequelize.STRING,
+      },
+      c_field_name: {
+        type: Sequelize.STRING,
+      },
+      c_periode: {
+        type: Sequelize.STRING,
+      },
+      d_periode: {
+        type: Sequelize.DATEONLY,
+      },
+      n_field_value: {
+        type: Sequelize.DOUBLE,
+      },
+      j_field_rules: {
+        type: Sequelize.JSON,
+      },
+      j_field_bu: {
+        type: Sequelize.JSON,
+      },
+      // d_created_at: {
+      //   type: Sequelize.DATEONLY,
+      // },
+      // d_updated_at: {
+      //   type: Sequelize.DATEONLY,
+      // },
+      // n_created_by: {
+      //   type: Sequelize.INTEGER,
+      // },
+      // n_updated_by: {
+      //   type: Sequelize.INTEGER,
+      // },
+    },
+    {
+      freezeTableName: true,
+      timestamps: false,
+    }
+  );
+
+  return PmFinserDashboardWeeklyBooking;
 };

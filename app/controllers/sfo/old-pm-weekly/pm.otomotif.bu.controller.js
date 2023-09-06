@@ -1,6 +1,6 @@
 const db = require("../../../models/sfo/pm-weekly");
-const { getPagingData, getPagination, isContentTableExist } = require("../../../utils/util");
-const PmFinserBu = db.pmFinserBu;
+const { getPagingData, getPagination, isContentTableExist } = require("../../../utils/spdmain.util");
+const PmOtomotifBu = db.pmOtomotifBu;
 
 const sequalize = db.Sequelize;
 const Op = db.Sequelize.Op;
@@ -13,11 +13,11 @@ exports.createBu = (req, res) => {
     });
     return;
   }
-  const pmFinserBuReq = {
+  const pmOtomotifBuReq = {
     n_bu_id: req.body.n_bu_id,
     c_bu_name: req.body.c_bu_name,
   };
-  PmFinserBu.create(pmFinserBuReq)
+  PmOtomotifBu.create(pmOtomotifBuReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -48,9 +48,9 @@ exports.bulkCreateBu = (req, res) => {
     return;
   }
 
-  PmFinserBu.bulkCreate(
+  PmOtomotifBu.bulkCreate(
     req.body,
-    isContentTableExist(PmFinserBu)
+    isContentTableExist(PmOtomotifBu)
       ? {
           updateOnDuplicate: [
             "c_bu_name",
@@ -82,7 +82,7 @@ exports.bulkCreateBu = (req, res) => {
 exports.updateBu = (req, res) => {
   const buId = req.params.id;
 
-  PmFinserBu.update(req.body, {
+  PmOtomotifBu.update(req.body, {
     where: { n_id: buId },
   })
     .then((num) => {
@@ -113,7 +113,7 @@ exports.updateBu = (req, res) => {
 
 // Retrieve all products data from the database.
 exports.findAll = (req, res) => {
-  PmFinserBu.findAll()
+  PmOtomotifBu.findAll()
     .then((data) => {
       const successResponse = {
         status: true,
@@ -136,7 +136,7 @@ exports.findAll = (req, res) => {
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
   const {n_bu_id, c_bu_name } = req.body;
-  PmFinserBu.findAll({
+  PmOtomotifBu.findAll({
     where: {
       [Op.or]: [
         n_bu_id ? { n_bu_id: n_bu_id } : null,

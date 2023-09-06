@@ -3,7 +3,7 @@ const {
   getPagingData,
   getPagination,
   isContentTableExist,
-} = require("../../../utils/spdmain.util");
+} = require("../../../utils/util");
 const PmFinserFields = db.pmFinserFields;
 const PmFinserFieldsTransactions = db.pmFinserFieldsTransactions;
 const PmFinserBu = db.pmFinserBu;

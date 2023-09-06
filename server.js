@@ -1,3 +1,6 @@
+// Import and load dotenv to load .env //
+require('dotenv').config();
+////////////////////////////////////
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -87,6 +90,12 @@ require("./app/routes/sfo/pm-monthly/pm.otomotif.route")(app);
 require("./app/routes/sfo/pm-weekly/pm.finser.route")(app);
 // routes of api PM-Finser monthly
 require("./app/routes/sfo/pm-monthly/pm.finser.route")(app);
+// routes of api PM-Comments
+require("./app/routes/sfo/pm-weekly/pm.comments.route")(app);
+
+
+// auth
+require("./app/routes/auth/auth.route")(app);
 
 ////considered deprecated////
 // require("./app/routes/sfo/pm-monthly/pm.otomotif.route")(app);

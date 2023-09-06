@@ -1,9 +1,9 @@
-const db = require("../../models/sfo");
-const { getPagingData, getPagination } = require("../../utils/util");
-const SfoWeekly = db.sfoWeekly;
-const SfoComments = db.sfoComments;
+const db = require("../../../models/sfo/pm-weekly");
+const { getPagingData, getPagination } = require("../../../utils/spdmain.util");
+const PmWeeklyOtomotif = db.pmWeeklyOtomotif;
+const PmCommentsOtomotif = db.pmCommentsOtomotif;
 
-const sequelize = db.Sequelize;
+const sequalize = db.Sequelize;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -13,7 +13,7 @@ exports.create = (req, res) => {
     });
     return;
   }
-  const sfoCommentsReq = {
+  const pmCommentsOtomotifReq = {
     c_weekly_reference: req.body.c_weekly_reference,
     c_weekly_reference_id: req.body.c_weekly_reference_id,
     c_weekly_cell_id: req.body.c_weekly_cell_id,
@@ -21,7 +21,7 @@ exports.create = (req, res) => {
     n_weekly_id: req.body.n_weekly_id,
     n_updated_by: req.body.n_updated_by,
   };
-  SfoComments.create(sfoCommentsReq)
+  PmCommentsOtomotif.create(pmCommentsOtomotifReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -43,8 +43,8 @@ exports.create = (req, res) => {
 
 // Retrieve all SFO SU Fields data from the database.
 exports.findAll = (req, res) => {
-  SfoComments.findAll({
-    include: [{ model: SfoWeekly, as: "sfo_weekly" }],
+  PmCommentsOtomotif.findAll({
+    include: [{ model: PmWeeklyOtomotif, as: "pm_weekly" }],
   })
     .then((data) => {
       const successResponse = {
@@ -68,8 +68,8 @@ exports.findAll = (req, res) => {
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
   const { n_weekly_id, c_weekly_reference, c_weekly_cell_id } = req.body;
-  SfoComments.findAll({
-    include: [{ model: SfoWeekly, as: "sfo_weekly" }],
+  PmCommentsOtomotif.findAll({
+    include: [{ model: PmWeeklyOtomotif, as: "pm_weekly" }],
     where: {
       [Op.or]: [
         {

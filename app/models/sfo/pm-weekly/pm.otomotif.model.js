@@ -43,69 +43,6 @@ exports.PmCommentsOtomotif = (sequelize, Sequelize) => {
 
   return PmCommentsOtomotif;
 };
-exports.PmWeeklyOtomotif = (sequelize, Sequelize) => {
-  const PmWeeklyOtomotif = sequelize.define(
-    "pm_otomotif_weekly",
-    {
-      n_id: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-      },
-      n_bu_id: {
-        type: Sequelize.INTEGER,
-      },
-      c_bu_name: {
-        type: Sequelize.STRING,
-      },
-      d_periode: {
-        type: Sequelize.DATEONLY,
-      },
-      n_monthlyBudget: {
-        type: Sequelize.INTEGER,
-      },
-      n_w1: {
-        type: Sequelize.INTEGER,
-      },
-      n_w2: {
-        type: Sequelize.INTEGER,
-      },
-      n_w3: {
-        type: Sequelize.INTEGER,
-      },
-      n_w4: {
-        type: Sequelize.INTEGER,
-      },
-      n_totalMonthly: {
-        type: Sequelize.INTEGER,
-      },
-      n_achBudget: {
-        type: Sequelize.DOUBLE,
-      },
-      c_cell_id: {
-        type: Sequelize.STRING,
-      },
-      d_created_at: {
-        type: Sequelize.DATEONLY,
-      },
-      d_updated_at: {
-        type: Sequelize.DATEONLY,
-      },
-      n_created_by: {
-        type: Sequelize.INTEGER,
-      },
-      n_updated_by: {
-        type: Sequelize.INTEGER,
-      },
-    },
-    {
-      freezeTableName: true,
-      timestamps: false,
-    }
-  );
-
-  return PmWeeklyOtomotif;
-};
 
 exports.PmOtomotifBu = (sequelize, Sequelize) => {
   const PmOtomotifBu = sequelize.define(
@@ -131,4 +68,153 @@ exports.PmOtomotifBu = (sequelize, Sequelize) => {
   );
 
   return PmOtomotifBu;
+};
+
+exports.PmOtomotifFields = (sequelize, Sequelize) => {
+  const PmOtomotifFields = sequelize.define(
+    "pm_otomotif_fields",
+    {
+      n_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      n_field_id: {
+        type: Sequelize.INTEGER,
+      },
+      c_field_id: {
+        type: Sequelize.STRING,
+      },
+      c_field_name: {
+        type: Sequelize.STRING,
+      },
+      j_field_rules: {
+        type: Sequelize.JSON,
+      },
+      j_field_bu: {
+        type: Sequelize.JSON,
+      },
+    },
+    {
+      freezeTableName: true,
+      timestamps: false,
+    }
+  );
+
+  return PmOtomotifFields;
+};
+exports.PmOtomotifFieldsTransactions = (sequelize, Sequelize) => {
+  const PmOtomotifFieldsTransactions = sequelize.define(
+    "pm_otomotif_fields_transactions",
+    {
+      n_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      n_bu_id: {
+        type: Sequelize.INTEGER,
+      },
+      n_field_id: {
+        type: Sequelize.INTEGER,
+      },
+      c_field_id: {
+        type: Sequelize.STRING,
+      },
+      c_periode: {
+        type: Sequelize.STRING,
+      },
+      d_periode: {
+        type: Sequelize.DATEONLY,
+      },
+      n_field_value: {
+        type: Sequelize.DOUBLE,
+      },
+      // d_created_at: {
+      //   type: Sequelize.DATEONLY,
+      // },
+      // d_updated_at: {
+      //   type: Sequelize.DATEONLY,
+      // },
+      // n_created_by: {
+      //   type: Sequelize.INTEGER,
+      // },
+      // n_updated_by: {
+      //   type: Sequelize.INTEGER,
+      // },
+    },
+    {
+      freezeTableName: true,
+      timestamps: false,
+      indexes: [
+        {
+          unique: true,
+          fields: ["c_periode", "c_field_id", "n_field_id", "n_bu_id"],
+        },
+      ],
+    }
+  );
+
+  return PmOtomotifFieldsTransactions;
+};
+
+exports.PmOtomotifDashboardWeekly = (sequelize, Sequelize) => {
+  const PmOtomotifDashboardWeekly = sequelize.define(
+    "dashboard_pm_otomotif_weekly",
+    {
+      n_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      n_bu_id: {
+        type: Sequelize.INTEGER,
+      },
+      c_bu_name: {
+        type: Sequelize.STRING,
+      },
+      n_field_id: {
+        type: Sequelize.INTEGER,
+      },
+      c_field_id: {
+        type: Sequelize.STRING,
+      },
+      c_field_name: {
+        type: Sequelize.STRING,
+      },
+      c_periode: {
+        type: Sequelize.STRING,
+      },
+      d_periode: {
+        type: Sequelize.DATEONLY,
+      },
+      n_field_value: {
+        type: Sequelize.DOUBLE,
+      },
+      j_field_rules: {
+        type: Sequelize.JSON,
+      },
+      j_field_bu: {
+        type: Sequelize.JSON,
+      },
+      // d_created_at: {
+      //   type: Sequelize.DATEONLY,
+      // },
+      // d_updated_at: {
+      //   type: Sequelize.DATEONLY,
+      // },
+      // n_created_by: {
+      //   type: Sequelize.INTEGER,
+      // },
+      // n_updated_by: {
+      //   type: Sequelize.INTEGER,
+      // },
+    },
+    {
+      freezeTableName: true,
+      timestamps: false,
+    }
+  );
+
+  return PmOtomotifDashboardWeekly;
 };

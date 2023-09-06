@@ -1,5 +1,5 @@
 const db = require("../../../models/sfo/pm-weekly");
-const { getPagingData, getPagination, isContentTableExist } = require("../../../utils/spdmain.util");
+const { getPagingData, getPagination, isContentTableExist } = require("../../../utils/util");
 const PmOtomotifBu = db.pmOtomotifBu;
 
 const sequalize = db.Sequelize;

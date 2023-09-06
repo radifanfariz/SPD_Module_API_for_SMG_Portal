@@ -3,7 +3,7 @@ const {
   getPagingData,
   getPagination,
   isContentTableExist,
-} = require("../../../utils/spdmain.util");
+} = require("../../../utils/util");
 const PmOtomotifFields = db.pmOtomotifFields;
 const PmOtomotifFieldsTransactions = db.pmOtomotifFieldsTransactions;
 const PmOtomotifBu = db.pmOtomotifBu;
