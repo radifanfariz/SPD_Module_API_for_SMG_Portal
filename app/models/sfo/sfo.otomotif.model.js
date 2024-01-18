@@ -1,3 +1,109 @@
+exports.SfoComments = (sequelize, Sequelize) => {
+  const SfoComments = sequelize.define(
+    "sfo_otomotif_comments",
+    {
+      n_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      c_weekly_reference: {
+        type: Sequelize.STRING,
+      },
+      c_weekly_reference_id: {
+        type: Sequelize.STRING,
+      },
+      c_weekly_cell_id: {
+        type: Sequelize.STRING,
+      },
+      c_comments: {
+        type: Sequelize.INTEGER,
+      },
+      n_weekly_id: {
+        type: Sequelize.INTEGER,
+      },
+      d_created_at: {
+        type: Sequelize.DATEONLY,
+      },
+      d_updated_at: {
+        type: Sequelize.DATEONLY,
+      },
+      n_created_by: {
+        type: Sequelize.INTEGER,
+      },
+      n_updated_by: {
+        type: Sequelize.INTEGER,
+      },
+    },
+    {
+      freezeTableName: true,
+      timestamps: false,
+    }
+  );
+
+  return SfoComments;
+};
+exports.SfoWeekly = (sequelize, Sequelize) => {
+  const SfoWeekly = sequelize.define(
+    "sfo_otomotif_weekly",
+    {
+      n_id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      n_su_id: {
+        type: Sequelize.INTEGER,
+      },
+      d_period: {
+        type: Sequelize.DATEONLY,
+      },
+      n_monthlyBudget: {
+        type: Sequelize.INTEGER,
+      },
+      n_w1: {
+        type: Sequelize.INTEGER,
+      },
+      n_w2: {
+        type: Sequelize.INTEGER,
+      },
+      n_w3: {
+        type: Sequelize.INTEGER,
+      },
+      n_w4: {
+        type: Sequelize.INTEGER,
+      },
+      n_totalBudget: {
+        type: Sequelize.INTEGER,
+      },
+      n_achBudget: {
+        type: Sequelize.DOUBLE,
+      },
+      c_cell_id: {
+        type: Sequelize.STRING,
+      },
+      d_created_at: {
+        type: Sequelize.DATEONLY,
+      },
+      d_updated_at: {
+        type: Sequelize.DATEONLY,
+      },
+      n_created_by: {
+        type: Sequelize.INTEGER,
+      },
+      n_updated_by: {
+        type: Sequelize.INTEGER,
+      },
+    },
+    {
+      freezeTableName: true,
+      timestamps: false,
+    }
+  );
+
+  return SfoWeekly;
+};
+
 exports.SfoSu = (sequelize, Sequelize) => {
   const SfoSu = sequelize.define(
     "sfo_otomotif_su",
@@ -12,6 +118,9 @@ exports.SfoSu = (sequelize, Sequelize) => {
       },
       c_su_type: {
         type: Sequelize.STRING,
+      },
+      n_bu_id: {
+        type: Sequelize.INTEGER,
       },
     },
     {
@@ -45,6 +154,9 @@ exports.SfoFields = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
       },
       c_field_id: {
+        type: Sequelize.STRING,
+      },
+      c_field_formula: {
         type: Sequelize.STRING,
       },
     },
@@ -95,6 +207,9 @@ exports.SfoSuFields = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
       },
       n_field_id: {
+        type: Sequelize.INTEGER,
+      },
+      n_seq: {
         type: Sequelize.INTEGER,
       },
     },

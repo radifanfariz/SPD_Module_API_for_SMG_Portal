@@ -1,5 +1,5 @@
 const db = require("../../models/spd");
-const { getPagingData, getPagination } = require("../../utils/spdmain.util");
+const { getPagingData, getPagination } = require("../../utils/util");
 const Spdmain = db.spdmain;
 const SpdmainAkomadasi = db.spdmainAkomodasi;
 const SpdmainJenis = db.spdmainJenis;
@@ -34,7 +34,7 @@ exports.create = (req, res) => {
     c_spd_nohp: req.body.c_spd_nohp,
     c_spd_pangkat: req.body.c_spd_pangkat,
     c_spd_grade: req.body.c_spd_grade,
-    c_spd_tempattujuan: req.body.c_spd_tempatdiajukan,
+    c_spd_tempattujuan: req.body.c_spd_tempattujuan,
     c_spd_costcenterpenanggung: req.body.c_spd_costcenterpenanggung,
     d_spd_tanggalberangkat: req.body.d_spd_tanggalberangkat,
     d_spd_tanggalkembali: req.body.d_spd_tanggalkembali,

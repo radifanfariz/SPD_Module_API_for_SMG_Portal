@@ -1,10 +1,9 @@
 const db = require("../../models/sfo");
 const { getPagingData, getPagination } = require("../../utils/util");
-const SfoSuFields = db.sfoSuFields;
-const SfoFields = db.sfoFields;
-const SfoSu = db.sfoSu;
+const SfoWeekly = db.sfoWeekly;
+const SfoComments = db.sfoComments;
 
-const sequalize = db.Sequelize;
+const sequelize = db.Sequelize;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -14,12 +13,15 @@ exports.create = (req, res) => {
     });
     return;
   }
-  const sfoSuFieldsReq = {
-    n_su_id: req.body.n_su_id,
-    n_field_id: req.body.n_field_id,
-    n_seq: req.body.n_seq,
+  const sfoCommentsReq = {
+    c_weekly_reference: req.body.c_weekly_reference,
+    c_weekly_reference_id: req.body.c_weekly_reference_id,
+    c_weekly_cell_id: req.body.c_weekly_cell_id,
+    c_comments: req.body.c_comments,
+    n_weekly_id: req.body.n_weekly_id,
+    n_updated_by: req.body.n_updated_by,
   };
-  SfoSuFields.create(sfoSuFieldsReq)
+  SfoComments.create(sfoCommentsReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -41,8 +43,8 @@ exports.create = (req, res) => {
 
 // Retrieve all SFO SU Fields data from the database.
 exports.findAll = (req, res) => {
-  SfoSuFields.findAll({
-    include: [{ model: SfoFields }, { model: SfoSu }],
+  SfoComments.findAll({
+    include: [{ model: SfoWeekly, as: "sfo_weekly" }],
   })
     .then((data) => {
       const successResponse = {
@@ -65,17 +67,18 @@ exports.findAll = (req, res) => {
 
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
-  const { n_su_id, n_field_id, n_seq } = req.body;
-  SfoSuFields.findAll({
-    include: [
-        { model: SfoFields }, 
-        { model: SfoSu }
-    ],
+  const { n_weekly_id, c_weekly_reference, c_weekly_cell_id } = req.body;
+  SfoComments.findAll({
+    include: [{ model: SfoWeekly, as: "sfo_weekly" }],
     where: {
-      [Op.and]: [
-        n_su_id ? { n_su_id: n_su_id } : null,
-        n_field_id ? { n_field_id: n_field_id } : null,
-        n_seq ? { n_seq: n_seq } : null,
+      [Op.or]: [
+        {
+          [Op.and]: [
+            c_weekly_reference ? { c_weekly_reference: { [Op.iLike]: `%${c_weekly_reference}%` } } : null,
+            c_weekly_cell_id ? { c_weekly_cell_id: { [Op.iLike]: `%${c_weekly_cell_id}%` } } : null,
+          ],
+        },
+        n_weekly_id ? { n_weekly_id: n_weekly_id } : null,
       ],
     },
   })

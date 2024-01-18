@@ -1,7 +1,9 @@
 const db = require("../../models/sfo");
 const { getPagingData, getPagination } = require("../../utils/util");
-const SfoSuFields = db.sfoSuFields;
-const SfoFields = db.sfoFields;
+const SfoTransactionsProducts = db.sfoTransactionsProducts;
+const SfoTransactions = db.sfoTransactions;
+const SfoSuProducts = db.sfoSuProducts;
+const SfoProducts = db.sfoProducts;
 const SfoSu = db.sfoSu;
 
 const sequalize = db.Sequelize;
@@ -14,12 +16,12 @@ exports.create = (req, res) => {
     });
     return;
   }
-  const sfoSuFieldsReq = {
-    n_su_id: req.body.n_su_id,
-    n_field_id: req.body.n_field_id,
-    n_seq: req.body.n_seq,
+  const sfoTransactionsProductsReq = {
+    n_su_product_id: req.body.n_su_product_id,
+    n_transaction_id: req.body.n_transaction_id,
+    n_total_unit: req.body.n_total_unit,
   };
-  SfoSuFields.create(sfoSuFieldsReq)
+  SfoTransactionsProducts.create(sfoTransactionsProductsReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -41,8 +43,14 @@ exports.create = (req, res) => {
 
 // Retrieve all SFO SU Fields data from the database.
 exports.findAll = (req, res) => {
-  SfoSuFields.findAll({
-    include: [{ model: SfoFields }, { model: SfoSu }],
+  SfoTransactionsProducts.findAll({
+    include: [
+      { model: SfoTransactions },
+      {
+        model: SfoSuProducts,
+        include: [{ model: SfoSu }, { model: SfoProducts }],
+      },
+    ],
   })
     .then((data) => {
       const successResponse = {
@@ -65,17 +73,19 @@ exports.findAll = (req, res) => {
 
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
-  const { n_su_id, n_field_id, n_seq } = req.body;
-  SfoSuFields.findAll({
+  const { n_su_product_id, n_transaction_id } = req.body;
+  SfoTransactionsProducts.findAll({
     include: [
-        { model: SfoFields }, 
-        { model: SfoSu }
+      { model: SfoTransactions },
+      {
+        model: SfoSuProducts,
+        include: [{ model: SfoSu }, { model: SfoProducts }],
+      },
     ],
     where: {
       [Op.and]: [
-        n_su_id ? { n_su_id: n_su_id } : null,
-        n_field_id ? { n_field_id: n_field_id } : null,
-        n_seq ? { n_seq: n_seq } : null,
+        n_su_product_id ? { n_su_product_id: n_su_product_id } : null,
+        n_transaction_id ? { n_transaction_id: n_transaction_id } : null,
       ],
     },
   })

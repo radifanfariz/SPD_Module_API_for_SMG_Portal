@@ -1,5 +1,5 @@
 const db = require("../../models/sfo");
-const { getPagingData, getPagination } = require("../../utils/spdmain.util");
+const { getPagingData, getPagination } = require("../../utils/util");
 const SfoFields = db.sfoFields;
 const SfoProducts = db.sfoProducts;
 const SfoSu = db.sfoSu;
@@ -22,6 +22,7 @@ exports.create = (req, res) => {
     c_field_subtype: req.body.c_field_subtype,
     c_field_rule: req.body.c_field_rule,
     c_field_id: req.body.c_field_id,
+    c_field_formula: req.body.c_field_formula,
   };
   SfoFields.create(sfoFieldsReq)
     .then((data) => {

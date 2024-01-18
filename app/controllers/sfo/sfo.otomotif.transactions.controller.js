@@ -1,7 +1,6 @@
 const db = require("../../models/sfo");
-const { getPagingData, getPagination } = require("../../utils/spdmain.util");
-const SfoSuProducts = db.sfoSuProducts;
-const SfoProducts = db.sfoProducts;
+const { getPagingData, getPagination } = require("../../utils/util");
+const SfoTransactions = db.sfoTransactions;
 const SfoSu = db.sfoSu;
 
 const sequalize = db.Sequelize;
@@ -14,11 +13,11 @@ exports.create = (req, res) => {
     });
     return;
   }
-  const sfoSuProductsReq = {
+  const sfoTransactionsReq = {
+    d_period: req.body.d_period,
     n_su_id: req.body.n_su_id,
-    n_field_id: req.body.n_field_id,
   };
-  SfoSuProducts.create(sfoSuProductsReq)
+  SfoTransactions.create(sfoTransactionsReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -40,8 +39,8 @@ exports.create = (req, res) => {
 
 // Retrieve all SFO SU Fields data from the database.
 exports.findAll = (req, res) => {
-  SfoSuProducts.findAll({
-    include: [{ model: SfoProducts }, { model: SfoSu }],
+  SfoTransactions.findAll({
+    include: [{ model: SfoSu }],
   })
     .then((data) => {
       const successResponse = {
@@ -64,16 +63,15 @@ exports.findAll = (req, res) => {
 
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
-  const { n_su_id, n_product_id } = req.body;
-  SfoSuProducts.findAll({
+  const { n_su_id, d_period } = req.body;
+  SfoTransactions.findAll({
     include: [
-        { model: SfoProducts }, 
         { model: SfoSu }
     ],
     where: {
       [Op.and]: [
+        d_period ? { d_period: d_period } : null,
         n_su_id ? { n_su_id: n_su_id } : null,
-        n_product_id ? { n_product_id: n_product_id } : null,
       ],
     },
   })

@@ -1,5 +1,7 @@
 const db = require("../../models/sfo");
 const { getPagingData, getPagination } = require("../../utils/util");
+const SfoTransactionsFields = db.sfoTransactionsFields;
+const SfoTransactions = db.sfoTransactions;
 const SfoSuFields = db.sfoSuFields;
 const SfoFields = db.sfoFields;
 const SfoSu = db.sfoSu;
@@ -14,12 +16,12 @@ exports.create = (req, res) => {
     });
     return;
   }
-  const sfoSuFieldsReq = {
-    n_su_id: req.body.n_su_id,
-    n_field_id: req.body.n_field_id,
-    n_seq: req.body.n_seq,
+  const sfoTransactionsFieldsReq = {
+    n_su_field_id: req.body.n_su_field_id,
+    n_transaction_id: req.body.n_transaction_id,
+    n_field_value: req.body.n_field_value,
   };
-  SfoSuFields.create(sfoSuFieldsReq)
+  SfoTransactionsFields.create(sfoTransactionsFieldsReq)
     .then((data) => {
       const successResponse = {
         status: true,
@@ -41,8 +43,14 @@ exports.create = (req, res) => {
 
 // Retrieve all SFO SU Fields data from the database.
 exports.findAll = (req, res) => {
-  SfoSuFields.findAll({
-    include: [{ model: SfoFields }, { model: SfoSu }],
+  SfoTransactionsFields.findAll({
+    include: [
+      { model: SfoTransactions },
+      {
+        model: SfoSuFields,
+        include: [{ model: SfoSu }, { model: SfoFields }],
+      },
+    ],
   })
     .then((data) => {
       const successResponse = {
@@ -65,17 +73,19 @@ exports.findAll = (req, res) => {
 
 // Retrieve all SFO SU Fields data by param from the database.
 exports.findAllByParam = (req, res) => {
-  const { n_su_id, n_field_id, n_seq } = req.body;
-  SfoSuFields.findAll({
+  const { n_su_field_id, n_transaction_id } = req.body;
+  SfoTransactionsFields.findAll({
     include: [
-        { model: SfoFields }, 
-        { model: SfoSu }
+      { model: SfoTransactions },
+      {
+        model: SfoSuFields,
+        include: [{ model: SfoSu }, { model: SfoFields }],
+      },
     ],
     where: {
       [Op.and]: [
-        n_su_id ? { n_su_id: n_su_id } : null,
-        n_field_id ? { n_field_id: n_field_id } : null,
-        n_seq ? { n_seq: n_seq } : null,
+        n_su_field_id ? { n_su_field_id: n_su_field_id } : null,
+        n_transaction_id ? { n_transaction_id: n_transaction_id } : null,
       ],
     },
   })

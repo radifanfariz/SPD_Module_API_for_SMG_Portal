@@ -1,3 +1,6 @@
+// Import and load dotenv to load .env //
+require('dotenv').config();
+////////////////////////////////////
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -56,13 +59,17 @@ let corsOptions = {
 
 app.use(cors(corsOptions));
 
+//////considered deprecated//////
 // parse requests of content-type - application/json
-app.use(express.json());
+// app.use(express.json());
 // app.use(bodyParser.json()); //alternative
+// app.use(express.urlencoded({ extended: true }));
+// app.use(bodyParser.urlencoded({ extended: true })); //alternative
+///////////////
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
-// app.use(bodyParser.urlencoded({ extended: true })); //alternative
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb', extended: true}));
 
 // routes of api SPD
 require("./app/routes/spd/spdmain.route")(app);
@@ -74,6 +81,25 @@ require("./app/routes/spd/spddocs.route")(app);
 
 // routes of api SFO
 require("./app/routes/sfo/sfo.otomotif.route")(app);
+
+// routes of api PM-Otomotif weekly
+require("./app/routes/sfo/pm-weekly/pm.otomotif.route")(app);
+// routes of api PM-Otomotif monthly
+require("./app/routes/sfo/pm-monthly/pm.otomotif.route")(app);
+// routes of api PM-Finser weekly
+require("./app/routes/sfo/pm-weekly/pm.finser.route")(app);
+// routes of api PM-Finser monthly
+require("./app/routes/sfo/pm-monthly/pm.finser.route")(app);
+// routes of api PM-Comments
+require("./app/routes/sfo/pm-weekly/pm.comments.route")(app);
+
+
+// auth
+require("./app/routes/auth/auth.route")(app);
+
+////considered deprecated////
+// require("./app/routes/sfo/pm-monthly/pm.otomotif.route")(app);
+/////////////////////////////////////
 
 // set port, listen for requests
 const PORT = process.env.PORT || 9999;
