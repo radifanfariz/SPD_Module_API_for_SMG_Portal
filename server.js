@@ -10,6 +10,8 @@ const app = express();
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
+const PORT = process.env.PORT || 9999;
+
 const options = {
   failOnErrors: true,
   definition: {
@@ -26,7 +28,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:9999/api/spdmain",
+        url: `http://localhost:${PORT}/api/spdmain`,
       },
     ],
   },
@@ -102,7 +104,6 @@ require("./app/routes/auth/auth.route")(app);
 /////////////////////////////////////
 
 // set port, listen for requests
-const PORT = process.env.PORT || 9999;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });
