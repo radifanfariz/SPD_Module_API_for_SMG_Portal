@@ -165,10 +165,16 @@ exports.findAllForTablePaging = (req, res) => {
     where: req.body
       ? {
           [Op.and]: [
-            n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
+            n_spd_company_id
+              ? { n_spd_company_id: { [Op.in]: n_spd_company_id } }
+              : null,
             n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
-            n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
-            n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
+            n_spd_atasan_userId
+              ? { n_spd_atasan_userId: n_spd_atasan_userId }
+              : null,
+            n_spd_hrdadh_userId
+              ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId }
+              : null,
             n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
             c_spd_atasannama
               ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
@@ -311,9 +317,15 @@ exports.findAllByParam = (req, res) => {
         n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
         n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
         n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
-        n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
-        n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
-        c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
+        n_spd_atasan_userId
+          ? { n_spd_atasan_userId: n_spd_atasan_userId }
+          : null,
+        n_spd_hrdadh_userId
+          ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId }
+          : null,
+        c_spd_atasannama
+          ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
+          : null,
         c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
         c_spd_nomorsurat
           ? {
@@ -382,9 +394,15 @@ exports.findOneByParam = (req, res) => {
         n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
         n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
         n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
-        n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
-        n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
-        c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
+        n_spd_atasan_userId
+          ? { n_spd_atasan_userId: n_spd_atasan_userId }
+          : null,
+        n_spd_hrdadh_userId
+          ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId }
+          : null,
+        c_spd_atasannama
+          ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
+          : null,
         c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
         c_spd_nomorsurat
           ? {
@@ -404,7 +422,7 @@ exports.findOneByParam = (req, res) => {
         n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
       ],
     },
-    order: [['n_spd_id', 'DESC']]
+    order: [["n_spd_id", "DESC"]],
   })
     .then((data) => {
       const successResponse = {
@@ -458,9 +476,15 @@ exports.findAllPaging = (req, res) => {
         n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
         n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
         n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
-        n_spd_atasan_userId ? { n_spd_atasan_userId: n_spd_atasan_userId } : null,
-        n_spd_hrdadh_userId ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId } : null,
-        c_spd_atasannama ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } } : null,
+        n_spd_atasan_userId
+          ? { n_spd_atasan_userId: n_spd_atasan_userId }
+          : null,
+        n_spd_hrdadh_userId
+          ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId }
+          : null,
+        c_spd_atasannama
+          ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
+          : null,
         c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
         c_spd_nomorsurat
           ? {
@@ -545,10 +569,6 @@ exports.findOne = (req, res) => {
     });
 };
 
-
-
-
-
 /*--------------------------------- considered deprecated---------------------------------*/
 // Update a SPD main data after created by the id in the request
 exports.updateAfterCreated = (req, res) => {
@@ -588,10 +608,6 @@ exports.updateAfterCreated = (req, res) => {
     });
 };
 /*----------------------------------------------------------------------------------------*/
-
-
-
-
 
 // Update a SPD main data by the id in the request
 exports.update = (req, res) => {
