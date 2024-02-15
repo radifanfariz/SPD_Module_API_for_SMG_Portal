@@ -5,20 +5,14 @@ module.exports = (app) => {
   const router = require("express").Router();
 
   // middleware
-  const spdMainDocument = YAML.load("./docs/spd/spd_main.yml");
-  const spdMainPartDocument = YAML.load("./docs/spd/spd_main_parts.yml");
-  const spdPelaksanaanDocument = YAML.load(
-    "./docs/spd/spd_main_pelaksanaan.yml"
-  );
-  const spdRealisasiDocument = YAML.load("./docs/spd/spd_main_realisasi.yml");
-  const spdRealisasiDetailDocument = YAML.load(
-    "./docs/spd/spd_main_realisasi_detail.yml"
-  );
-  const spdRealisasiPersetujuanDocument = YAML.load(
-    "./docs/spd/spd_main_realisasi_persetujuan.yml"
-  );
+  const spdMainDocument = YAML.load(process.env.PATH_ROOT +"/docs/spd/spd_main.yml");
+  const spdMainPartDocument = YAML.load(process.env.PATH_ROOT +"/docs/spd/spd_main_parts.yml");
+  const spdPelaksanaanDocument = YAML.load(process.env.PATH_ROOT +"/docs/spd/spd_main_pelaksanaan.yml");
+  const spdRealisasiDocument = YAML.load(process.env.PATH_ROOT +"/docs/spd/spd_main_realisasi.yml");
+  const spdRealisasiDetailDocument = YAML.load(process.env.PATH_ROOT +"/docs/spd/spd_main_realisasi_detail.yml");
+  const spdRealisasiPersetujuanDocument = YAML.load(process.env.PATH_ROOT +"/docs/spd/spd_main_realisasi_persetujuan.yml");
 
-  
+ 
   router.use(
     "/spdmain",
     swaggerUi.serve,
