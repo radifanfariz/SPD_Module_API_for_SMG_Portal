@@ -95,6 +95,7 @@ exports.findAllForTable = (req, res) => {
       { model: SpdmainJenis, as: "spd_main_jenis" },
       { model: SpdmainStatus },
     ],
+    order: [["n_spd_id", "DESC"]],
   })
     .then((data) => {
       const spdDataForTable = data.map((item) => {
@@ -203,6 +204,7 @@ exports.findAllForTablePaging = (req, res) => {
       : null,
     limit: limit,
     offset: offset,
+    order: [["n_spd_id", "DESC"]],
   })
     .then((data) => {
       const { totalItems, totalPages, currentPage, row } = getPagingData(
@@ -268,6 +270,7 @@ exports.findAll = (req, res) => {
       { model: SpdmainUangMuka },
       // { model: SpdRealisasi, as: 'spd_realisasi' },
     ],
+    order: [["n_spd_id", "DESC"]],
   })
     .then((data) => {
       const successResponse = {
@@ -345,6 +348,7 @@ exports.findAllByParam = (req, res) => {
         n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
       ],
     },
+    order: [["n_spd_id", "DESC"]],
   })
     .then((data) => {
       const successResponse = {
@@ -506,6 +510,7 @@ exports.findAllPaging = (req, res) => {
     },
     limit: limit,
     offset: offset,
+    order: [["n_spd_id", "DESC"]],
   })
     .then((data) => {
       const pagingData = getPagingData(data, page, limit);
@@ -544,6 +549,7 @@ exports.findOne = (req, res) => {
       { model: SpdmainUangMuka },
       // { model: SpdRealisasi, as: 'spd_realisasi' },
     ],
+    order: [["n_spd_id", "DESC"]],
   })
     .then((data) => {
       const successResponse = {
