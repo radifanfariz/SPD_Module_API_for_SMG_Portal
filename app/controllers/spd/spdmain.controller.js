@@ -165,41 +165,47 @@ exports.findAllForTablePaging = (req, res) => {
     ],
     where: req.body
       ? {
-          [Op.and]: [
-            n_spd_company_id
-              ? { n_spd_company_id: { [Op.in]: n_spd_company_id } }
-              : null,
-            n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
-            n_spd_atasan_userId
-              ? { n_spd_atasan_userId: n_spd_atasan_userId }
-              : null,
-            n_spd_hrdadh_userId
-              ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId }
-              : null,
-            n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
-            c_spd_atasannama
-              ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
-              : null,
-            c_spd_nama
-              ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } }
-              : null,
-            c_spd_nomorsurat
-              ? {
-                  c_spd_nomorsurat: {
-                    [Op.iLike]: `%${c_spd_nomorsurat}%`,
-                  },
-                }
-              : null,
-            d_spd_tanggalajukan
-              ? {
-                  d_spd_tanggalajukan: {
-                    [Op.eq]: d_spd_tanggalajukan,
-                  },
-                }
-              : null,
-            n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
-            n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
-          ],
+          [Op.and]: {
+            [Op.or]: [
+              n_spd_atasan_userId
+                ? { n_spd_atasan_userId: n_spd_atasan_userId }
+                : null,
+              [
+                n_spd_company_id
+                  ? { n_spd_company_id: { [Op.in]: n_spd_company_id } }
+                  : null,
+                n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+                n_spd_hrdadh_userId
+                  ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId }
+                  : null,
+                n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
+                c_spd_atasannama
+                  ? {
+                      c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` },
+                    }
+                  : null,
+                c_spd_nama
+                  ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } }
+                  : null,
+                c_spd_nomorsurat
+                  ? {
+                      c_spd_nomorsurat: {
+                        [Op.iLike]: `%${c_spd_nomorsurat}%`,
+                      },
+                    }
+                  : null,
+                d_spd_tanggalajukan
+                  ? {
+                      d_spd_tanggalajukan: {
+                        [Op.eq]: d_spd_tanggalajukan,
+                      },
+                    }
+                  : null,
+                n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
+                n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
+              ],
+            ],
+          },
         }
       : null,
     limit: limit,
@@ -316,37 +322,47 @@ exports.findAllByParam = (req, res) => {
       // { model: SpdRealisasi, as: 'spd_realisasi' },
     ],
     where: {
-      [Op.and]: [
-        n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
-        n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
-        n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
-        n_spd_atasan_userId
-          ? { n_spd_atasan_userId: n_spd_atasan_userId }
-          : null,
-        n_spd_hrdadh_userId
-          ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId }
-          : null,
-        c_spd_atasannama
-          ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
-          : null,
-        c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
-        c_spd_nomorsurat
-          ? {
-              c_spd_nomorsurat: {
-                [Op.iLike]: `%${c_spd_nomorsurat}%`,
-              },
-            }
-          : null,
-        d_spd_tanggalajukan
-          ? {
-              d_spd_tanggalajukan: {
-                [Op.gte]: d_spd_tanggalajukan,
-              },
-            }
-          : null,
-        n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
-        n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
-      ],
+      [Op.and]: {
+        [Op.or]: [
+          n_spd_atasan_userId
+            ? { n_spd_atasan_userId: n_spd_atasan_userId }
+            : null,
+          [
+            n_spd_company_id
+              ? { n_spd_company_id: { [Op.in]: n_spd_company_id } }
+              : null,
+            n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+            n_spd_hrdadh_userId
+              ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId }
+              : null,
+            n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
+            c_spd_atasannama
+              ? {
+                  c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` },
+                }
+              : null,
+            c_spd_nama
+              ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } }
+              : null,
+            c_spd_nomorsurat
+              ? {
+                  c_spd_nomorsurat: {
+                    [Op.iLike]: `%${c_spd_nomorsurat}%`,
+                  },
+                }
+              : null,
+            d_spd_tanggalajukan
+              ? {
+                  d_spd_tanggalajukan: {
+                    [Op.eq]: d_spd_tanggalajukan,
+                  },
+                }
+              : null,
+            n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
+            n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
+          ],
+        ],
+      },
     },
     order: [["n_spd_id", "DESC"]],
   })
@@ -394,37 +410,47 @@ exports.findOneByParam = (req, res) => {
       // { model: SpdRealisasi, as: 'spd_realisasi' },
     ],
     where: {
-      [Op.and]: [
-        n_spd_company_id ? { n_spd_company_id: n_spd_company_id } : null,
-        n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
-        n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
-        n_spd_atasan_userId
-          ? { n_spd_atasan_userId: n_spd_atasan_userId }
-          : null,
-        n_spd_hrdadh_userId
-          ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId }
-          : null,
-        c_spd_atasannama
-          ? { c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` } }
-          : null,
-        c_spd_nama ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } } : null,
-        c_spd_nomorsurat
-          ? {
-              c_spd_nomorsurat: {
-                [Op.iLike]: `%${c_spd_nomorsurat}%`,
-              },
-            }
-          : null,
-        d_spd_tanggalajukan
-          ? {
-              d_spd_tanggalajukan: {
-                [Op.gte]: d_spd_tanggalajukan,
-              },
-            }
-          : null,
-        n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
-        n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
-      ],
+      [Op.and]: {
+        [Op.or]: [
+          n_spd_atasan_userId
+            ? { n_spd_atasan_userId: n_spd_atasan_userId }
+            : null,
+          [
+            n_spd_company_id
+              ? { n_spd_company_id: { [Op.in]: n_spd_company_id } }
+              : null,
+            n_spd_userId ? { n_spd_userId: n_spd_userId } : null,
+            n_spd_hrdadh_userId
+              ? { n_spd_hrdadh_userId: n_spd_hrdadh_userId }
+              : null,
+            n_spd_hrisId ? { n_spd_hrisId: n_spd_hrisId } : null,
+            c_spd_atasannama
+              ? {
+                  c_spd_atasannama: { [Op.iLike]: `%${c_spd_atasannama}%` },
+                }
+              : null,
+            c_spd_nama
+              ? { c_spd_nama: { [Op.iLike]: `%${c_spd_nama}%` } }
+              : null,
+            c_spd_nomorsurat
+              ? {
+                  c_spd_nomorsurat: {
+                    [Op.iLike]: `%${c_spd_nomorsurat}%`,
+                  },
+                }
+              : null,
+            d_spd_tanggalajukan
+              ? {
+                  d_spd_tanggalajukan: {
+                    [Op.eq]: d_spd_tanggalajukan,
+                  },
+                }
+              : null,
+            n_spd_jenis_id ? { n_spd_jenis_id: n_spd_jenis_id } : null,
+            n_spd_status_id ? { n_spd_status_id: n_spd_status_id } : null,
+          ],
+        ],
+      },
     },
     order: [["n_spd_id", "DESC"]],
   })
