@@ -75,7 +75,7 @@ paths:
     put:
       tags:
         - General
-      summary: apiPortalFZ (SPD-Pelaksanaan) Copy 2
+      summary: apiPortalFZ (SPD-Pelaksanaan)
       requestBody:
         content:
           application/json:
@@ -93,3 +93,14 @@ paths:
           description: Successful response
           content:
             application/json: {}
+    delete:
+        tags:
+          - General
+        summary: apiPortalFZ (SPD-Pelaksanaan)
+        security:
+          - basicAuth: []
+        responses:
+          "200":
+            description: Successful response
+            content:
+              application/json: {}

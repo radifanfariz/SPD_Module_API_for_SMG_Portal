@@ -69,6 +69,17 @@ paths:
           description: Successful response
           content:
             application/json: {}
+    delete:
+        tags:
+          - General
+        summary: apiPortalFZ (SPD-Realisasi Detail)
+        security:
+          - basicAuth: []
+        responses:
+          "200":
+            description: Successful response
+            content:
+              application/json: {}
   /api/spdrealisasidetail/2:
     get:
       tags:

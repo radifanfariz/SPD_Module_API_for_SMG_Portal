@@ -4,7 +4,7 @@ module.exports = (app) => {
   const spdRealisasi = require("../../controllers/spd/spdrealisasi.controller.js");
   const spdRealisasiDetail = require("../../controllers/spd/spdrealisasidetail.controller.js");
   const spdRealisasiPersetujuan = require("../../controllers/spd/spdrealisasipersetujuan.controller.js");
-//   const spdRealisasiPersetujuan = require("../controllers/spdrealisasipersetujuan.controller.js");
+  //   const spdRealisasiPersetujuan = require("../controllers/spdrealisasipersetujuan.controller.js");
 
   var router = require("express").Router();
 
@@ -17,28 +17,30 @@ module.exports = (app) => {
   router.get("/", isAuth, spdRealisasi.findAllByParam);
   // Retrieve one SPD Realisasi
   router.get("/:id", isAuth, spdRealisasi.findOne);
-  // Update a SPD Realisasi Data with id
+  // Update a SPD Realisasi Data by id
   router.put("/:id", isAuth, spdRealisasi.update);
+  // Delete a SPD Realisasi Data by id
+  router.delete("/:id", isAuth, spdRealisasi.delete);
 
-  // Realisasi Detail //
-  // Create a new SPD Realisasi Data
-  router.post("/detail", isAuth, spdRealisasiDetail.create);
-  // Retrieve all SPD Realisasi
-  router.get("/detail", isAuth, spdRealisasiDetail.findAllByParam);
-  // Retrieve one SPD Realisasi
-  router.get("/detail/:id", isAuth, spdRealisasiDetail.findOne);
-  // Update a SPD Realisasi Data with id
-  router.put("/detail/:id", isAuth, spdRealisasiDetail.update);
+  // // Realisasi Detail //
+  // // Create a new SPD Realisasi Data
+  // router.post("/detail", isAuth, spdRealisasiDetail.create);
+  // // Retrieve all SPD Realisasi
+  // router.get("/detail", isAuth, spdRealisasiDetail.findAllByParam);
+  // // Retrieve one SPD Realisasi
+  // router.get("/detail/:id", isAuth, spdRealisasiDetail.findOne);
+  // // Update a SPD Realisasi Data by id
+  // router.put("/detail/:id", isAuth, spdRealisasiDetail.update);
 
-  // Realisasi Persetujuan //
-  // Create a new SPD Realisasi Data
-  router.post("/persetujuan", isAuth, spdRealisasiPersetujuan.create);
-  // Retrieve all SPD Realisasi
-  router.get("/persetujuan", isAuth, spdRealisasiPersetujuan.findAllByParam);
-  // Retrieve one SPD Realisasi
-  router.get("/persetujuan/:id", isAuth, spdRealisasiPersetujuan.findOne);
-  // Update a SPD Realisasi Data with id
-  router.put("/persetujuan/:id", isAuth, spdRealisasiPersetujuan.update);
+  // // Realisasi Persetujuan //
+  // // Create a new SPD Realisasi Data
+  // router.post("/persetujuan", isAuth, spdRealisasiPersetujuan.create);
+  // // Retrieve all SPD Realisasi
+  // router.get("/persetujuan", isAuth, spdRealisasiPersetujuan.findAllByParam);
+  // // Retrieve one SPD Realisasi
+  // router.get("/persetujuan/:id", isAuth, spdRealisasiPersetujuan.findOne);
+  // // Update a SPD Realisasi Data by id
+  // router.put("/persetujuan/:id", isAuth, spdRealisasiPersetujuan.update);
 
   app.use("/api/spdrealisasi", router);
 };

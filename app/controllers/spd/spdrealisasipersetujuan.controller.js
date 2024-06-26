@@ -145,3 +145,32 @@ exports.findOne = (req, res) => {
         res.status(500).send(errorResponse);
       });
   };
+
+  exports.delete = (req, res) => {
+    const spdId = req.params.id;
+  
+    Spdrealisasipersetujuan.destroy({
+      where: { n_spd_id: spdId },
+    })
+      .then((num) => {
+        if (num === 1) {
+          res.send({
+            status: true,
+            message: "SPD Realisasi data was deleted successfully!",
+          });
+        } else {
+          const errorResponse = {
+            status: false,
+            message: `Cannot delete SPD Realisasi data with id=${spdId} !`,
+          };
+          res.send(errorResponse);
+        }
+      })
+      .catch((err) => {
+        const errorResponse = {
+          status: false,
+          message: err.message || `Cannot delete SPD Realisasi data with id=${spdId} !`,
+        };
+        res.status(500).send(errorResponse);
+      });
+  };
