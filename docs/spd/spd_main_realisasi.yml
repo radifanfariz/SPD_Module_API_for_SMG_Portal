@@ -23,32 +23,32 @@ paths:
             schema:
               type: object
               example:
-                - n_spd_id: '5'
-                  n_realisasi_uangsaku: '50000'
+                - n_spd_id: "5"
+                  n_realisasi_uangsaku: "50000"
                   c_realisasi_uangsaku_ket: test
-                  n_realisasi_biayapenginapan: '50000'
+                  n_realisasi_biayapenginapan: "50000"
                   c_realisasi_biayapenginapan_ket: test
-                  n_realisasi_biayatransport: '50000'
+                  n_realisasi_biayatransport: "50000"
                   c_realisasi_biayatransport_ket: test
-                  n_realisasi_biayalain: '50000'
+                  n_realisasi_biayalain: "50000"
                   c_realisasi_biayalain_ket: test
-                  d_realisasi_tanggal: '2023-06-06'
-                  n_realisasi_subtotal: '500000'
-                - n_spd_id: '5'
-                  n_realisasi_uangsaku: '50000'
+                  d_realisasi_tanggal: "2023-06-06"
+                  n_realisasi_subtotal: "500000"
+                - n_spd_id: "5"
+                  n_realisasi_uangsaku: "50000"
                   c_realisasi_uangsaku_ket: test
-                  n_realisasi_biayapenginapan: '50000'
+                  n_realisasi_biayapenginapan: "50000"
                   c_realisasi_biayapenginapan_ket: test
-                  n_realisasi_biayatransport: '50000'
+                  n_realisasi_biayatransport: "50000"
                   c_realisasi_biayatransport_ket: test
-                  n_realisasi_biayalain: '50000'
+                  n_realisasi_biayalain: "50000"
                   c_realisasi_biayalain_ket: test
-                  d_realisasi_tanggal: '2023-06-06'
-                  n_realisasi_subtotal: '500000'
+                  d_realisasi_tanggal: "2023-06-06"
+                  n_realisasi_subtotal: "500000"
       security:
         - basicAuth: []
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json: {}
@@ -63,21 +63,21 @@ paths:
             schema:
               type: object
               example:
-                n_spd_id: '5'
-                n_realisasi_uangsaku: '50000'
+                n_spd_id: "5"
+                n_realisasi_uangsaku: "50000"
                 c_realisasi_uangsaku_ket: test
-                n_realisasi_biayapenginapan: '50000'
+                n_realisasi_biayapenginapan: "50000"
                 c_realisasi_biayapenginapan_ket: test
-                n_realisasi_biayatransport: '50000'
+                n_realisasi_biayatransport: "50000"
                 c_realisasi_biayatransport_ket: test
-                n_realisasi_biayalain: '50000'
+                n_realisasi_biayalain: "50000"
                 c_realisasi_biayalain_ket: test
-                d_realisasi_tanggal: '2023-06-06'
-                n_realisasi_subtotal: '500000'
+                d_realisasi_tanggal: "2023-06-06"
+                n_realisasi_subtotal: "500000"
       security:
         - basicAuth: []
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json: {}
@@ -93,7 +93,7 @@ paths:
               type: object
               example:
                 n_spd_id: 38
-                d_realisasi_tanggal: '2023-01-01'
+                d_realisasi_tanggal: "2023-01-01"
                 n_realisasi_uangsaku: 20000
                 n_realisasi_biayapenginapan: 200000
                 n_realisasi_biayatransportasi: 200000
@@ -107,10 +107,21 @@ paths:
       security:
         - basicAuth: []
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json: {}
+    delete:
+        tags:
+          - General
+        summary: apiPortalFZ (SPD-Realisasi)
+        security:
+          - basicAuth: []
+        responses:
+          "200":
+            description: Successful response
+            content:
+              application/json: {}
     get:
       tags:
         - General
@@ -118,7 +129,7 @@ paths:
       security:
         - basicAuth: []
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json: {}
@@ -130,7 +141,7 @@ paths:
       security:
         - basicAuth: []
       responses:
-        '200':
+        "200":
           description: Successful response
           content:
             application/json: {}

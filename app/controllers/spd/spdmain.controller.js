@@ -681,7 +681,7 @@ exports.delete = (req, res) => {
     where: { n_spd_id: spdId },
   })
     .then((num) => {
-      if (num == 1) {
+      if (num === 1) {
         res.send({
           status: true,
           message: "SPD data was deleted successfully!",

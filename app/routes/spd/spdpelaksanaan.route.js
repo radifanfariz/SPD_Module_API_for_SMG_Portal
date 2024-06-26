@@ -14,8 +14,10 @@ module.exports = (app) => {
   router.get("/", isAuth, spdPelaksanaan.findAllByParam);
   // Retrieve one SPD Pelaksanaan
   router.get("/:id", isAuth, spdPelaksanaan.findOne);
-  // Update a SPD Pelaksanaan Data with id
+  // Update a SPD Pelaksanaan Data by id
   router.put("/:id", isAuth, spdPelaksanaan.update);
+  // Delete a SPD Pelaksanaan Data by id
+  router.delete("/:id", isAuth, spdPelaksanaan.delete);
 
   app.use("/api/spdpelaksanaan", router);
 };
