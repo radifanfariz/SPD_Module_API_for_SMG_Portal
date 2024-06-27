@@ -115,6 +115,9 @@ exports.findAllByParam = (req, res) => {
         n_spd_id ? { n_spd_id: n_spd_id } : null,
       ],
     },
+    order: [
+      ["d_pelaksanaan_tanggal", "ASC"],
+    ],
   })
     .then((data) => {
       const successResponse = {
@@ -141,6 +144,9 @@ exports.findOne = (req, res) => {
     Spdpelaksanaan.findByPk(spdpelaksanaanId, {
       include: [
         { model: Spdmain, as: "spd_main" },
+      ],
+      order: [
+        ["d_pelaksanaan_tanggal", "ASC"],
       ],
     })
       .then((data) => {
